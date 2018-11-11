@@ -1,8 +1,8 @@
-;; evil-leader: <leader> key for evil
-;; https://github.com/cofi/evil-leader
+;;; evil-leader: <leader> key for evil
+;;; https://github.com/cofi/evil-leader
 (use-package evil-leader
   :commands (evil-leader-mode)
-  :ensure evil-leader
+  :ensure t
   :demand evil-leader
   :init
   (global-evil-leader-mode)
@@ -21,10 +21,10 @@
     (evil-leader/set-key "a" 'org-agenda)
     (evil-leader/set-key "c" 'org-capture)))
 
-;; evil - The extensible vi layer for Emacs.
-;; https://github.com/emacs-evil/evil
+;;; evil - The extensible vi layer for Emacs.
+;;; https://github.com/emacs-evil/evil
 (use-package evil
-  :ensure evil
+  :ensure t
   :config
   (progn
     (evil-mode 1)
@@ -32,5 +32,22 @@
     (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
     (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
     (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)))
+
+;;; evil-cleverparens: Evil normal-state minor-mode for editing lisp-like languages.
+;;; https://github.com/luxbock/evil-cleverparens
+(use-package evil-cleverparens
+  :ensure t
+  :config
+  (progn
+    (add-hook 'lisp-mode 'evil-cleverparens-mode)
+    (add-hook 'elisp-mode 'evil-cleverparens-mode)))
+
+;;; evil-commentary: Comment stuff out. A port of vim-commentary
+;;; https://github.com/linktohack/evil-commentary
+(use-package evil-commentary
+  :ensure t
+  :config
+  (progn
+    (evil-commentary-mode)))
 
 (provide 'my-evil)
