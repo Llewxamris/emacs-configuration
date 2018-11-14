@@ -14,10 +14,8 @@
     (evil-leader/set-key "h" 'dired-jump)
     (evil-leader/set-key "t" 'dired)
     (evil-leader/set-key "v" 'split-window-right)
-    (evil-leader/set-key "e" 'pp-eval-last-sexp)
     (evil-leader/set-key "," 'other-window)
     (evil-leader/set-key "b" 'ibuffer)
-    (evil-leader/set-key "x" 'helm-M-x)
     (evil-leader/set-key "a" 'org-agenda)
     (evil-leader/set-key "c" 'org-capture)))
 
@@ -39,8 +37,8 @@
   :ensure t
   :config
   (progn
-    (add-hook 'lisp-mode 'evil-cleverparens-mode)
-    (add-hook 'elisp-mode 'evil-cleverparens-mode)))
+    (add-hook 'lisp-mode-hook 'evil-cleverparens-mode)
+    (add-hook 'emacs-lisp-mode-hook 'evil-cleverparens-mode)))
 
 ;;; evil-commentary: Comment stuff out. A port of vim-commentary
 ;;; https://github.com/linktohack/evil-commentary
