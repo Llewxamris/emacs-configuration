@@ -1,10 +1,14 @@
+;;;; my-elfeed.el
+;;;; Package setup for Elfeed
 ;;; elfeed-org: Configure the Elfeed RSS reader with an Orgmode file
 ;;; https://github.com/remyhonig/elfeed-org
 (use-package elfeed-org
   :ensure elfeed-org
   :config
   (progn
+    ;; Enable on startup
     (elfeed-org)
+    ;; Set the org RSS file
     (setq rmh-elfeed-org-files (list (concat org-directory "/rss.org")))
     ;; The only custom bindings are `j` and `k`, the others are just
     ;; enabling default bindings in evil.

@@ -1,9 +1,12 @@
+;;;; my-golang.el
+;;;; Package setup for the Go programming language
 ;;; go-mode: Emacs mode for the Go programming language
 ;;; https://github.com/dominikh/go-mode.el
 (use-package go-mode
   :ensure t
   :config
   (progn
+    ;; Run goimports before saving a file
     (setq gofmt-command "goimports")
     (add-hook 'before-save-hook 'gofmt-before-save)))
 

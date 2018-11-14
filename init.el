@@ -1,22 +1,30 @@
-;; Setup package management
+;;;; init.el
+;;; Setup package managment
+;; Setup the package package
 (require 'package)
 (setq load-prefer-newer t)
 (package-initialize)
 (setq package-enable-at-startup nil)
 
+;; Define the list of directories to search for files to load
 (add-to-list 'load-path (concat user-emacs-directory "config"))
 (add-to-list 'load-path (concat user-emacs-directory "config" "/languages"))
 (add-to-list 'load-path (concat user-emacs-directory "packages"))
 
+;; Define which archives to use for packages
 (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
 			 ("org" . "http://orgmode.org/elpa/")
 			 ("gnu" . "http://elpa.gnu.org/packages/")))
 
+;; Auto-download use-package if it isn't already installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; Enable use-pacakge
 (require 'use-package)
+
+;;; Auto-generated Custom stuff
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -44,7 +52,8 @@
     (auto-compile-on-load-mode)
     (auto-compile-on-save-mode)))
 
-;; require custom packages
+;;; Define configuration files for other packages and their configuration
+;; General packages
 (require 'my-evil)
 (require 'my-dired-x)
 (require 'my-ibuffer)
@@ -56,7 +65,7 @@
 (require 'my-elfeed)
 (require 'my-autocomplete)
 
-;; Language Support
+;; Language specific packages
 (require 'my-markdown)
 (require 'my-golang)
 (require 'my-lisp)

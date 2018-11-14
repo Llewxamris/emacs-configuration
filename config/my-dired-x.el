@@ -1,5 +1,9 @@
+;;;; my-dired-x.el
+;;;; Package setup for navigating the local filesystem
+;; Do not prompt
 (put 'dired-find-alternate-file 'disabled nil)
 
+;;; Define how the filesystem is displayed
 ;; -k :: Default to 1024-byte blocks for disk usage
 ;; -a :: Do not ignore entries starting with .
 ;; -B :: Do not list implied entires ending with ~
@@ -7,15 +11,18 @@
 ;; -l :: Use a long listing format
 (setq dired-listing-switches "-kaBhl --group-directories-first")
 
+;;; dired-x
 (use-package dired-x
   :init
   (progn
+    ;; Don't clog the buffer
     (defun my-dired-up-directory ()
       "Take dired up one directory, but behave like dired-find-alternate-file"
       (interactive)
       (let ((old (current-buffer)))
 	(dired-up-directory)
 	(kill-buffer old)))
+    ;; Ranger-like key bindings
     (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
     (evil-define-key 'normal dired-mode-map "l" 'dired-find-alternate-file)
     (evil-define-key 'normal dired-mode-map "o" 'dired-sort-toggle-or-edit)

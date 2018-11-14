@@ -1,3 +1,6 @@
+;;;; my-ibuffer.el
+;;;; Package setup for iBuffer
+;;; This is a total mess. Save me.
 (eval-after-load 'ibuffer
   '(progn
      (evil-set-initial-state 'ibuffer-mode 'normal)

@@ -1,3 +1,5 @@
+;;;; my-org.el
+;;;; Package setup for org-mode
 ;;; org: Your life in plain text
 ;;; https://orgmode.org/
 (use-package org
