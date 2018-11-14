@@ -27,7 +27,7 @@
     ("9fcac3986e3550baac55dc6175195a4c7537e8aa082043dcbe3f93f548a3a1e0" default)))
  '(package-selected-packages
    (quote
-    (evil-commentary evil-cleverparens auto-compile go-errcheck slime hydandata-light-theme eziam-theme atom-one-light-theme yasnippets elfeed-org org-bullets evil-org flycheck flyspell-correct-popup markdown-mode auto-dictionary auto-dictionary-mode magit dired-x evil-leader linum-relative evil))))
+    (elisp-slime-nav elips-slime-nav evil-commentary evil-cleverparens auto-compile go-errcheck slime hydandata-light-theme eziam-theme atom-one-light-theme yasnippets elfeed-org org-bullets evil-org flycheck flyspell-correct-popup markdown-mode auto-dictionary auto-dictionary-mode magit dired-x evil-leader linum-relative evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -60,5 +60,6 @@
 (require 'my-markdown)
 (require 'my-golang)
 (require 'my-lisp)
+(require 'my-elisp)
 
 (provide 'init)
