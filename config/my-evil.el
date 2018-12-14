@@ -1,28 +1,43 @@
-;;;; my-evill.el
+;;;; my-evil.el
 ;;;; Package setup for Evil!
-;;; evil-leader: <leader> key for evil
-;;; https://github.com/cofi/evil-leader
-(use-package evil-leader
-  :commands (evil-leader-mode)
+;;; general - More convenient key definitions in emacs
+;;; https://github.com/noctuid/general.el
+(use-package general
   :ensure t
-  :demand evil-leader
-  :init
-  ;; Evil-leader by default
-  (global-evil-leader-mode)
   :config
   (progn
     ;; Set <leader> to ","
-    (evil-leader/set-leader ",")
-    ;; Global bindings for evil-leader
-    (evil-leader/set-key "w" 'save-buffer)
-    (evil-leader/set-key "q" 'delete-window)
-    (evil-leader/set-key "h" 'dired-jump)
-    (evil-leader/set-key "t" 'dired)
-    (evil-leader/set-key "v" 'split-window-right)
-    (evil-leader/set-key "," 'other-window)
-    (evil-leader/set-key "b" 'ibuffer)
-    (evil-leader/set-key "a" 'org-agenda)
-    (evil-leader/set-key "c" 'org-capture)))
+    (general-create-definer my-leader-def
+      :prefix ",")
+    ;; Global evil keybindings
+    (general-define-key
+     :states 'normal
+     "C-h" 'evil-window-left
+     "C-j" 'evil-window-bottom
+     "C-k" 'evil-window-up
+     "C-l" 'evil-window-right)
+    ;; Global <leader> bindings
+    (my-leader-def
+      :keymaps 'normal
+      "w" 'save-buffer
+      "q" 'delete-window
+      "g" 'dired-jump
+      "t" 'dired
+      "v" 'split-window-right
+      "h" 'split-window-below
+      "," 'other-window
+      "b" 'ibuffer
+      "a" 'org-agenda
+      "c" 'org-capture
+      "e" 'eval-last-sexp)
+    ;; Org-mode <leader> bindings
+    (my-leader-def
+      :states 'normal
+      :keymaps 'org-mode-map
+      "x" 'org-todo
+      "y" 'org-todo-yesterday
+      "s" 'org-schedule
+      "d" 'org-deadline)))
 
 ;;; evil - The extensible vi layer for Emacs.
 ;;; https://github.com/emacs-evil/evil
@@ -31,12 +46,7 @@
   :config
   (progn
     ;; Evil by default
-    (evil-mode 1)
-    ;; Change windows using Ctrl-[hjkl]
-    (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
-    (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
-    (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
-    (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)))
+    (evil-mode 1)))
 
 ;;; evil-cleverparens: Evil normal-state minor-mode for editing lisp-like languages.
 ;;; https://github.com/luxbock/evil-cleverparens
