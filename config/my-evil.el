@@ -37,7 +37,8 @@
       "x" 'org-todo
       "y" 'org-todo-yesterday
       "s" 'org-schedule
-      "d" 'org-deadline)))
+      "d" 'org-deadline
+      "r" 'org-refile)))
 
 ;;; evil - The extensible vi layer for Emacs.
 ;;; https://github.com/emacs-evil/evil

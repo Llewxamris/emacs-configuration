@@ -29,8 +29,6 @@
     ;; Enable fast todo selection
     (setq org-use-fast-todo-selection t)
     ;; Define org-capture templates
-    ;; %? - Starting cursor position
-    ;; %U - Insert an inactive timestamp
     (setq org-capture-templates
 	  (quote (("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
 		   "* TODO %^{task-name}
@@ -54,7 +52,13 @@ SCHEDULED: %^{start-datetime}T
 DEADLINE: %^{end-datetime}T
 %?")
 		  ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
-		   "* %^{note-title}\n%?\n%U"))))))
+		   "* %^{note-title}\n%?\n%U"))))
+    ;; Provide refile targets as paths
+    (setq org-refile-use-outline-path nil)
+    ;; Allow refile to create parent nodes
+    (setq org-refile-allow-creating-parent-nodes 'confirm)
+    ;; Set refile target to be all the agenda files
+    (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))))
 
 ;;; evil-org: Supplemental evil-mode keybindings to emacs org-mode
 ;;; https://github.com/Somelauw/evil-org-mode
