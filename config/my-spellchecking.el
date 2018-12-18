@@ -23,9 +23,7 @@
 ;;; flyspell-correct-popup - Correcting words with flyspell via custom interface.
 ;;; https://github.com/d12frosted/flyspell-correct
 (use-package flyspell-correct-popup
-  :ensure flyspell-correct-popup
-  :config
-  (evil-leader/set-key "z" 'flyspell-correct-previous-word-generic))
+  :ensure flyspell-correct-popup)
 
 ;;; auto-dictionaryEmacs: Automatic dictionary switcher for flyspell 
 ;;; https://github.com/nschum/auto-dictionary-mode

@@ -29,7 +29,8 @@
       "b" 'ibuffer
       "a" 'org-agenda
       "c" 'org-capture
-      "e" 'eval-last-sexp)
+      "e" 'eval-last-sexp
+      "z" 'flyspell-correct-previous-word-generic)
     ;; Org-mode <leader> bindings
     (my-leader-def
       :states 'normal
