@@ -31,28 +31,15 @@
     ;; Define org-capture templates
     (setq org-capture-templates
 	  (quote (("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
-		   "* TODO %^{task-name}
-:PROPERTIES:
-:EFFORT: %^{effort|0.5|1|2|3|5|8|13}
-:END:
-SCHEDULED: %^{scheduled}T
-DEADLINE: %^{deadline}T
-%?")
+		   (file "~/doc/org/agenda/capture-templates/task.txt"))
 		  ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
-		   "* RAW %^{task-name}
-%U
-%?")
+		   (file "~/doc/org/agenda/capture-templates/raw-task.txt"))
 		  ("e" "Event" entry (file+headline "~/doc/org/agenda/todo.org" "Calendar")
-		   "* %^{event-name}
-%^{event-datetime}T
-%?")
+		   (file "~/doc/org/agenda/capture-templates/event.txt"))
 		  ("a" "Appointment" entry (file+headline "~/doc/org/agenda/todo.org" "Calendar")
-		   "* APPOINTMENT %^{appointment-name}
-SCHEDULED: %^{start-datetime}T
-DEADLINE: %^{end-datetime}T
-%?")
+		   (file "~/doc/org/agenda/capture-templates/appointment.txt"))
 		  ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
-		   "* %^{note-title}\n%?\n%U"))))
+		   (file "~/doc/org/agenda/capture-templates/note.txt")))))
     ;; Provide refile targets as paths
     (setq org-refile-use-outline-path nil)
     ;; Allow refile to create parent nodes
