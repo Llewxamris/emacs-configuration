@@ -23,7 +23,7 @@
 	  ;; Generic task sequence, including appointment keyword
 	  (quote ((sequence "TODO(t)" "STARTED(s)" "APPOINTMENT(a)" "|" "DONE(d)")
 		  ;; Sequence for blocked tasks
-		  (sequence "RAW WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
+		  (sequence "RAW(-) WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
 		  ;; Sequence for financial tasks
 		  (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)"))))
     ;; Enable fast todo selection
@@ -45,7 +45,25 @@
     ;; Allow refile to create parent nodes
     (setq org-refile-allow-creating-parent-nodes 'confirm)
     ;; Set refile target to be all the agenda files
-    (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))))
+    (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
+    ;; Set custom faces for todo keywords
+    (setq org-todo-keyword-faces
+	  '(("RAW" . (:foreground "red" :weight "bold"))
+	    ("WAITING" . (:foreground "#ff7800" :weight "bold" ))
+	    ("HOLD" . (:foreground "#ff7800" :weight "bold" ))
+	    ("CANCELLED" . (:foreground "red" :weight "bold"))
+	    ("OVERDUE" . (:foreground "red" :weight "bold"))))
+    ;; Exclude the follow tags from being inherited by parents
+    (setq org-tags-exclude-from-inheritance '("project"))
+    ;; Set tags for quick selections
+    (setq org-tag-alist '(("@work" . ?w)
+			  ("@home" . ?h)
+			  ("@chores" . ?c)
+			  ("@programming" . ?p)
+			  ("@finance" . ?f)
+			  ("@family" . ?m)
+			  ("@appointment" . ?a)
+			  ("project" . ?j)))))
 
 ;;; evil-org: Supplemental evil-mode keybindings to emacs org-mode
 ;;; https://github.com/Somelauw/evil-org-mode
