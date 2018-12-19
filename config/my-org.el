@@ -53,17 +53,35 @@
 	    ("HOLD" . (:foreground "#ff7800" :weight "bold" ))
 	    ("CANCELLED" . (:foreground "red" :weight "bold"))
 	    ("OVERDUE" . (:foreground "red" :weight "bold"))))
-    ;; Exclude the follow tags from being inherited by parents
+    ;; Exclude the follow tags from being inherited by children.
+    ;; 1. Sub-tasks for a project do not need to be also tagged as a
+    ;;    project, unless they too have several sub-tasks.
     (setq org-tags-exclude-from-inheritance '("project"))
-    ;; Set tags for quick selections
+
+    ;; Set tags for quick selections. Tags begining with '@' are contexts.
+    ;; Contexts define the "mindset" I associate with each task.
+    ;;
+    ;; This means that the contexts are not just physical locations, but
+    ;; how I represent that location mental. For example, @chores is a mindset
+    ;; I need to get in to do chores that I usually find dull. @chores can be
+    ;; done @home, which combines the mindset I need for dull work with the
+    ;; mindset of being inside the living space of myself and my family.
+    ;;
+    ;; Tags like "project" therefore are not contexts. A project is just a
+    ;; way of organizing work by breaking large goals into smaller, more
+    ;; managable chunks. There is no mindset for doing a project, however
+    ;; a @programming project requires to be in the mental state for
+    ;; programming and problem solving.
     (setq org-tag-alist '(("@work" . ?w)
 			  ("@home" . ?h)
 			  ("@chores" . ?c)
+			  ("@car" . ?C)
 			  ("@programming" . ?p)
 			  ("@finance" . ?f)
 			  ("@family" . ?m)
 			  ("@appointment" . ?a)
-			  ("project" . ?j)))))
+			  ("project" . ?j)
+			  ("@relationship" . ?r)))))
 
 ;;; evil-org: Supplemental evil-mode keybindings to emacs org-mode
 ;;; https://github.com/Somelauw/evil-org-mode
