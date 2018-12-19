@@ -28,18 +28,64 @@
 		  (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)"))))
     ;; Enable fast todo selection
     (setq org-use-fast-todo-selection t)
-    ;; Define org-capture templates
+    ;; Define my org-capture templates. All templates are defined inside
+    ;; external *.txt files to keep this configuration file clean.
+    ;; The goal of each template is to capture down the minimum amount of
+    ;; data required for the item to be actionable (except for RAW).
     (setq org-capture-templates
-	  (quote (("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
-		   (file "~/doc/org/agenda/capture-templates/task.txt"))
-		  ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
-		   (file "~/doc/org/agenda/capture-templates/raw-task.txt"))
-		  ("e" "Event" entry (file+headline "~/doc/org/agenda/todo.org" "Calendar")
-		   (file "~/doc/org/agenda/capture-templates/event.txt"))
-		  ("a" "Appointment" entry (file+headline "~/doc/org/agenda/todo.org" "Calendar")
-		   (file "~/doc/org/agenda/capture-templates/appointment.txt"))
-		  ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
-		   (file "~/doc/org/agenda/capture-templates/note.txt")))))
+	  '(
+	    ;; 1. Task captures an actionable todo item. This means providing
+	    ;;    a proper name, the estimated effort of the todo item,
+	    ;;    and a schedule date and/or deadline date. Tasks should
+	    ;;    also have at least one context tag. Priorities should be
+	    ;;    set later after grooming through tasks.
+	    ;;
+	    ;;    Proper tasks are still put into the inbox, as I do not want
+	    ;;    to fill up my todo list with tasks that I know do not need
+	    ;;    to be completed today.
+	    ("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
+	     (file "~/doc/org/agenda/capture-templates/task.txt"))
+	    ;; 2. Raw task captures a raw task, idea, or note, that required
+	    ;;    refinement before moving out of the inbox. This could be
+	    ;;    anything from a quote I read/heard that needed quick
+	    ;;    capturing, to a project idea, to a meeting I want to have in
+	    ;;    the future. Raw tasks are to never leave the inbox.
+	    ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
+	     (file "~/doc/org/agenda/capture-templates/raw-task.txt"))
+	    ;; 3. Event captures dates for events that are not appointments.
+	    ;;    For example: birthdays, outtings, holidays, etc.
+	    ;;
+	    ;;    Events have a name, at least one context tag, and the
+	    ;;    datetime of the event.
+	    ("e" "Event" entry (file+headline "~/doc/org/agenda/todo.org" "Calendar")
+	     (file "~/doc/org/agenda/capture-templates/event.txt"))
+	    ;; 4. Appointment captures appointments from both work and home.
+	    ;;    An appointment is a timeboxed professional session where
+	    ;;    I must be in a given location from the scheduled time to
+	    ;;    the deadline. This could be used for meetings at work,
+	    ;;    going to the mechanics, going to the doctors, meeting
+	    ;;    for lunch, etc.
+	    ;;
+	    ;;   Appointments have a name, their scheduled (start) and
+	    ;;   deadline (end) datetime, and by default have the @appointment
+	    ;;   tag. An additional tag is prompted for.
+	    ("a" "Appointment" entry (file+headline "~/doc/org/agenda/todo.org" "Calendar")
+	     (file "~/doc/org/agenda/capture-templates/appointment.txt"))
+	    ;; 5. Note captures a basic note. This note has a name, a
+	    ;;    timestamp, and then the content.
+	    ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
+	     (file "~/doc/org/agenda/capture-templates/note.txt"))
+	    ;; 6. Chore captures a new chore. A chore is any sort of dull
+	    ;;    maintenance work that has to be done manually, usually
+	    ;;    cleaning.
+	    ;;
+	    ;;    Chores have a name, a context tag (@chores is inherited),
+	    ;;    a tag showing how often the chore should be repeated, and
+	    ;;    the scheduled datetime. This datetime should repeat
+	    ;;    according to the tag.
+	    ("C" "Chore" entry (file+headline "~/doc/org/agenda/todo.org" "Chores")
+	     (file "~/doc/org/agenda/capture-templates/chore.txt"))))
+
     ;; Provide refile targets as paths
     (setq org-refile-use-outline-path nil)
     ;; Allow refile to create parent nodes
