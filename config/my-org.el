@@ -46,19 +46,42 @@
     (setq org-refile-allow-creating-parent-nodes 'confirm)
     ;; Set refile target to be all the agenda files
     (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
-    ;; Set custom faces for todo keywords
+
+    ;; Set custom faces for state keywords. The faces should represent
+    ;; the emotion the keyword is reflecting, while matching the
+    ;; theme of my setup. Nothing special is set for tasks like TODO,
+    ;; STARTED, and DONE as I feel they work well out of the box.
     (setq org-todo-keyword-faces
-	  '(("RAW" . (:foreground "red" :weight "bold"))
-	    ("WAITING" . (:foreground "#ff7800" :weight "bold" ))
-	    ("HOLD" . (:foreground "#ff7800" :weight "bold" ))
-	    ("CANCELLED" . (:foreground "red" :weight "bold"))
-	    ("OVERDUE" . (:foreground "red" :weight "bold"))))
+	  '(
+	    ;; 1. RAW is set to the org-warning face. RAW should never be used
+	    ;;    outside of my inbox, as it represents an unfinished thought
+	    ;;    or task.
+	    ("RAW" . org-warning)
+	    ;; 2. WAITING & HOLD are set to a bold orange colour. Both states
+	    ;;    represent a task that is not actively being worked on by
+	    ;;    myself, but has not been completed or cancelled. The colour
+	    ;;    is an orange from the colour theme, that evokes pause while
+	    ;;    still catching my eye and alerting me that the given task
+	    ;;    still requires input. This could trigger sending out an
+	    ;;    email to see progress, or evaluating the task and deciding
+	    ;;    to cancel.
+	    ("WAITING" . (:foreground "#ff7800" :weight bold ))
+	    ("HOLD" . (:foreground "#ff7800" :weight bold ))
+	    ;; 3. CANCELLED is set to the org-archived face to signify that
+	    ;; the task no longer needs my attention. 
+	    ("CANCELLED" . org-archived)
+	    ;; 4. OVERDUE is set to a bold red to signify the danger of
+	    ;;    unpaid expenses. I want to feel a wash of fear everytime
+	    ;;    I see that bold red inside my todo list.
+	    ("OVERDUE" . (:foreground "red" :background "lightgrey" :weight ultrabold :underline t))))
+    
+    
     ;; Exclude the follow tags from being inherited by children.
     ;; 1. Sub-tasks for a project do not need to be also tagged as a
     ;;    project, unless they too have several sub-tasks.
     (setq org-tags-exclude-from-inheritance '("project"))
 
-    ;; Set tags for quick selections. Tags begining with '@' are contexts.
+    ;; Set tags for quick selections. Tags beginning with '@' are contexts.
     ;; Contexts define the "mindset" I associate with each task.
     ;;
     ;; This means that the contexts are not just physical locations, but
@@ -69,7 +92,7 @@
     ;;
     ;; Tags like "project" therefore are not contexts. A project is just a
     ;; way of organizing work by breaking large goals into smaller, more
-    ;; managable chunks. There is no mindset for doing a project, however
+    ;; manageable chunks. There is no mindset for doing a project, however
     ;; a @programming project requires to be in the mental state for
     ;; programming and problem solving.
     (setq org-tag-alist '(("@work" . ?w)
@@ -90,12 +113,12 @@
   :after org
   :config
   (progn
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  (add-hook 'evil-org-mode-hook
-            (lambda ()
-              (evil-org-set-key-theme)))
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)))
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (add-hook 'evil-org-mode-hook
+	      (lambda ()
+		(evil-org-set-key-theme)))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys)))
 
 ;;; org-bullets: utf-8 bullets for org-mode
 ;;; https://github.com/sabof/org-bullets
