@@ -23,7 +23,7 @@
 	  ;; Generic task sequence, including appointment keyword
 	  (quote ((sequence "TODO(t)" "STARTED(s)" "APPOINTMENT(a)" "|" "DONE(d)")
 		  ;; Sequence for blocked tasks
-		  (sequence "RAW(-) WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
+		  (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
 		  ;; Sequence for financial tasks
 		  (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)"))))
     ;; Enable fast todo selection
