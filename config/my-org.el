@@ -44,21 +44,21 @@
 	    ;;    to fill up my todo list with tasks that I know do not need
 	    ;;    to be completed today.
 	    ("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
-	     (file "~/doc/org/agenda/capture-templates/task.txt"))
+	     (file "~/.emacs.d/capture-templates/task.txt"))
 	    ;; 2. Raw task captures a raw task, idea, or note, that required
 	    ;;    refinement before moving out of the inbox. This could be
 	    ;;    anything from a quote I read/heard that needed quick
 	    ;;    capturing, to a project idea, to a meeting I want to have in
 	    ;;    the future. Raw tasks are to never leave the inbox.
 	    ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
-	     (file "~/doc/org/agenda/capture-templates/raw-task.txt"))
+	     (file "~/.emacs.d/capture-templates/raw-task.txt"))
 	    ;; 3. Event captures dates for events that are not appointments.
 	    ;;    For example: birthdays, outtings, holidays, etc.
 	    ;;
 	    ;;    Events have a name, at least one context tag, and the
 	    ;;    datetime of the event.
 	    ("e" "Event" entry (file+headline "~/doc/org/agenda/todo.org" "Calendar")
-	     (file "~/doc/org/agenda/capture-templates/event.txt"))
+	     (file "~/.emacs.d/capture-templates/event.txt"))
 	    ;; 4. Appointment captures appointments from both work and home.
 	    ;;    An appointment is a timeboxed professional session where
 	    ;;    I must be in a given location from the scheduled time to
@@ -70,11 +70,11 @@
 	    ;;   deadline (end) datetime, and by default have the @appointment
 	    ;;   tag. An additional tag is prompted for.
 	    ("a" "Appointment" entry (file+headline "~/doc/org/agenda/todo.org" "Calendar")
-	     (file "~/doc/org/agenda/capture-templates/appointment.txt"))
+	     (file "~/.emacs.d/capture-templates/appointment.txt"))
 	    ;; 5. Note captures a basic note. This note has a name, a
 	    ;;    timestamp, and then the content.
 	    ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
-	     (file "~/doc/org/agenda/capture-templates/note.txt"))
+	     (file "~/.emacs.d/capture-templates/note.txt"))
 	    ;; 6. Chore captures a new chore. A chore is any sort of dull
 	    ;;    maintenance work that has to be done manually, usually
 	    ;;    cleaning.
@@ -84,7 +84,7 @@
 	    ;;    the scheduled datetime. This datetime should repeat
 	    ;;    according to the tag.
 	    ("C" "Chore" entry (file+headline "~/doc/org/agenda/todo.org" "Chores")
-	     (file "~/doc/org/agenda/capture-templates/chore.txt"))))
+	     (file "~/.emacs.d/capture-templates/chore.txt"))))
 
     ;; Provide refile targets as paths
     (setq org-refile-use-outline-path nil)

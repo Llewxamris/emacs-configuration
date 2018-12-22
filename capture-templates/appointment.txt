@@ -1,0 +1,4 @@
+* APPOINTMENT %^{appointment-name} :@appointment:%^{@context}G
+  SCHEDULED: %^{start-datetime}T
+  DEADLINE: %^{end-datetime}T
+  %?

@@ -1,0 +1,3 @@
+* %^{event-name} %^{@context}G
+  %^{event-datetime}T
+  %?"
