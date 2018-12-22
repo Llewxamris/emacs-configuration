@@ -40,6 +40,7 @@
       "s" 'org-schedule
       "d" 'org-deadline
       "r" 'org-refile)
+    
     ;; Org-agenda <leader> bindings
     ;; Org-agenda requires redefining some of the global keys to work
     ;; properly. I've only included those global keys that would make
@@ -47,17 +48,13 @@
     (my-leader-def
       :states 'motion
       :keymaps 'org-agenda-mode-map
-      "x" 'org-agenda-todo
-      "y" 'org-agenda-todo-yesterday
       "s" 'org-agenda-schedule
       "d" 'org-agenda-deadline
-      "q" 'delete-window
       "," 'other-window
       "t" 'dired
       "v" 'split-window-right
       "h" 'split-window-below
-      "b" 'ibuffer
-      "c" 'org-capture)))
+      "b" 'ibuffer)))
 
 ;;; evil - The extensible vi layer for Emacs.
 ;;; https://github.com/emacs-evil/evil
