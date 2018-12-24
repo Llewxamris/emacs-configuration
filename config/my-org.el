@@ -21,11 +21,11 @@
     ;; Set keywords and quick access keys
     (setq org-todo-keywords
 	  ;; Generic task sequence, including appointment keyword
-	  (quote ((sequence "TODO(t)" "STARTED(s)" "APPOINTMENT(a)" "|" "DONE(d)")
+	  '((sequence "TODO(t)" "STARTED(s)" "APPOINTMENT(a)" "|" "DONE(d)")
 		  ;; Sequence for blocked tasks
 		  (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
 		  ;; Sequence for financial tasks
-		  (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)"))))
+		  (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
     ;; Enable fast todo selection
     (setq org-use-fast-todo-selection t)
     ;; Define my org-capture templates. All templates are defined inside
@@ -150,7 +150,37 @@
 			  ("@family" . ?m)
 			  ("@appointment" . ?a)
 			  ("project" . ?j)
-			  ("@relationship" . ?r)))))
+			  ("@relationship" . ?r)))
+
+		;; By default, show today and the next two days when opening the agenda.
+		;; When planning ahead, three days is usually good enough to see if I'm
+		;; overworking myself.
+		(setq org-agenda-span 3)
+
+		;; Pushes off the tags if I'm viewing the agenda in a verticle split on the
+		;; laptop. I'd rather see the content of the heading rather than the tags
+		;; associated in most contexts.
+		(setq org-agenda-tags-column -100)
+
+		;; Shows the content of the log in the agenda view. Mostly, this is used
+		;; to see when I clocked into a task.
+		(setq org-agenda-show-log t)
+
+		;; Do not show scheduled/deadlined tasks if the task is in a done state.
+		;; Prevents cluttering with completed tasks,
+		(setq org-agenda-skip-scheduled-if-done t)
+		(setq org-agenda-skip-deadline-if-done t)
+
+		;; Do show the post-scheduled counter if the deadline counter is current
+		;; visible in the agenda.
+		(setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+
+		;; Set the how the org-agenda is displayed (currently, just using the
+		;; default setting.
+		(setq org-agenda-time-grid
+					'((daily today require-timed)
+						(800 1000 1200 1400 1600 1800 2000)
+						"......" "----------------"))))
 
 ;;; evil-org: Supplemental evil-mode keybindings to emacs org-mode
 ;;; https://github.com/Somelauw/evil-org-mode
