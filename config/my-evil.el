@@ -6,9 +6,6 @@
   :ensure t
   :config
   (progn
-    ;; Set <leader> to ","
-    (general-create-definer my-leader-def
-      :prefix ",")
     ;; Global evil keybindings
     (general-define-key
      :states '(normal motion)
@@ -17,8 +14,9 @@
      "C-k" 'evil-window-up
      "C-l" 'evil-window-right)
     ;; Global <leader> bindings
-    (my-leader-def
+    (general-define-key
       :keymaps 'normal
+			:prefix ","
       "w" 'save-buffer
       "q" 'delete-window
       "g" 'dired-jump
@@ -32,8 +30,9 @@
       "e" 'eval-last-sexp
       "z" 'flyspell-correct-previous-word-generic)
     ;; Org-mode <leader> bindings
-    (my-leader-def
+    (general-define-key
       :states 'normal
+			:prefix ","
       :keymaps 'org-mode-map
       "x" 'org-todo
       "y" 'org-todo-yesterday
@@ -45,8 +44,9 @@
     ;; Org-agenda requires redefining some of the global keys to work
     ;; properly. I've only included those global keys that would make
     ;; sense within the context of the agenda.
-    (my-leader-def
+    (general-define-key
       :states 'motion
+			:prefix ","
       :keymaps 'org-agenda-mode-map
       "s" 'org-agenda-schedule
       "d" 'org-agenda-deadline
