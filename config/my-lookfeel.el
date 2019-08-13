@@ -6,17 +6,18 @@
   :ensure linum-relative
   :init
   ;; Always use relative line numbers
+	(setq linum-relative-backend 'display-line-numbers-mode)
   (linum-relative-global-mode 1))
 
 ;;; hydandata-light-theme - Light color theme that is easy on your eyes
 ;;; https://github.com/hydandata/hydandata-light-theme
-(use-package hydandata-light-theme
+(use-package nord-theme
   :ensure t
   :config
   (progn
     ;; Load the theme unless running inside a terminal session
     (unless noninteractive
-      (load-theme 'hydandata-light t))))
+      (load-theme 'nord t))))
 
 ;;; smooth-scrolling - Emacs smooth scrolling package
 ;;; https://github.com/aspiers/smooth-scrolling
@@ -25,9 +26,11 @@
   :init
   (smooth-scrolling-mode 1))
 
-
 ;;; General settings
 (progn
+	;; Required for revert settings in Dired
+	(require 'autorevert)
+
   ;; Disable the intro screen & message
   (setq inhibit-splash-screen t
 	inhibit-startup-echo-area-message t
@@ -113,6 +116,6 @@
   (tool-bar-mode -1)
 
   ;; Set the current font to "Hack" with a size of 10.
-  (add-to-list 'default-frame-alist '(font . "Hack-10")))
+  (add-to-list 'default-frame-alist '(font . "GoMono-10")))
 
 (provide 'my-lookfeel)
