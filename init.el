@@ -16,14 +16,21 @@
 (setq package-enable-at-startup nil)
 
 ;; Define the list of directories to search for local packages/configuration.
-(add-to-list 'load-path (concat user-emacs-directory "config"))
-(add-to-list 'load-path (concat user-emacs-directory "config" "/languages"))
-(add-to-list 'load-path (concat user-emacs-directory "packages"))
+(eval-and-compile
+	(defvar package-dir (expand-file-name "packages" user-emacs-directory)
+		"The packages directory")
+	(defvar config-dir (expand-file-name "config" user-emacs-directory)
+		"The core configuration directory")
+	(defvar language-config-dir (expand-file-name "languages" config-dir)
+		"The language specific configuration directory")
+	(add-to-list 'load-path config-dir)
+	(add-to-list 'load-path language-config-dir)
+	(add-to-list 'load-path package-dir))
 
 ;; Define which archives to use for fetching packages remotely.
 (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
-			 ("org" . "http://orgmode.org/elpa/")
-			 ("gnu" . "http://elpa.gnu.org/packages/")))
+													 ("org" . "http://orgmode.org/elpa/")
+													 ("gnu" . "http://elpa.gnu.org/packages/")))
 
 ;; Auto-download use-package if it isn't already installed.
 (unless (package-installed-p 'use-package)
@@ -45,7 +52,7 @@
 		("9fcac3986e3550baac55dc6175195a4c7537e8aa082043dcbe3f93f548a3a1e0" default)))
  '(package-selected-packages
 	 (quote
-		(smooth-scrolling general elisp-slime-nav elips-slime-nav evil-commentary evil-cleverparens auto-compile go-errcheck slime hydandata-light-theme eziam-theme atom-one-light-theme yasnippets elfeed-org org-bullets evil-org flycheck flyspell-correct-popup markdown-mode auto-dictionary auto-dictionary-mode magit dired-x evil-leader linum-relative evil))))
+		(company-lsp lsp-ui lsp-mode nord-theme smooth-scrolling general elisp-slime-nav elips-slime-nav evil-commentary evil-cleverparens auto-compile go-errcheck slime hydandata-light-theme eziam-theme atom-one-light-theme yasnippets elfeed-org org-bullets evil-org flycheck flyspell-correct-popup markdown-mode auto-dictionary auto-dictionary-mode magit dired-x evil-leader linum-relative evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -55,13 +62,13 @@
 
 ;;; auto-compile: Automatically compile Emacs Lisp libraries
 ;;; https://github.com/emacscollective/auto-compile
-(use-package auto-compile
-  :ensure t
-  :config
-  (progn
-		;; Auto-compile on both loading and saving.
-    (auto-compile-on-load-mode)
-    (auto-compile-on-save-mode)))
+; (use-package auto-compile
+; 	:ensure t
+; 	:config
+; 	(progn
+; 		;; Auto-compile on both loading and saving.
+; 		(auto-compile-on-load-mode)
+; 		(auto-compile-on-save-mode)))
 
 ;;; Define configuration files for other packages and their configuration. All
 ;;; of these packages are local configs. I won't go into detail of what each
@@ -73,7 +80,7 @@
 (require 'my-lookfeel)
 (require 'my-magit)
 (require 'my-spellchecking)
-(require 'my-flycheck)
+(require 'my-code-completion)
 (require 'my-org)
 (require 'my-elfeed)
 (require 'my-autocomplete)
@@ -81,7 +88,7 @@
 ;; Language specific packages
 (require 'my-markdown)
 (require 'my-golang)
-(require 'my-lisp)
+; (require 'my-lisp)
 (require 'my-elisp)
 
 (provide 'init)

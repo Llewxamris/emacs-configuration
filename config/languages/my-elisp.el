@@ -7,11 +7,10 @@
   :config
   (progn
     ;; Hook to Elisp mode
-    (add-hook 'emacs-lisp-mode-hook 'elisp-slime-nav-mode)))
-
-;;; General configuration
-(progn
-  ;; Use <leader>e to evaluate s-expressions
-  (evil-leader/set-key-for-mode 'emacs-lisp-mode "e" 'pp-eval-last-sexp))
+		(add-hook 'emacs-lisp-mode-hook 'elisp-slime-nav-mode)
+		;; Use <leader>e to evaluate s-expressions
+		(general-define-key
+		 :states 'normal
+		 "e" 'pp-eval-last-sexp)))
 
 (provide 'my-elisp)

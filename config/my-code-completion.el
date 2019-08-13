@@ -61,4 +61,4 @@
 		;; characters.
 		(setq company-lsp-enable-recompletion t)))
 
-(provide 'my-flycheck)
+(provide 'my-code-completion)
