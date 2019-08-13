@@ -1,5 +1,6 @@
 ;;;; my-magit.el
 ;;;; Package setup for Magit
+(require 'evil)
 ;;; magit - It's Magit! A Git porcelain inside Emacs
 ;;; https://github.com/magit/magit
 (use-package magit
