@@ -13,27 +13,22 @@
 
 ;;; dired-x
 (use-package dired-x
-  :init
+  :config
   (progn
-    ;; Don't clog the buffer
-    (defun my-dired-up-directory ()
-      "Take dired up one directory, but behave like dired-find-alternate-file"
-      (interactive)
-      (let ((old (current-buffer)))
-	(dired-up-directory)
-	(kill-buffer old)))
     ;; Ranger-like key bindings
-    (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
-    (evil-define-key 'normal dired-mode-map "l" 'dired-find-alternate-file)
-    (evil-define-key 'normal dired-mode-map "o" 'dired-sort-toggle-or-edit)
-    (evil-define-key 'normal dired-mode-map "v" 'dired-toggle-marks)
-    (evil-define-key 'normal dired-mode-map "m" 'dired-mark)
-    (evil-define-key 'normal dired-mode-map "u" 'dired-unmark)
-    (evil-define-key 'normal dired-mode-map "U" 'dired-unmark-all-marks)
-    (evil-define-key 'normal dired-mode-map "c" 'dired-create-directory)
-    (evil-define-key 'normal dired-mode-map "n" 'evil-search-next)
-    (evil-define-key 'normal dired-mode-map "N" 'evil-search-previous)
-    (evil-define-key 'normal dired-mode-map "q" 'kill-this-buffer)
-    (evil-define-key 'normal dired-mode-map "h" 'my-dired-up-directory)))
+		(general-define-key
+		 :states 'normal
+		 :keymaps 'dired-mode-map
+		 "l" 'dired-find-alternate-file
+		 "h" 'my-dired-up-directory
+		 "o" 'dired-sort-toggle-or-edit
+		 "v" 'dired-toggle-marks
+		 "m" 'dired-mark
+		 "u" 'dired-unmark
+		 "U" 'dired-unmark-all-marks
+		 "c" 'dired-create-directory
+		 "n" 'evil-search-next
+		 "N" 'evil-search-previous
+		 "q" 'kill-this-buffer)))
 
 (provide 'my-dired-x)
