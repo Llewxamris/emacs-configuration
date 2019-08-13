@@ -1,134 +1,134 @@
 ;;;; my-ibuffer.el
 ;;;; Package setup for iBuffer
 ;;; This is a total mess. Save me.
+(require 'evil)
+
+(evil-set-initial-state 'ibuffer-mode 'normal)
 (eval-after-load 'ibuffer
-  '(progn
-     (evil-set-initial-state 'ibuffer-mode 'normal)
-     (evil-define-key 'normal ibuffer-mode-map
-       (kbd "j") 'evil-next-line
-       (kbd "k") 'evil-previous-line
-       (kbd "l") 'ibuffer-visit-buffer
-       (kbd "v") 'ibuffer-toggle-marks
-       (kbd "m") 'ibuffer-mark-forward
-       (kbd "u") 'ibuffer-unmark-forward
-       (kbd "=") 'ibuffer-diff-with-file
-       (kbd "J") 'ibuffer-jump-to-buffer
-       (kbd "M-g") 'ibuffer-jump-to-buffer
-       (kbd "M-s a C-s") 'ibuffer-do-isearch
-       (kbd "M-s a M-C-s") 'ibuffer-do-isearch-regexp
-       (kbd "M-s a C-o") 'ibuffer-do-occur
-       (kbd "DEL") 'ibuffer-unmark-backward
-       (kbd "M-DEL") 'ibuffer-unmark-all
-       (kbd "* *") 'ibuffer-unmark-all
-       (kbd "* M") 'ibuffer-mark-by-mode
-       (kbd "* m") 'ibuffer-mark-modified-buffers
-       (kbd "* u") 'ibuffer-mark-unsaved-buffers
-       (kbd "* s") 'ibuffer-mark-special-buffers
-       (kbd "* r") 'ibuffer-mark-read-only-buffers
-       (kbd "* /") 'ibuffer-mark-dired-buffers
-       (kbd "* e") 'ibuffer-mark-dissociated-buffers
-       (kbd "* h") 'ibuffer-mark-help-buffers
-       (kbd "* z") 'ibuffer-mark-compressed-file-buffers
-       (kbd ".") 'ibuffer-mark-old-buffers
+  (progn
+     (general-define-key
+			:states 'normal
+			:keymaps 'ibuffer-mode-map
+      "j" 'evil-next-line
+      "k" 'evil-previous-line
+      "l" 'ibuffer-visit-buffer
+      "v" 'ibuffer-toggle-marks
+      "m" 'ibuffer-mark-forward
+      "u" 'ibuffer-unmark-forward
+      "=" 'ibuffer-diff-with-file
+      "J" 'ibuffer-jump-to-buffer
+      "M-g" 'ibuffer-jump-to-buffer
+      "M-s a C-s" 'ibuffer-do-isearch
+      "M-s a M-C-s" 'ibuffer-do-isearch-regexp
+      "M-s a C-o" 'ibuffer-do-occur
+      "DEL" 'ibuffer-unmark-backward
+      "M-DEL" 'ibuffer-unmark-all
+      "* *" 'ibuffer-unmark-all
+      "* M" 'ibuffer-mark-by-mode
+      "* m" 'ibuffer-mark-modified-buffers
+      "* u" 'ibuffer-mark-unsaved-buffers
+      "* s" 'ibuffer-mark-special-buffers
+      "* r" 'ibuffer-mark-read-only-buffers
+      "* /" 'ibuffer-mark-dired-buffers
+      "* e" 'ibuffer-mark-dissociated-buffers
+      "* h" 'ibuffer-mark-help-buffers
+      "* z" 'ibuffer-mark-compressed-file-buffers
+      "." 'ibuffer-mark-old-buffers
 
-       (kbd "d") 'ibuffer-mark-for-delete
-       (kbd "C-d") 'ibuffer-mark-for-delete-backwards
-       (kbd "k") 'ibuffer-mark-for-delete
-       (kbd "x") 'ibuffer-do-kill-on-deletion-marks
+      "d" 'ibuffer-mark-for-delete
+      "C-d" 'ibuffer-mark-for-delete-backwards
+      "k" 'ibuffer-mark-for-delete
+      "x" 'ibuffer-do-kill-on-deletion-marks
 
-       ;; immediate operations
-       (kbd "n") 'ibuffer-forward-line
-       (kbd "SPC") 'forward-line
-       (kbd "p") 'ibuffer-backward-line
-       (kbd "M-}") 'ibuffer-forward-next-marked
-       (kbd "M-{") 'ibuffer-backwards-next-marked
-       (kbd "g") 'ibuffer-update
-       (kbd ",") 'ibuffer-toggle-sorting-mode
-       (kbd "s i") 'ibuffer-invert-sorting
-       (kbd "s a") 'ibuffer-do-sort-by-alphabetic
-       (kbd "s v") 'ibuffer-do-sort-by-recency
-       (kbd "s s") 'ibuffer-do-sort-by-size
-       (kbd "s f") 'ibuffer-do-sort-by-filename/process
-       (kbd "s m") 'ibuffer-do-sort-by-major-mode
+      ;; immediate operations
+      "n" 'ibuffer-forward-line
+      "SPC" 'forward-line
+      "p" 'ibuffer-backward-line
+      "M-}" 'ibuffer-forward-next-marked
+      "M-{" 'ibuffer-backwards-next-marked
+      "g" 'ibuffer-update
+      "," 'ibuffer-toggle-sorting-mode
+      "s i" 'ibuffer-invert-sorting
+      "s a" 'ibuffer-do-sort-by-alphabetic
+      "s v" 'ibuffer-do-sort-by-recency
+      "s s" 'ibuffer-do-sort-by-size
+      "s f" 'ibuffer-do-sort-by-filename/process
+      "s m" 'ibuffer-do-sort-by-major-mode
 
-       (kbd "/ m") 'ibuffer-filter-by-used-mode
-       (kbd "/ M") 'ibuffer-filter-by-derived-mode
-       (kbd "/ n") 'ibuffer-filter-by-name
-       (kbd "/ c") 'ibuffer-filter-by-content
-       (kbd "/ e") 'ibuffer-filter-by-predicate
-       (kbd "/ f") 'ibuffer-filter-by-filename
-       (kbd "/ >") 'ibuffer-filter-by-size-gt
-       (kbd "/ <") 'ibuffer-filter-by-size-lt
-       (kbd "/ r") 'ibuffer-switch-to-saved-filters
-       (kbd "/ a") 'ibuffer-add-saved-filters
-       (kbd "/ x") 'ibuffer-delete-saved-filters
-       (kbd "/ d") 'ibuffer-decompose-filter
-       (kbd "/ s") 'ibuffer-save-filters
-       (kbd "/ p") 'ibuffer-pop-filter
-       (kbd "/ !") 'ibuffer-negate-filter
-       (kbd "/ t") 'ibuffer-exchange-filters
-       (kbd "/ TAB") 'ibuffer-exchange-filters
-       (kbd "/ o") 'ibuffer-or-filter
-       (kbd "/ g") 'ibuffer-filters-to-filter-group
-       (kbd "/ P") 'ibuffer-pop-filter-group
-       (kbd "/ D") 'ibuffer-decompose-filter-group
-       (kbd "/ /") 'ibuffer-filter-disable
+      "/ m" 'ibuffer-filter-by-used-mode
+      "/ M" 'ibuffer-filter-by-derived-mode
+      "/ n" 'ibuffer-filter-by-name
+      "/ c" 'ibuffer-filter-by-content
+      "/ e" 'ibuffer-filter-by-predicate
+      "/ f" 'ibuffer-filter-by-filename
+      "/ >" 'ibuffer-filter-by-size-gt
+      "/ <" 'ibuffer-filter-by-size-lt
+      "/ r" 'ibuffer-switch-to-saved-filters
+      "/ a" 'ibuffer-add-saved-filters
+      "/ x" 'ibuffer-delete-saved-filters
+      "/ d" 'ibuffer-decompose-filter
+      "/ s" 'ibuffer-save-filters
+      "/ p" 'ibuffer-pop-filter
+      "/ !" 'ibuffer-negate-filter
+      "/ t" 'ibuffer-exchange-filters
+      "/ TAB" 'ibuffer-exchange-filters
+      "/ o" 'ibuffer-or-filter
+      "/ g" 'ibuffer-filters-to-filter-group
+      "/ P" 'ibuffer-pop-filter-group
+      "/ D" 'ibuffer-decompose-filter-group
+      "/ /" 'ibuffer-filter-disable
 
-       (kbd "M-n") 'ibuffer-forward-filter-group
-       "\t" 'ibuffer-forward-filter-group
-       (kbd "M-p") 'ibuffer-backward-filter-group
-       [backtab] 'ibuffer-backward-filter-group
-       (kbd "M-j") 'ibuffer-jump-to-filter-group
-       (kbd "C-k") 'ibuffer-kill-line
-       (kbd "C-y") 'ibuffer-yank
-       (kbd "/ S") 'ibuffer-save-filter-groups
-       (kbd "/ R") 'ibuffer-switch-to-saved-filter-groups
-       (kbd "/ X") 'ibuffer-delete-saved-filter-groups
-       (kbd "/ \\") 'ibuffer-clear-filter-groups
+      "M-n" 'ibuffer-forward-filter-group
+      "\t" 'ibuffer-forward-filter-group
+      "M-p" 'ibuffer-backward-filter-group
+      [backtab] 'ibuffer-backward-filter-group
+      "M-j" 'ibuffer-jump-to-filter-group
+      "C-k" 'ibuffer-kill-line
+      "C-y" 'ibuffer-yank
+      "/ S" 'ibuffer-save-filter-groups
+      "/ R" 'ibuffer-switch-to-saved-filter-groups
+      "/ X" 'ibuffer-delete-saved-filter-groups
+      "/ \\" 'ibuffer-clear-filter-groups
 
-       (kbd "% n") 'ibuffer-mark-by-name-regexp
-       (kbd "% m") 'ibuffer-mark-by-mode-regexp
-       (kbd "% f") 'ibuffer-mark-by-file-name-regexp
+      "% n" 'ibuffer-mark-by-name-regexp
+      "% m" 'ibuffer-mark-by-mode-regexp
+      "% f" 'ibuffer-mark-by-file-name-regexp
 
-       (kbd "C-t") 'ibuffer-visit-tags-table
+      "C-t" 'ibuffer-visit-tags-table
 
-       (kbd "|") 'ibuffer-do-shell-command-pipe
-       (kbd "!") 'ibuffer-do-shell-command-file
-       (kbd "~") 'ibuffer-do-toggle-modified
-       ion
-       (kbd "A") 'ibuffer-do-view
-       (kbd "D") 'ibuffer-do-delete
-       (kbd "E") 'ibuffer-do-eval
-       (kbd "F") 'ibuffer-do-shell-command-file
-       (kbd "I") 'ibuffer-do-query-replace-regexp
-       (kbd "H") 'ibuffer-do-view-other-frame
-       (kbd "N") 'ibuffer-do-shell-command-pipe-replace
-       (kbd "M") 'ibuffer-do-toggle-modified
-       (kbd "O") 'ibuffer-do-occur
-       (kbd "P") 'ibuffer-do-print
-       (kbd "Q") 'ibuffer-do-query-replace
-       (kbd "R") 'ibuffer-do-rename-uniquely
-       (kbd "S") 'ibuffer-do-save
-       (kbd "T") 'ibuffer-do-toggle-read-only
-       (kbd "U") 'ibuffer-do-replace-regexp
-       (kbd "V") 'ibuffer-do-revert
-       (kbd "W") 'ibuffer-do-view-and-eval
-       (kbd "X") 'ibuffer-do-shell-command-pipe
+      "|" 'ibuffer-do-shell-command-pipe
+      "!" 'ibuffer-do-shell-command-file
+      "~" 'ibuffer-do-toggle-modified
+      "A" 'ibuffer-do-view
+      "D" 'ibuffer-do-delete
+      "E" 'ibuffer-do-eval
+      "F" 'ibuffer-do-shell-command-file
+      "I" 'ibuffer-do-query-replace-regexp
+      "H" 'ibuffer-do-view-other-frame
+      "N" 'ibuffer-do-shell-command-pipe-replace
+      "M" 'ibuffer-do-toggle-modified
+      "O" 'ibuffer-do-occur
+      "P" 'ibuffer-do-print
+      "Q" 'ibuffer-do-query-replace
+      "R" 'ibuffer-do-rename-uniquely
+      "S" 'ibuffer-do-save
+      "T" 'ibuffer-do-toggle-read-only
+      "U" 'ibuffer-do-replace-regexp
+      "V" 'ibuffer-do-revert
+      "W" 'ibuffer-do-view-and-eval
+      "X" 'ibuffer-do-shell-command-pipe
 
-       (kbd "w") 'ibuffer-copy-filename-as-kill
+      "w" 'ibuffer-copy-filename-as-kill
 
-       (kbd "e") 'ibuffer-visit-buffer
-       (kbd "f") 'ibuffer-visit-buffer
-       (kbd "C-x C-f") 'ibuffer-find-file
-       (kbd "o") 'ibuffer-visit-buffer-other-window
-       (kbd "C-o") 'ibuffer-visit-buffer-other-window-noselect
-       (kbd "M-o") 'ibuffer-visit-buffer-1-window
-       (kbd "C-x v") 'ibuffer-do-view-horizontally
-       (kbd "C-c C-a") 'ibuffer-auto-mode
-       (kbd "C-x 4 RET") 'ibuffer-visit-buffer-other-window
-       (kbd "C-x 5 RET") 'ibuffer-visit-buffer-other-frame
-       )
-     )
-  )
+      "e" 'ibuffer-visit-buffer
+      "f" 'ibuffer-visit-buffer
+      "C-x C-f" 'ibuffer-find-file
+      "o" 'ibuffer-visit-buffer-other-window
+      "C-o" 'ibuffer-visit-buffer-other-window-noselect
+      "M-o" 'ibuffer-visit-buffer-1-window
+      "C-x v" 'ibuffer-do-view-horizontally
+      "C-c C-a" 'ibuffer-auto-mode
+      "C-x 4 RET" 'ibuffer-visit-buffer-other-window
+      "C-x 5 RET" 'ibuffer-visit-buffer-other-frame)))
 
 (provide 'my-ibuffer)
