@@ -4,3 +4,5 @@ snipptes/
 *~
 server/
 flycheck_init.el
+transient/
+.lsp-session-*
