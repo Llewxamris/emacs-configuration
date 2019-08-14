@@ -13,12 +13,14 @@
 ;;; popop - Visual Popup Interface Library for Emacs
 ;;; https://github.com/auto-complete/popup-el
 (use-package popup
-  :ensure popup
-  :config
-  ;; Navigate through any popup menu using [jk]
-  (evil-define-key 'nil popup-menu-keymap
-    (kbd "j") 'popup-next
-    (kbd "k") 'popup-previous))
+	:ensure popup
+	:config
+	;; Navigate through any popup menu using [jk]
+	(progn
+		(general-define-key
+		 :keymaps 'popup-menu-keymap
+		 "j" 'popup-next
+		 "k" 'popup-previous)))
 
 ;;; flyspell-correct-popup - Correcting words with flyspell via custom interface.
 ;;; https://github.com/d12frosted/flyspell-correct
