@@ -24,7 +24,18 @@
 	:config
 	(progn
 		;; Attempt to find a language server for any programming language mode
-		(add-hook 'prog-mode-hook  #'lsp)))
+		(add-hook 'prog-mode-hook  #'lsp)
+
+		;; Bindings for my most used lsp-mode commands
+		(general-define-key
+		 :states 'normal
+		 :prefix "SPC c"
+		 ;; Format all source code within the active buffer
+		 "f" 'lsp-format-buffer
+		 ;; Organize imports in the active buffer
+		 "o" 'lsp-organize-imports
+		 ;; Rename a symbol accross an entire project
+		 "r" 'lsp-rename)))
 		
 ;;; lsp-ui
 ;;; Higher level UI modules of lsp-mode, like flycheck support and code lenses
@@ -36,7 +47,38 @@
 		;; in a way that I think is useful. The Doc window is close, but small bugs
 		;; within it makes it an eyesore more often than not.
 		(setq lsp-ui-sideline-enable nil)
-		(setq lsp-ui-doc-enable nil)))
+		(setq lsp-ui-doc-enable nil)
+
+		(defun toggle-lsp-ui-doc ()
+			"Toggle the UI Doc"
+			(interactive)
+			(if (lsp-ui-doc--visible-p)
+					(lsp-ui-doc-hide)
+				(lsp-ui-doc-show)))
+
+		(defun toggle-lsp-ui-imenu ()
+			"Toggle the ~lsp-ui~ ~imenu~ buffer."
+			(interactive)
+			(if (get-buffer "*lsp-ui-imenu*")
+					(kill-buffer "*lsp-ui-imenu*")
+				(lsp-ui-imenu)))
+
+		;; Bindings for the "Peek" functionality
+		(general-define-key
+		 :states 'normal
+		 :prefix "SPC p"
+		 "d" 'lsp-ui-peek-find-definitions
+		 "r" 'lsp-ui-peek-find-references)
+
+		;; Bindings to view ~lsp-ui~ content
+		(general-define-key
+		 :states 'normal
+		 :prefix "SPC s"
+		 ;; Shows the Doc window if the Doc window is not already visible
+		 "d" 'toggle-lsp-ui-doc
+		 ;; Create the ~imenu~ buffer is not already available. Kills the buffer
+		 ;; if it is.
+		 "m" 'toggle-lsp-ui-imenu)))
 
 ;;; company-lsp - Company completion backend for lsp-mode
 ;;; https://github.com/tigersoldier/company-lsp
