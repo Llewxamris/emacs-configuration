@@ -62,13 +62,13 @@
 
 ;;; auto-compile: Automatically compile Emacs Lisp libraries
 ;;; https://github.com/emacscollective/auto-compile
-; (use-package auto-compile
-; 	:ensure t
-; 	:config
-; 	(progn
-; 		;; Auto-compile on both loading and saving.
-; 		(auto-compile-on-load-mode)
-; 		(auto-compile-on-save-mode)))
+(use-package auto-compile
+	:ensure t
+	:config
+	(progn
+		;; Auto-compile on both loading and saving.
+		(auto-compile-on-load-mode)
+		(auto-compile-on-save-mode)))
 
 ;;; Define configuration files for other packages and their configuration. All
 ;;; of these packages are local configs. I won't go into detail of what each
