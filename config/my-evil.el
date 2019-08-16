@@ -2,43 +2,62 @@
 ;;;; Package setup for Evil!
 ;;; general - More convenient key definitions in emacs
 ;;; https://github.com/noctuid/general.el
-(use-package general
+ (use-package general
   :ensure t
   :config
   (progn
-    ;; Global evil keybindings
+		;; Generic bindings across all modes
+		;; Window navigation bindings use CTRL + a Vim movement key to
+		;; navigate between window splits
     (general-define-key
      :states '(normal motion)
      "C-h" 'evil-window-left
      "C-j" 'evil-window-bottom
      "C-k" 'evil-window-up
      "C-l" 'evil-window-right)
-    ;; Global <leader> bindings
-    (general-define-key
-      :keymaps 'normal
-			:prefix ","
-      "w" 'save-buffer
-      "q" 'delete-window
-      "g" 'dired-jump
-      "t" 'dired
-      "v" 'split-window-right
-      "h" 'split-window-below
-      "," 'other-window
-      "b" 'ibuffer
-      "a" 'org-agenda
-      "c" 'org-capture
-      "e" 'eval-last-sexp
-      "z" 'flyspell-correct-previous-word-generic)
-    ;; Org-mode <leader> bindings
-    (general-define-key
-      :states 'normal
-			:prefix ","
-      :keymaps 'org-mode-map
-      "x" 'org-todo
-      "y" 'org-todo-yesterday
-      "s" 'org-schedule
-      "d" 'org-deadline
-      "r" 'org-refile)
+
+		;; Describe bindings. Uses SPACE + h(elp) + d(escribe) to run describe
+		;; commands. Mostly useful when working with Elisp, but describing
+		;; functions has been useful in several situations
+		(general-define-key
+		 :states 'normal
+		 :prefix "SPC h d"
+		 "f" 'describe-function
+		 "k" 'describe-key
+		 "m" 'describe-mode
+		 "v" 'describe-variable)
+
+		;; Window manipulation bindings
+		(general-define-key
+		 :states 'normal
+		 :prefix "SPC w"
+		 "c" 'delete-window
+		 "s v" 'split-window-horizontally
+		 "s h" 'split-window-vertically)
+
+		;; File manipulation bindings
+		(general-define-key
+		 :states 'normal
+		 :prefix "SPC f"
+		 "w" 'save-buffer
+		 "r" 'find-file)
+
+		;; Buffer creation bindings. These bindings focus on opening special
+		;; buffers, not on closing/modifying existing ones
+		(general-define-key
+		 :states 'normal
+		 :prefix "SPC b"
+		 "b" 'ibuffer
+		 "d" 'dired
+		 "D" 'dired-jump)
+
+    ;; Obsolete, need to be refactored out
+		(general-define-key
+		 :states 'normal
+		 :prefix "SPC"
+		 "SPC" 'other-window
+		 "e" 'eval-last-sexp
+		 "z" 'flyspell-correct-previous-word-generic)
     
     ;; Org-agenda <leader> bindings
     ;; Org-agenda requires redefining some of the global keys to work

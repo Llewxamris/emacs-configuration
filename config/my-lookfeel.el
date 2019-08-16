@@ -33,6 +33,14 @@
 	(progn
 		(telephone-line-mode 1)))
 
+;;; which-key - Emacs package that displays available keybindings in popup
+;;; https://github.com/justbur/emacs-which-key
+(use-package which-key
+	:ensure t
+	:init
+	(progn
+		(which-key-mode)))
+
 ;;; General settings
 (progn
 	;; Required for revert settings in Dired

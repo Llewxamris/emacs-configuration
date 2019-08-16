@@ -73,9 +73,9 @@
 		;; Bindings to view ~lsp-ui~ content
 		(general-define-key
 		 :states 'normal
-		 :prefix "SPC s"
+		 :prefix "SPC b"
 		 ;; Shows the Doc window if the Doc window is not already visible
-		 "d" 'toggle-lsp-ui-doc
+		 "u" 'toggle-lsp-ui-doc
 		 ;; Create the ~imenu~ buffer is not already available. Kills the buffer
 		 ;; if it is.
 		 "m" 'toggle-lsp-ui-imenu)))

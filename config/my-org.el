@@ -7,6 +7,18 @@
   :commands (org-mode org-capture org-agenda orgtbl-mode)
   :init
   (progn
+
+		(general-define-key
+		 :states 'normal
+		 :prefix "SPC o"
+		 "x" 'org-todo
+		 "y" 'org-todo-yesterday
+		 "s" 'org-schedule
+		 "d" 'org-deadline
+		 "r" 'org-refile
+		 "a" 'org-agenda
+		 "c" 'org-capture)
+
     ;; Auto-enter org-mode on files matching *.org
     (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
     ;; Set the org-agenda to read from the follow directory
