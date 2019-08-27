@@ -6,3 +6,9 @@ server/
 flycheck_init.el
 transient/
 .lsp-session-*
+.last-package-update-day
+config.*
+!config.org
+bookmarks
+request/
+workspace/
