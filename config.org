@@ -1,0 +1,299 @@
+#+TITLE: Maxwell Haley's Emacs Configuration
+#+OPTIONS: toc:4 h:4
+#+STARTUP: showeverything
+
+* Forward
+	My living monolith of a Emacs configuration file. Bred through trial, error, and
+	peeking at the configurations of people far more wise than I.
+	
+	The entire configuration file is written out in Emac's Org Mode. The goal is to 
+	describe and justify my decisions in a way that both:
+	
+	1. Anyone interested in building their own configuration can browse through my
+	own and make informed decisions on what they want to co-opt
+	2. I can figure out /"What the f--- was I thinking."/ in the next few months
+		 
+	I also tried to use some humour to make reading through this YAML file on
+	steroids. I apologize in advance.
+	
+  To start of this configuration, lets define my name and email address before
+	kicking off the package initialization.
+	
+	#+BEGIN_SRC emacs-lisp
+	(setq user-full-name "Maxwell R. Haley")
+	(setq user-mail-address "maxwell.r.haley@gmail.com")
+	(package-initialize)
+	#+END_SRC
+	
+* Preparation & Package Management
+** Custom
+	 Hide away the ~custom~ configurations. I try to avoid using ~custom~ in
+	 general. I find figuring out how to do it manually much more +infuriating+
+	 entertaining.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (setq custom-file (concat user-emacs-directory ".custom.el"))
+		 (load custom-file t)
+	 #+END_SRC
+	 
+** Remote Package Archives
+	 Define what remote archives to use as package repositories. GNU ELPA is the
+	 default package repository for Emacs. It is a solid repository, but limited
+	 in content. MELPA has a much larger selection of modern and up-to-date packages.
+	 
+	 Org is the Org mode repository. 
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
+															("org" . "http://orgmode.org/elpa/")
+															("gnu" . "http://elpa.gnu.org/packages/")))
+	 #+END_SRC
+	 
+** Use Package
+	 /Ensure/ ~use-package~ is always installed alongside this configuration. I /ensure/
+	 to always /ensure/ my packages are available, and then /ensure/ I have the
+	 newest packages available.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (unless (package-installed-p 'use-package)
+			 (package-refresh-contents)
+			 (package-install 'use-package))
+		 (require 'use-package)
+		 (setq use-package-verbose t)
+		 (setq use-package-always-ensure t)
+		 (setq load-prefer-newer t)
+
+		 ;; Automatically update packages as new version come out
+		 (use-package auto-package-update
+			 :config
+			 (setq auto-package-update-delete-old-versions t)
+			 (setq auto-package-update-hide-results t)
+			 (auto-package-update-maybe))
+	 #+END_SRC
+	 
+** Automatically Byte Compile Emacs Lisp Libraries
+	 Byte compiling Emacs Lisp files allows them to load and execute faster. I've
+	 never tested the speed difference of compiled vs. not-compiled, but I assume
+	 the performance increase over time is negated by the amount of time spent setting up
+	 byte compiling.
+	 
+	 #+BEGIN_SRC emacs-lisp
+			(use-package auto-compile
+				:config
+					;; Auto-compile on both loading and saving.
+					(auto-compile-on-load-mode)
+					(auto-compile-on-save-mode))
+	 #+END_SRC
+	
+* Look & Feel
+	#+BEGIN_QUOTE
+	I'm so three thousand and eight. You so two thousand and late.
+	---Stacy Ann "Fergie" Ferguson
+	#+END_QUOTE
+	
+** Emacs Essentials
+	 Disable the startup screen & message.
+
+	 #+BEGIN_SRC emacs-lisp 
+		(setq inhibit-splash-screen t)
+		(setq	inhibit-startup-echo-area-message t)
+		(setq	inhibit-startup-message t)
+	 #+END_SRC
+	
+	 Disable the bell that makes me feel shame every time it lets me know I fumbled a
+	 keystroke. Worse, its almost like hearing the bell guarantees the next
+	 few strokes will also be fumbled resulting in more bells. Disable this
+	 existential horror please.
+
+	 #+BEGIN_SRC emacs-lisp
+	(setq ring-bell-function 'ignore) ; *ding-ding* SHAME. *ding-ding* SHAME.
+	 #+END_SRC
+	
+	 Seeing three bars on a slot machine is good. Seeing three bars on Emacs is bad.
+ 
+	 #+BEGIN_SRC emacs-lisp
+		(menu-bar-mode -1)
+		(scroll-bar-mode -1)
+		(tool-bar-mode -1)
+	 #+END_SRC
+	
+	 Force syntax highlighting for all supported major modes.
+	
+	 #+BEGIN_SRC emacs-lisp
+		(global-font-lock-mode t)
+	 #+END_SRC
+	 
+	 Change the "Yes or No" prompt to just be "y or n".
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (defalias 'yes-or-no-p 'y-or-n-p)
+	 #+END_SRC
+	 
+	 Show keystrokes after 0.1 seconds. Any longer and the panic sets in.
+	 Similarly, I like having which-key around to pat me on the back and tell
+	 me I'm doing okay when I start a motion and forget where to go next.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (setq echo-keystrokes 0.1)
+
+		 (use-package which-key
+			 :hook (after-init . which-key-mode))
+	 #+END_SRC
+	 
+	 Show column numbers on the modeline.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (column-number-mode t)
+	 #+END_SRC
+	 
+	 Automatically decompress files when reading, and then compress again when 
+	 writing.
+	
+	 #+BEGIN_SRC emacs-lisp
+	(auto-compression-mode t)
+	 #+END_SRC
+	 
+** Editor
+*** Character Encoding & General Formatting
+		Set the current font to [[https://blog.golang.org/go-fonts][Go Mono]] with a size of 10.
+		
+		#+BEGIN_SRC emacs-lisp
+			(add-to-list 'default-frame-alist '(font . "GoMono-10"))
+		#+END_SRC
+		
+		Use UTF-8 encoding everywhere. I rarely run Emacs in a terminal, and even then
+		my terminal of choice also supports UTF-8. No reason to not enable.
+	
+		#+BEGIN_SRC emacs-lisp
+			(setq locale-coding-system 'utf-8)
+			(set-terminal-coding-system 'utf-8)
+			(set-keyboard-coding-system 'utf-8)
+			(set-selection-coding-system 'utf-8)
+			(prefer-coding-system 'utf-8)
+		#+END_SRC
+	
+		Always include a trailing newline at the end of a file. As well, disable
+		sentences ending with a double space. I don't think I've ever seen someone
+		do this in real life, and to be frank I don't think I want to meet the people
+		that do.
+	
+		#+BEGIN_SRC emacs-lisp
+			(setq sentence-end-double-space nil)
+			(setq require-final-newline t)
+		#+END_SRC
+		
+		Use spaces instead of tabs.
+		There must be a better way of doing this, /but I sure as hell can't find it!/
+		#+BEGIN_SRC emacs-lisp
+			(setq-default tab-width 2)
+			(setq-default tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80))
+			(setq indent-tabs-mode nil)
+		#+END_SRC
+	
+*** Colour Theme
+		I've become a big fan of the [[https://www.nordtheme.com/][Nord]] theme. Something about its cool
+		colours is very calming, while still being easy on my eyes.
+		
+		#+BEGIN_SRC emacs-lisp
+			(use-package nord-theme
+				:config
+				;; Load the theme unless running inside a terminal session
+				(unless noninteractive
+					(load-theme 'nord t)))
+		#+END_SRC
+
+*** Columns
+		Always show the current line number and column number
+		in the buffer. When both enabled, they appear like this:
+		~~~
+		(line, col)
+		~~~
+	 
+		#+BEGIN_SRC emacs-lisp
+		 (setq line-number-mode t)
+		 (setq column-number-mode t)
+		#+END_SRC
+	 
+		Visually wrap lines when they get too close to the fringe. Adds some curly 
+		arrows to help show which lines are being effected.
+	 
+		#+BEGIN_SRC emacs-lisp
+		 (global-visual-line-mode 1)
+		 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+		#+END_SRC
+
+*** Rows
+		Highlight the row the cursor is currently on.
+		
+		#+BEGIN_SRC emacs-lisp
+			(global-hl-line-mode t)
+		#+END_SRC
+		
+*** Parenthesis
+		Show the matching parenthesis to the one currently covered by the cursor.
+		
+		#+BEGIN_SRC emacs-lisp
+			(show-paren-mode t)
+		#+END_SRC
+		
+*** Doom Modeline
+		A """minimalist""" modeline. It's minimalist, so that justifies satisfying
+		my need for fancy colours and icons everywhere I look so I can keep my ADD
+		rattled brain distracted while the rest of me tries to do real work.
+		
+		#+BEGIN_SRC emacs-lisp
+			(use-package doom-modeline
+				:hook (after-init . doom-modeline-mode))
+
+			(use-package all-the-icons)
+		#+END_SRC
+
+*** Relative Line Numbering
+		I really like Vims relative line number feature. I find it makes taking
+		advantage of motions easier since it removes any sort of mental math. I
+		use the [[https://github.com/coldnew/linum-relative][linum-relative]] package for this.
+		
+		#+BEGIN_SRC emacs-lisp
+			(use-package linum-relative
+				:init
+				;; ~display-line-numbers-mode~ is the faster backend on Emacs 26
+				(setq linum-relative-backend 'diplay-line-numbers-mode)
+				:config
+				(linum-relative-global-mode 1))
+		#+END_SRC
+		
+*** Smooth Scrolling
+		Leaves just a bit of room at the bottom and top of the window when
+		scrolling. Something about it just feels so right. Uses the
+		[[https://github.com/aspiers/smooth-scrolling][smooth-scrolling package]] .		
+		
+		#+BEGIN_SRC emacs-lisp
+			(use-package smooth-scrolling
+				:config
+				(smooth-scrolling-mode 1))
+		#+END_SRC
+
+** Autorevert 
+	 Automatically refresh buffers. That is: If the content of a buffer changes 
+	 (such as a file changing on disk), then redraw the buffer. I also set it
+	 to refresh non-file buffers (such as Dired buffers), and to suppress the
+	 nag.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (use-package autorevert
+			 :init
+			 (setq global-auto-revert-non-file-buffers t)
+			 (setq auto-revert-verbose nil)
+			 :config
+			 (global-auto-revert-mode t))
+	 #+END_SRC
+
+** Winner
+	 Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
+	 accidental destruction the layout of windows and buffers.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (use-package winner
+			 :config
+			 (winner-mode 1))
+	 #+END_SRC 
