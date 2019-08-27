@@ -193,7 +193,35 @@
    #+BEGIN_SRC emacs-lisp
      (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
    #+END_SRC
-   
+	 
+	 I don't want to have my hard drive littered with backups, so I set Emacs to
+	 only keep up to three backup versions. I also don't want to have a nag every
+	 time it wants to delete a backup. I also include version controlled files,
+	 just in case.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq version-control t)
+		 (setq kept-old-versions 3)
+		 (setq delete-old-versions t)
+		 (setq vc-make-backup-files t)
+	 #+END_SRC
+	 
+	 I also want to backup all of the commands I've used, so I can re-invoke them
+   in later sessions. Command history is essential for any command based environment.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (use-package savehist
+			 :init
+			 (setq savehist-file "~/.emacs.d/savehist")
+			 (setq savehist-save-minibuffer-history +1)
+			 (setq savehist-additional-variables
+						 '(kill-ring
+							 search-ring
+							 regexp-search-ring))
+			 :config
+			 (savehist-mode))
+	 #+END_SRC
+
 ** Editor
 *** Character Encoding & General Formatting
 		Set the current font to [[https://blog.golang.org/go-fonts][Go Mono]] with a size of 10.
