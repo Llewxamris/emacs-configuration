@@ -4,7 +4,13 @@
 
 * Forward
 	My living monolith of a Emacs configuration file. Bred through trial, error, and
-	peeking at the configurations of people far more wise than I.
+	peeking at the configurations of people far more wise than I. Here's a list 
+	of some of those configurations I've lifted. Can't let me get away red handed.
+
+	- [[https://github.com/angrybacon/dotemacs][angrybacon/dotemacs]]
+	- [[https://github.com/valignatev/dotfiles][valignatev/dotfiles]]
+	- [[https://github.com/sachac/.emacs.d][sachac/.emacs.d]]
+	- [[https://github.com/wasamasa/dotemacs][wasamasa/dotemacs]]
 	
 	The entire configuration file is written out in Emac's Org Mode. The goal is to 
 	describe and justify my decisions in a way that both:
@@ -14,7 +20,7 @@
 	2. I can figure out /"What the f--- was I thinking."/ in the next few months
 		 
 	I also tried to use some humour to make reading through this YAML file on
-	steroids. I apologize in advance.
+	steroids enjoyable. I apologize in advance.
 	
   To start of this configuration, lets define my name and email address before
 	kicking off the package initialization.
@@ -71,6 +77,23 @@
 			 (auto-package-update-maybe))
 	 #+END_SRC
 	 
+** General
+	 I prefer defining keys using the [[https://github.com/noctuid/general.el][General]] syntactic sugar style. It interops
+	 extremely well with Evil, and makes it absurdly easy to use mnemonic style
+	 motions. To demonstrate, behold my (h)elp (d)escribe something binds!
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (use-package general
+			 :config
+			 (general-define-key
+				:states 'normal
+				:prefix "SPC h d"
+				"f" 'describe-function
+				"k" 'describe-key
+				"m" 'describe-mode
+				"v" 'describe-variable))
+	 #+END_SRC
+
 ** Automatically Byte Compile Emacs Lisp Libraries
 	 Byte compiling Emacs Lisp files allows them to load and execute faster. I've
 	 never tested the speed difference of compiled vs. not-compiled, but I assume
@@ -85,6 +108,16 @@
 					(auto-compile-on-save-mode))
 	 #+END_SRC
 	
+** Reload Configuration
+	 The following function definition allows me to reload my Emacs configuration
+	 on the fly.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (defun max/reload-emacs-configuration ()
+			 (interactive)
+			 (load-file (concat user-emacs-directory "init.el")))
+	 #+END_SRC
+	 
 * Look & Feel
 	#+BEGIN_QUOTE
 	I'm so three thousand and eight. You so two thousand and late.
@@ -153,6 +186,14 @@
 	(auto-compression-mode t)
 	 #+END_SRC
 	 
+** Backups & History
+   Emacs auto-backups files, which is great. But, it dumps them in the current
+   directory, which is terrible. Instead, dump them into ~.emacs.d/~.
+   
+   #+BEGIN_SRC emacs-lisp
+     (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+   #+END_SRC
+   
 ** Editor
 *** Character Encoding & General Formatting
 		Set the current font to [[https://blog.golang.org/go-fonts][Go Mono]] with a size of 10.
@@ -273,6 +314,29 @@
 				(smooth-scrolling-mode 1))
 		#+END_SRC
 
+** Window Manipulation
+	 Navigate between windows using CTRL + Vim movement keys.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states '(normal motion)
+			"C-h" 'evil-window-left
+			"C-j" 'evil-window-bottom
+			"C-k" 'evil-window-up
+			"C-l" 'evil-window-right)
+	 #+END_SRC
+	 
+	 Create vertical and horizontal window splits.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC w"
+			"c" 'delete-window
+			"s v" 'split-window-horizontally
+			"s h" 'split-window-vertically)
+	 #+END_SRC
+
 ** Autorevert 
 	 Automatically refresh buffers. That is: If the content of a buffer changes 
 	 (such as a file changing on disk), then redraw the buffer. I also set it
@@ -288,6 +352,16 @@
 			 (global-auto-revert-mode t))
 	 #+END_SRC
 
+** Autosave
+	 Automatically save buffers when focus changes or frames are deleted. Prevent
+	 sudden crashes or battery deaths from losing data.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (add-hook 'focus-out-hook (lambda () (interactive) (save-some-buffers t)))
+		 (add-hook 'delete-frame-functions (lambda ()
+																				 (interactive) (save-some-buffers t)))
+	 #+END_SRC
+
 ** Winner
 	 Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
 	 accidental destruction the layout of windows and buffers.
@@ -297,3 +371,17 @@
 			 :config
 			 (winner-mode 1))
 	 #+END_SRC 
+** Whitespace 
+	 Highlight rogue whitespace characters so I can snuff them out. Sure I could
+	 have them removed on save or something, but manually taking them out gives
+	 my day a bit more sunshine.
+	 
+	 #+BEGIN_SRC emacs-lisp
+		 (use-package whitespace
+			 :hook
+			 ((prog-mode . whitespace-turn-on)
+				(text-mode . whitespace-turn-on))
+			 :custom
+			 (whitespace-style '(face empty indentation::space tab trailing)))
+	 #+END_SRC   
+	 

@@ -4,36 +4,6 @@
 ;;; https://github.com/noctuid/general.el
  (use-package general
   :ensure t
-  :config
-  (progn
-		;; Generic bindings across all modes
-		;; Window navigation bindings use CTRL + a Vim movement key to
-		;; navigate between window splits
-    (general-define-key
-     :states '(normal motion)
-     "C-h" 'evil-window-left
-     "C-j" 'evil-window-bottom
-     "C-k" 'evil-window-up
-     "C-l" 'evil-window-right)
-
-		;; Describe bindings. Uses SPACE + h(elp) + d(escribe) to run describe
-		;; commands. Mostly useful when working with Elisp, but describing
-		;; functions has been useful in several situations
-		(general-define-key
-		 :states 'normal
-		 :prefix "SPC h d"
-		 "f" 'describe-function
-		 "k" 'describe-key
-		 "m" 'describe-mode
-		 "v" 'describe-variable)
-
-		;; Window manipulation bindings
-		(general-define-key
-		 :states 'normal
-		 :prefix "SPC w"
-		 "c" 'delete-window
-		 "s v" 'split-window-horizontally
-		 "s h" 'split-window-vertically)
 
 		;; File manipulation bindings
 		(general-define-key
@@ -73,7 +43,7 @@
       "t" 'dired
       "v" 'split-window-right
       "h" 'split-window-below
-      "b" 'ibuffer)))
+      "b" 'ibuffer))
 
 ;;; evil - The extensible vi layer for Emacs.
 ;;; https://github.com/emacs-evil/evil
