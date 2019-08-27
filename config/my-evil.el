@@ -4,7 +4,7 @@
 ;;; https://github.com/noctuid/general.el
  (use-package general
   :ensure t
-
+	:config
 		;; File manipulation bindings
 		(general-define-key
 		 :states 'normal
