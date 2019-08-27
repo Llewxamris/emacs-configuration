@@ -240,6 +240,15 @@
 			(set-selection-coding-system 'utf-8)
 			(prefer-coding-system 'utf-8)
 		#+END_SRC
+		
+		To congratulate myself for taking a stand against non-UTF-8 encoding, I will
+		reward myself some pretty symbols.
+
+		#+BEGIN_SRC emacs-lisp
+			(use-package pretty-mode
+				:config
+				(global-pretty-mode t))
+		#+END_SRC
 	
 		Always include a trailing newline at the end of a file. As well, disable
 		sentences ending with a double space. I don't think I've ever seen someone
