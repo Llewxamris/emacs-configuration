@@ -94,6 +94,8 @@
 				"v" 'describe-variable))
 	 #+END_SRC
 
+	 The rest of my keybindings are found in the section [[Keybindings]].
+
 ** Automatically Byte Compile Emacs Lisp Libraries
 	 Byte compiling Emacs Lisp files allows them to load and execute faster. I've
 	 never tested the speed difference of compiled vs. not-compiled, but I assume
@@ -351,29 +353,6 @@
 				(smooth-scrolling-mode 1))
 		#+END_SRC
 
-** Window Manipulation
-	 Navigate between windows using CTRL + Vim movement keys.
-	 
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states '(normal motion)
-			"C-h" 'evil-window-left
-			"C-j" 'evil-window-bottom
-			"C-k" 'evil-window-up
-			"C-l" 'evil-window-right)
-	 #+END_SRC
-	 
-	 Create vertical and horizontal window splits.
-	 
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:prefix "SPC w"
-			"c" 'delete-window
-			"s v" 'split-window-horizontally
-			"s h" 'split-window-vertically)
-	 #+END_SRC
-
 ** Autorevert 
 	 Automatically refresh buffers. That is: If the content of a buffer changes 
 	 (such as a file changing on disk), then redraw the buffer. I also set it
@@ -421,4 +400,46 @@
 			 :custom
 			 (whitespace-style '(face empty indentation::space tab trailing)))
 	 #+END_SRC   
+* Keybindings
+** General Bindings
+
+	 - Space + e(m)acs
+		 - (r)eload :: Reload Emacs configuration
+		 - (q)uit :: Quit Emacs
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states '(normal motion)
+			:prefix "SPC m"
+			"r" 'max/reload-emacs-configuration
+			"q" 'save-buffers-kill-terminal)
+	 #+END_SRC
+** Window Manipulation
+	 Navigate between windows using CTRL + Vim movement keys.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states '(normal motion)
+			"C-h" 'evil-window-left
+			"C-j" 'evil-window-bottom
+			"C-k" 'evil-window-up
+			"C-l" 'evil-window-right)
+	 #+END_SRC
+
+	 Create vertical and horizontal window splits.
+
+	 - Space + (w)indow
+		 - (c)lose :: Close window
+		 - (s)plit
+			 - (v)ertical :: Split the window vertically
+			 - (h)orizontal :: Split the window vertically
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC w"
+			"c" 'delete-window
+			"s v" 'split-window-horizontally
+			"s h" 'split-window-vertically)
+	 #+END_SRC
 	 
