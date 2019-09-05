@@ -409,7 +409,7 @@
 
 	 #+BEGIN_SRC emacs-lisp
 		 (general-define-key
-			:states '(normal motion)
+			:states 'normal
 			:prefix "SPC m"
 			"r" 'max/reload-emacs-configuration
 			"q" 'save-buffers-kill-terminal)
