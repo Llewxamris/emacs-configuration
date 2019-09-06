@@ -60,6 +60,9 @@
 	 to always /ensure/ my packages are available, and then /ensure/ I have the
 	 newest packages available.
 	 
+	 Also included is ~auto-package-update~. It automatically updates packages seven
+	 days after the previous upgrade was ran.
+	 
 	 #+BEGIN_SRC emacs-lisp
 		 (unless (package-installed-p 'use-package)
 			 (package-refresh-contents)
@@ -69,7 +72,6 @@
 		 (setq use-package-always-ensure t)
 		 (setq load-prefer-newer t)
 
-		 ;; Automatically update packages as new version come out
 		 (use-package auto-package-update
 			 :config
 			 (setq auto-package-update-delete-old-versions t)
