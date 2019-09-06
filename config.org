@@ -189,7 +189,7 @@
 		 (column-number-mode t)
 	 #+END_SRC
 	 
-	 Automatically decompress files when reading, and then compress again when 
+	 Automatically decompress archives when reading, and then compress again when 
 	 writing.
 	
 	 #+BEGIN_SRC emacs-lisp
