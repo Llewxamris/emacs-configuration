@@ -108,7 +108,7 @@
 	 Byte compiling Emacs Lisp files allows them to load and execute faster. I've
 	 never tested the speed difference of compiled vs. not-compiled, but I assume
 	 the performance increase over time is negated by the amount of time spent setting up
-	 byte compiling.
+	 my Emacs config.
 	 
 	 #+BEGIN_SRC emacs-lisp
 			(use-package auto-compile
