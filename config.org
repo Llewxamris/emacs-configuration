@@ -83,6 +83,12 @@
 	 I prefer defining keys using the [[https://github.com/noctuid/general.el][General]] syntactic sugar style. It interops
 	 extremely well with Evil, and makes it absurdly easy to use mnemonic style
 	 motions. To demonstrate, behold my (h)elp (d)escribe something binds!
+	  
+	 - Space + (h)elp + (d)escribe
+		 - (f)unction :: Describe a function
+		 - (k)ey :: Describe all functionalities assigned to a key
+		 - (m)ode :: Describe the modes currently active
+		 - (v)ariable :: Describe a variable
 	 
 	 #+BEGIN_SRC emacs-lisp
 		 (use-package general
