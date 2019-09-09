@@ -426,18 +426,54 @@
 
 * Keybindings
 ** General Bindings
-
 	 - Space + e(m)acs
 		 - (r)eload :: Reload Emacs configuration
 		 - (q)uit :: Quit Emacs
+		 - (e)val last s-expression :: Evaluates the Lisp expression before the pointer
+		 - correct (z)ee last word :: Runs flyspell against the incorrect word before the
+					pointer
+		 - (SCP) :: Jump to the next window
 
 	 #+BEGIN_SRC emacs-lisp
 		 (general-define-key
 			:states 'normal
 			:prefix "SPC m"
 			"r" 'max/reload-emacs-configuration
-			"q" 'save-buffers-kill-terminal)
+			"q" 'save-buffers-kill-terminal
+			"e" 'eval-last-sexp
+			"z" 'flyspell-correct-previous
+      "SPC" 'other-window)
 	 #+END_SRC
+
+** File Manipulation
+	 - Space + (f)iles
+		 - (w)rite file :: Save the current buffer to disk
+		 - (r)ead file :: Open a file to a buffer
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC f"
+			"w" 'save-buffer
+			"r" 'find-file)
+	 #+END_SRC
+
+** Buffer Creation
+	 - Space + (b)uffer
+		 - i(b)uffer :: Opens the iBuffer buffer
+		 - (d)ired :: Opens the X-Dired buffer
+		 - (D)ired Jump :: Opens the X-Dired buffer inside the directory of the file current
+										 active in the buffer
+
+		 #+BEGIN_SRC emacs-lisp
+			 (general-define-key
+				:states 'normal
+				:prefix "SPC b"
+				"b" 'ibuffer
+				"d" 'dired
+				"D" 'dired-jump)
+		 #+END_SRC
+
 ** Window Manipulation
 	 Navigate between windows using CTRL + Vim movement keys.
 
