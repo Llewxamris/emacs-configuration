@@ -4,65 +4,65 @@
 
 * Forward
 	My living monolith of a Emacs configuration file. Bred through trial, error, and
-	peeking at the configurations of people far more wise than I. Here's a list 
+	peeking at the configurations of people far more wise than I. Here's a list
 	of some of those configurations I've lifted. Can't let me get away red handed.
 
 	- [[https://github.com/angrybacon/dotemacs][angrybacon/dotemacs]]
 	- [[https://github.com/valignatev/dotfiles][valignatev/dotfiles]]
 	- [[https://github.com/sachac/.emacs.d][sachac/.emacs.d]]
 	- [[https://github.com/wasamasa/dotemacs][wasamasa/dotemacs]]
-	
-	The entire configuration file is written out in Emac's Org Mode. The goal is to 
+
+	The entire configuration file is written out in Emac's Org Mode. The goal is to
 	describe and justify my decisions in a way that both:
-	
+
 	1. Anyone interested in building their own configuration can browse through my
 	own and make informed decisions on what they want to co-opt
 	2. I can figure out /"What the f--- was I thinking."/ in the next few months
-		 
+
 	I also tried to use some humour to make reading through this YAML file on
 	steroids enjoyable. I apologize in advance.
-	
+
   To start of this configuration, lets define my name and email address before
 	kicking off the package initialization.
-	
+
 	#+BEGIN_SRC emacs-lisp
 	(setq user-full-name "Maxwell R. Haley")
 	(setq user-mail-address "maxwell.r.haley@gmail.com")
 	(package-initialize)
 	#+END_SRC
-	
+
 * Preparation & Package Management
 ** Custom
 	 Hide away the ~custom~ configurations. I try to avoid using ~custom~ in
 	 general. I find figuring out how to do it manually much more +infuriating+
 	 entertaining.
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (setq custom-file (concat user-emacs-directory ".custom.el"))
 		 (load custom-file t)
 	 #+END_SRC
-	 
+
 ** Remote Package Archives
 	 Define what remote archives to use as package repositories. GNU ELPA is the
 	 default package repository for Emacs. It is a solid repository, but limited
 	 in content. MELPA has a much larger selection of modern and up-to-date packages.
-	 
-	 Org is the Org mode repository. 
-	 
+
+	 Org is the Org mode repository.
+
 	 #+BEGIN_SRC emacs-lisp
 		 (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
 															("org" . "http://orgmode.org/elpa/")
 															("gnu" . "http://elpa.gnu.org/packages/")))
 	 #+END_SRC
-	 
+
 ** Use Package
 	 /Ensure/ ~use-package~ is always installed alongside this configuration. I /ensure/
 	 to always /ensure/ my packages are available, and then /ensure/ I have the
 	 newest packages available.
-	 
+
 	 Also included is ~auto-package-update~. It automatically updates packages seven
 	 days after the previous upgrade was ran.
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (unless (package-installed-p 'use-package)
 			 (package-refresh-contents)
@@ -78,18 +78,18 @@
 			 (setq auto-package-update-hide-results t)
 			 (auto-package-update-maybe))
 	 #+END_SRC
-	 
+
 ** General
 	 I prefer defining keys using the [[https://github.com/noctuid/general.el][General]] syntactic sugar style. It interops
 	 extremely well with Evil, and makes it absurdly easy to use mnemonic style
 	 motions. To demonstrate, behold my (h)elp (d)escribe something binds!
-	  
+
 	 - Space + (h)elp + (d)escribe
 		 - (f)unction :: Describe a function
 		 - (k)ey :: Describe all functionalities assigned to a key
 		 - (m)ode :: Describe the modes currently active
 		 - (v)ariable :: Describe a variable
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (use-package general
 			 :config
@@ -109,7 +109,7 @@
 	 never tested the speed difference of compiled vs. not-compiled, but I assume
 	 the performance increase over time is negated by the amount of time spent setting up
 	 my Emacs config.
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 			(use-package auto-compile
 				:config
@@ -117,7 +117,7 @@
 					(auto-compile-on-load-mode)
 					(auto-compile-on-save-mode))
 	 #+END_SRC
-	
+
 ** Reload Configuration
 	 The following function definition allows me to reload my Emacs configuration
 	 on the fly.
@@ -127,22 +127,22 @@
 			 (interactive)
 			 (load-file (concat user-emacs-directory "init.el")))
 	 #+END_SRC
-	 
+
 * Look & Feel
 	#+BEGIN_QUOTE
 	I'm so three thousand and eight. You so two thousand and late.
 	---Stacy Ann "Fergie" Ferguson
 	#+END_QUOTE
-	
+
 ** Emacs Essentials
 	 Disable the startup screen & message.
 
-	 #+BEGIN_SRC emacs-lisp 
+	 #+BEGIN_SRC emacs-lisp
 		(setq inhibit-splash-screen t)
 		(setq	inhibit-startup-echo-area-message t)
 		(setq	inhibit-startup-message t)
 	 #+END_SRC
-	
+
 	 Disable the bell that makes me feel shame every time it lets me know I fumbled a
 	 keystroke. Worse, its almost like hearing the bell guarantees the next
 	 few strokes will also be fumbled resulting in more bells. Disable this
@@ -151,59 +151,59 @@
 	 #+BEGIN_SRC emacs-lisp
 	(setq ring-bell-function 'ignore) ; *ding-ding* SHAME. *ding-ding* SHAME.
 	 #+END_SRC
-	
+
 	 Seeing three bars on a slot machine is good. Seeing three bars on Emacs is bad.
- 
+
 	 #+BEGIN_SRC emacs-lisp
 		(menu-bar-mode -1)
 		(scroll-bar-mode -1)
 		(tool-bar-mode -1)
 	 #+END_SRC
-	
+
 	 Force syntax highlighting for all supported major modes.
-	
+
 	 #+BEGIN_SRC emacs-lisp
 		(global-font-lock-mode t)
 	 #+END_SRC
-	 
+
 	 Change the "Yes or No" prompt to just be "y or n".
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (defalias 'yes-or-no-p 'y-or-n-p)
 	 #+END_SRC
-	 
+
 	 Show keystrokes after 0.1 seconds. Any longer and the panic sets in.
 	 Similarly, I like having which-key around to pat me on the back and tell
 	 me I'm doing okay when I start a motion and forget where to go next.
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (setq echo-keystrokes 0.1)
 
 		 (use-package which-key
 			 :hook (after-init . which-key-mode))
 	 #+END_SRC
-	 
+
 	 Show column numbers on the modeline.
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (column-number-mode t)
 	 #+END_SRC
-	 
-	 Automatically decompress archives when reading, and then compress again when 
+
+	 Automatically decompress archives when reading, and then compress again when
 	 writing.
-	
+
 	 #+BEGIN_SRC emacs-lisp
 	(auto-compression-mode t)
 	 #+END_SRC
-	 
+
 ** Backups & History
    Emacs auto-backups files, which is great. But, it dumps them in the current
    directory, which is terrible. Instead, dump them into ~.emacs.d/~.
-   
+
    #+BEGIN_SRC emacs-lisp
      (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
    #+END_SRC
-	 
+
 	 I don't want to have my hard drive littered with backups, so I set Emacs to
 	 only keep up to three backup versions. I also don't want to have a nag every
 	 time it wants to delete a backup. I also include version controlled files,
@@ -215,10 +215,10 @@
 		 (setq delete-old-versions t)
 		 (setq vc-make-backup-files t)
 	 #+END_SRC
-	 
+
 	 I also want to backup all of the commands I've used, so I can re-invoke them
    in later sessions. Command history is essential for any command based environment.
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (use-package savehist
 			 :init
@@ -235,14 +235,14 @@
 ** Editor
 *** Character Encoding & General Formatting
 		Set the current font to [[https://blog.golang.org/go-fonts][Go Mono]] with a size of 10.
-		
+
 		#+BEGIN_SRC emacs-lisp
-			(add-to-list 'default-frame-alist '(font . "GoMono-10"))
+			(add-to-list 'default-frame-alist '(font . "GoMono-12"))
 		#+END_SRC
-		
+
 		Use UTF-8 encoding everywhere. I rarely run Emacs in a terminal, and even then
 		my terminal of choice also supports UTF-8. No reason to not enable.
-	
+
 		#+BEGIN_SRC emacs-lisp
 			(setq locale-coding-system 'utf-8)
 			(set-terminal-coding-system 'utf-8)
@@ -250,7 +250,7 @@
 			(set-selection-coding-system 'utf-8)
 			(prefer-coding-system 'utf-8)
 		#+END_SRC
-		
+
 		To congratulate myself for taking a stand against non-UTF-8 encoding, I will
 		reward myself some pretty symbols.
 
@@ -259,17 +259,17 @@
 				:config
 				(global-pretty-mode t))
 		#+END_SRC
-	
+
 		Always include a trailing newline at the end of a file. As well, disable
 		sentences ending with a double space. I don't think I've ever seen someone
 		do this in real life, and to be frank I don't think I want to meet the people
 		that do.
-	
+
 		#+BEGIN_SRC emacs-lisp
 			(setq sentence-end-double-space nil)
 			(setq require-final-newline t)
 		#+END_SRC
-		
+
 		Use spaces instead of tabs.
 		There must be a better way of doing this, /but I sure as hell can't find it!/
 		#+BEGIN_SRC emacs-lisp
@@ -277,11 +277,11 @@
 			(setq-default tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80))
 			(setq indent-tabs-mode nil)
 		#+END_SRC
-	
+
 *** Colour Theme
 		I've become a big fan of the [[https://www.nordtheme.com/][Nord]] theme. Something about its cool
 		colours is very calming, while still being easy on my eyes.
-		
+
 		#+BEGIN_SRC emacs-lisp
 			(use-package nord-theme
 				:config
@@ -296,15 +296,15 @@
 		~~~
 		(line, col)
 		~~~
-	 
+
 		#+BEGIN_SRC emacs-lisp
 		 (setq line-number-mode t)
 		 (setq column-number-mode t)
 		#+END_SRC
-	 
-		Visually wrap lines when they get too close to the fringe. Adds some curly 
+
+		Visually wrap lines when they get too close to the fringe. Adds some curly
 		arrows to help show which lines are being effected.
-	 
+
 		#+BEGIN_SRC emacs-lisp
 		 (global-visual-line-mode 1)
 		 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
@@ -312,23 +312,23 @@
 
 *** Rows
 		Highlight the row the cursor is currently on.
-		
+
 		#+BEGIN_SRC emacs-lisp
 			(global-hl-line-mode t)
 		#+END_SRC
-		
+
 *** Parenthesis
 		Show the matching parenthesis to the one currently covered by the cursor.
-		
+
 		#+BEGIN_SRC emacs-lisp
 			(show-paren-mode t)
 		#+END_SRC
-		
+
 *** Doom Modeline
 		A """minimalist""" modeline. It's minimalist, so that justifies satisfying
 		my need for fancy colours and icons everywhere I look so I can keep my ADD
 		rattled brain distracted while the rest of me tries to do real work.
-		
+
 		#+BEGIN_SRC emacs-lisp
 			(use-package doom-modeline
 				:hook (after-init . doom-modeline-mode))
@@ -340,7 +340,7 @@
 		I really like Vims relative line number feature. I find it makes taking
 		advantage of motions easier since it removes any sort of mental math. I
 		use the [[https://github.com/coldnew/linum-relative][linum-relative]] package for this.
-		
+
 		#+BEGIN_SRC emacs-lisp
 			(use-package linum-relative
 				:init
@@ -349,24 +349,24 @@
 				:config
 				(linum-relative-global-mode 1))
 		#+END_SRC
-		
+
 *** Smooth Scrolling
 		Leaves just a bit of room at the bottom and top of the window when
 		scrolling. Something about it just feels so right. Uses the
-		[[https://github.com/aspiers/smooth-scrolling][smooth-scrolling package]] .		
-		
+		[[https://github.com/aspiers/smooth-scrolling][smooth-scrolling package]] .
+
 		#+BEGIN_SRC emacs-lisp
 			(use-package smooth-scrolling
 				:config
 				(smooth-scrolling-mode 1))
 		#+END_SRC
 
-** Autorevert 
-	 Automatically refresh buffers. That is: If the content of a buffer changes 
+** Autorevert
+	 Automatically refresh buffers. That is: If the content of a buffer changes
 	 (such as a file changing on disk), then redraw the buffer. I also set it
 	 to refresh non-file buffers (such as Dired buffers), and to suppress the
 	 nag.
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (use-package autorevert
 			 :init
@@ -379,7 +379,7 @@
 ** Autosave
 	 Automatically save buffers when focus changes or frames are deleted. Prevent
 	 sudden crashes or battery deaths from losing data.
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (add-hook 'focus-out-hook (lambda () (interactive) (save-some-buffers t)))
 		 (add-hook 'delete-frame-functions (lambda ()
@@ -389,25 +389,41 @@
 ** Winner
 	 Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
 	 accidental destruction the layout of windows and buffers.
-	 
+
 	 #+BEGIN_SRC emacs-lisp
 		 (use-package winner
 			 :config
 			 (winner-mode 1))
-	 #+END_SRC 
-** Whitespace 
-	 Highlight rogue whitespace characters so I can snuff them out. Sure I could
-	 have them removed on save or something, but manually taking them out gives
-	 my day a bit more sunshine.
-	 
-	 #+BEGIN_SRC emacs-lisp
-		 (use-package whitespace
-			 :hook
-			 ((prog-mode . whitespace-turn-on)
-				(text-mode . whitespace-turn-on))
-			 :custom
-			 (whitespace-style '(face empty indentation::space tab trailing)))
-	 #+END_SRC   
+	 #+END_SRC
+
+* Evil Mode
+	Vim has the superior input style. There. I said it. Modal-based bindings flow so much
+  better for me, both in thinking and in executing. Using Emacs native modifier bindings
+  feels incredibly restrictive in comparison. My left hand needs to positioned to always
+  be able to hold down Control, Alt, or Meta. Making my pinky the main work-horse of
+  my typing, to me, feels like a terrible mistake. On the other hand, modal style editing
+	lets me use my fingers equally. Even when I need to use some sort of modifier key (mostly
+  the space bar), it ends up being my thumb doing the work. My thumb can withstand the
+  brute force of slamming it down in frustration during a heated moment. My pinky is
+  barely even an appendage.
+
+	Evil mode gives me Vim-like keybindings without having to invest in any sort of 
+  remapping. I, of course, still add my own mappings and remappings. Not because Vim
+  lacks anything, but entirely due to personal preference. Without Evil, I don't think
+  I could see myself ever using Emacs seriously.
+
+	#+BEGIN_SRC emacs-lisp
+		(use-package evil
+			:config
+			(evil-mode 1))
+	(use-package evil-commentary
+			:ensure t
+			:config
+			(progn
+				;; Enable by default
+				(evil-commentary-mode)))
+  #+END_SRC
+
 * Keybindings
 ** General Bindings
 
@@ -450,4 +466,3 @@
 			"s v" 'split-window-horizontally
 			"s h" 'split-window-vertically)
 	 #+END_SRC
-	 
