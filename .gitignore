@@ -12,3 +12,7 @@ config.*
 bookmarks
 request/
 workspace/
+**/\#*\#
+.cache/
+savehist
+session.*
