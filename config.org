@@ -424,6 +424,19 @@
 				(evil-commentary-mode)))
   #+END_SRC
 
+* Org-mode
+	Org-mode was the killer feature that got me to try out Emacs to begin with,
+	and honestly it's probably the main reason I keep using Emacs.
+
+	I have tried many solutions to low tech or plain text note taking and
+	productivity tools, but until org-mode I was constantly disappointed.
+	Todo.txt, Markdown, XML with custom schemas, and Bullet Journals.
+	Bullet Journals was the closest to a perfect solution, but my natural
+  tendency to forget my journal at home lead to me dropping it as well.
+
+	Combining org-mode with Orgzly and Syncthing has become my perfect
+	organization, productivity, and note taking stack.
+
 * Keybindings
 ** General Bindings
 	 - Space + e(m)acs
