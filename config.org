@@ -444,6 +444,26 @@
 			:mode ("\\.org$" . org-mode))
 	#+END_SRC
 
+	The location of my Org files differs depending on what machine I am on. On my
+	personal machine, the directory is ~/home/max/doc/org/~. It is synced to
+  Nextcloud as a backup solution, and synced to my mobile phone with Syncthing.
+  On my work machine, it is under ~F:\org\~. This drive is a network drive. Not
+	really a backup, but better than only keeping it local.
+
+	#+BEGIN_SRC emacs-lisp
+		(defvar org-base-dir)
+
+		(if (eq system-type 'gnu/linux)
+				;; linux
+				(setq org-base-dir "/home/max/doc/org")
+			;; windows
+			(setq org-base-dir "f:/org"))
+
+		(setq org-directory org-base-dir)
+		(setq org-agenda-files (list (concat org-directory "/agenda")))
+		(setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
+	#+END_SRC
+
 * Keybindings
 ** General Bindings
 	 - Space + e(m)acs
