@@ -437,6 +437,13 @@
 	Combining org-mode with Orgzly and Syncthing has become my perfect
 	organization, productivity, and note taking stack.
 
+	#+BEGIN_SRC emacs-lisp
+		(use-package org
+			:ensure org
+			:commands (org-mode org-capture org-agenda orgtbl-mode)
+			:mode ("\\.org$" . org-mode))
+	#+END_SRC
+
 * Keybindings
 ** General Bindings
 	 - Space + e(m)acs
