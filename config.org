@@ -502,3 +502,28 @@
 			"s v" 'split-window-horizontally
 			"s h" 'split-window-vertically)
 	 #+END_SRC
+
+** Org-mode Bindings
+
+	 - Space + (o)rg-mode
+		 - (a)genda :: Open the org-mode agenda
+		 - (c)apture :: Capture an entry on the fly
+		 - (d)eadline :: Change the entries deadline
+		 - (r)efile :: Refile the entry
+		 - (s)chedule :: Change the entries scheduled time
+		 - che(x)k :: Change the todo keyword
+		 - check (y)esterday :: Change the todo keyword, but mark the day completed
+	 as yesterday
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC o"
+			"x" 'org-todo
+			"y" 'org-todo-yesterday
+			"s" 'org-schedule
+			"d" 'org-deadline
+			"r" 'org-refile
+			"a" 'org-agenda
+			"c" 'org-capture)
+	 #+END_SRC
