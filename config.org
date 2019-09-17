@@ -464,6 +464,12 @@
 		(setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
 	#+END_SRC
 
+	Automatically add a timestamp once a task is set to done.
+
+	#+BEGIN_SRC emacs-lisp
+		(setq org-log-done 'time)
+	#+END_SRC
+
 * Keybindings
 ** General Bindings
 	 - Space + e(m)acs
