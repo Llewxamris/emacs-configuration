@@ -478,6 +478,60 @@
 		(setq org-use-fast-todo-selection t)
 	#+END_SRC
 
+** Keywords
+	 I keep three sequences for todo keywords. The task sequence, the blocked
+	 sequence, and the financial sequence. The task sequence is for tasks
+	 that are ongoing and not impeded. The blocked sequence are for tasks that I
+	 cannot actively work on. The financial sequence is for not forgetting to
+	 pay my phone bill again.
+
+	 The ~RAW~ state is for tasks that have been captured, but haven't yet been
+	 fleshed out. Maybe the task is just an idea, or it needs more information
+	 before it's actionable.
+
+	 The ~WAITING~, ~HOLD~, ~CANCELLED~, and ~OVERDUE~ state leave a timestamp
+	 and a require a comment whenever it is switched too. I use to document why
+	 a task has reached this (usually negative) state.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-todo-keywords
+					 '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+						 (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
+						 (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
+	 #+END_SRC
+
+	 I believe the keyword faces should represent the emotion I want the keyword
+	 to evoke. Some of these work out of the box, but others require some
+	 tweaking.
+
+	 ~RAW~ is set to the org-warning face. ~RAW~ should never be used outside of
+	 my inbox, as it represents an unfinished thought or task.
+
+	 ~WAITING~ & ~HOLD~ are set to a bold orange colour. Both states represent a
+	 task that is not actively being worked on by myself, but has not been
+	 completed or cancelled. Causes pause while still catching my eye and
+	 alerting me that the given task still requires input. This could trigger
+	 sending out an email to see progress, or evaluating the task and deciding to
+	 cancel.
+
+	 ~CANCELLED~ is set to the org-archived face. It is subdued and lets me know
+	 the task no longer needs my attention.
+
+	 ~OVERDUE~ is set to a bold red to signify the danger of unpaid expenses. I
+	 want to feel a wash of fear every time see that bold red inside my todo list.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-todo-keyword-faces
+					 '(("RAW" . org-warning)
+						 ("WAITING" . (:foreground "#ff7800" :weight bold ))
+						 ("HOLD" . (:foreground "#ff7800" :weight bold ))
+						 ("CANCELLED" . org-archived)
+						 ("OVERDUE" . (:foreground "red"
+																			 :background "lightgrey"
+																			 :weight ultrabold
+																			 :underline t))))
+	 #+END_SRC
+
 * Keybindings
 ** General Bindings
 	 - Space + e(m)acs
