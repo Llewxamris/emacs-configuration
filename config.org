@@ -444,6 +444,7 @@
 			:mode ("\\.org$" . org-mode))
 	#+END_SRC
 
+** General Settings
 	The location of my Org files differs depending on what machine I am on. On my
 	personal machine, the directory is ~/home/max/doc/org/~. It is synced to
   Nextcloud as a backup solution, and synced to my mobile phone with Syncthing.
