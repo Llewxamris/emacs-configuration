@@ -478,6 +478,11 @@
 		(setq org-use-fast-todo-selection t)
 	#+END_SRC
 
+  Give the ellipsis at the end of collapsed headlines some breathing room.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq org-ellipsis " ... ")
+  #+END_SRC
 ** Keywords
 	 I keep three sequences for todo keywords. The task sequence, the blocked
 	 sequence, and the financial sequence. The task sequence is for tasks
