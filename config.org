@@ -564,6 +564,18 @@ a
 												((nil (:inherit shadow :strike-through t)))))
 	#+END_SRC
 
+** Meta & Block Sections
+	 Make the document title larger like a proper title should be.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (custom-set-faces '(org-document-title ((nil (:height 1.5 :weight bold)))))
+	 #+END_SRC
+
+	 Shrinking the meta lines makes the easier to scan over.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (custom-set-faces '(org-meta-line ((nil (:height 0.65 :slant italic)))))
+	 #+END_SRC
 * Keybindings
 ** General Bindings
 	 - Space + e(m)acs
