@@ -554,7 +554,16 @@ a
 		 '(org-level-3 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil))))
 		 '(org-level-4 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil)))))
 	#+END_SRC
-	
+
+	Strike-through any "/done/" state headlines and shadow the headline text.
+
+	#+BEGIN_SRC emacs-lisp
+		;; Requires org-fonitfy-done-headline to be non-nil
+		(setq org-fontify-done-headline t)
+		(custom-set-faces '(org-headline-done
+												((nil (:inherit shadow :strike-through t)))))
+	#+END_SRC
+
 * Keybindings
 ** General Bindings
 	 - Space + e(m)acs
