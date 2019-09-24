@@ -478,11 +478,6 @@
 		(setq org-use-fast-todo-selection t)
 	#+END_SRC
 
-  Give the ellipsis at the end of collapsed headlines some breathing room.
-
-  #+BEGIN_SRC emacs-lisp
-    (setq org-ellipsis " ... ")
-  #+END_SRC
 ** Keywords
 	 I keep three sequences for todo keywords. The task sequence, the blocked
 	 sequence, and the financial sequence. The task sequence is for tasks
@@ -541,6 +536,25 @@
                                        :underline t))))
 	 #+END_SRC
 
+** Headlines
+  Give the ellipsis at the end of collapsed headlines some breathing room.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq org-ellipsis " ... ")
+  #+END_SRC
+	
+	Increase headline font size based on the headline level. Going from level 1
+	(largest) to level 3 (smallest), and staying the same size from there on
+	out. Any smaller and it becomes hard to read.
+	
+	#+BEGIN_SRC emacs-lisp
+		(custom-set-faces
+		 '(org-level-1 ((nil (:weight bold :height 1.25 :foreground "#88c0d0"))))
+		 '(org-level-2 ((nil (:weight bold :height 1.1 :foreground "#88c0d0" :inherit nil))))
+		 '(org-level-3 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil))))
+		 '(org-level-4 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil)))))
+	#+END_SRC
+	
 * Keybindings
 ** General Bindings
 	 - Space + e(m)acs
