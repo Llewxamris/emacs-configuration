@@ -521,19 +521,19 @@
 	 want to feel a wash of fear every time see that bold red inside my todo list.
 
 	 #+BEGIN_SRC emacs-lisp
-     (setq org-todo-keyword-faces
-           '(("TODO" . (:foreground "#ebcb8b" :weight bold :underline t))
-             ("STARTED" . (:foreground "#ebcb8b" :weight bold :underline t))
-             ("RAW" . (:foreground "#ebcb8b" :weight bold :slant italic :underline t))
-             ("WAITING" . (:foreground "#ff7800" :weight bold :underline t))
-             ("HOLD" . (:foreground "#ff7800" :weight bold :underline t))
-             ("EXPENSE" . (:foreground "#ebcb8b" :weight bold :underline t))
-             ("DONE" . (:foreground "#a3be8c" :weight bold :underline t))
-             ("CANCELLED" . (:inherit shadow :underline t))
-             ("OVERDUE" . (:foreground "red"
-                                       :background "lightgrey"
-                                       :weight ultrabold
-                                       :underline t))))
+		 (setq org-todo-keyword-faces
+					 '(("TODO" . (:foreground "#ebcb8b" :weight bold :underline t))
+						 ("STARTED" . (:foreground "#ebcb8b" :weight bold :underline t))
+						 ("RAW" . (:foreground "#ebcb8b" :weight bold :slant italic :underline t))
+						 ("WAITING" . (:foreground "#ff7800" :weight bold :underline t))
+						 ("HOLD" . (:foreground "#ff7800" :weight bold :underline t))
+						 ("EXPENSE" . (:foreground "#ebcb8b" :weight bold :underline t))
+						 ("DONE" . (:foreground "#a3be8c" :weight bold :underline t))
+						 ("CANCELLED" . (:inherit shadow :underline t))
+						 ("OVERDUE" . (:foreground "red"
+																			 :background "lightgrey"
+																			 :weight ultrabold
+																			 :underline t))))
 	 #+END_SRC
 
 ** Headlines
