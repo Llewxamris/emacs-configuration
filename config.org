@@ -536,6 +536,24 @@ a
 																			 :underline t))))
 	 #+END_SRC
 
+** Tags
+	 I use tags to help prioritise my work. I use the Eisenhower matrix to
+	 prioritise my work. Each task is prioritised as either important or not
+	 important, and urgent or not urgent. Priority is assigned then from where
+	 on the matrix the task falls:
+
+	 1. Important & Urgent (Do ASAP)
+	 2. Important & Not Urgent (Schedule)
+	 3. Not Important & Urgent (Delegate if possible)
+	 4. Not Important & Not Urgent (Do it later)
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-tag-alist '(("important" . ?i)
+													 ("urgent" . ?u)
+													 ("!important" . ?I)
+													 ("!urgent" . ?U)))
+	 #+END_SRC
+
 ** Capture
 	 Org-capture is a fantastic feature I wish I used more often. Most of the time
 	 when capturing would be useful I'm away from my laptop. I use Orgzly's quick
