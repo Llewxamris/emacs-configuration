@@ -536,6 +536,53 @@ a
 																			 :underline t))))
 	 #+END_SRC
 
+** Capture
+	 Org-capture is a fantastic feature I wish I used more often. Most of the time
+	 when capturing would be useful I'm away from my laptop. I use Orgzly's quick
+	 note feature to accomplish a similar result, but the options for /how/ to
+	 capture the information is far more limited than org-capture proper.
+
+	 That being said, setting up capture templates for my work machine would
+	 probably be a blessing. I'm on that thing 7.5 hours a day.
+
+	 All templates are defined externally in ~*.txt~ files to keep this
+	 configuration file clean. The goal of each template is to capture the minimum
+	 amount of information required for the item to be actionable (excluding the
+	 ~RAW~ capture). These are my templates:
+
+	 - Task :: An actionable todo item with a proper name, estimate, some sort of
+						date, context tag, and priority tags. They are placed into the
+						general task bucket in my main org file
+	 - Raw task :: An idea, task, or note that requires refinement. Could be a
+								passing idea, a reminder, a quote, etc. Raw tasks are to never
+								leave the my inbox.
+	 - Note :: A name, timestamp, content. Just a note.
+
+	#+BEGIN_SRC emacs-lisp
+		(setq org-capture-templates
+					'(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
+						 (file "~/.emacs.d/capture-templates/task.txt"))
+						("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
+						 (file "~/.emacs.d/capture-templates/raw-task.txt"))
+						("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
+						 (file "~/.emacs.d/capture-templates/note.txt"))))
+	#+END_SRC
+
+** Refile
+	 Pick refile targets using paths. This works nicely with how I name "bucket"
+	 headlines for storing like tasks/notes.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-refile-use-outline-path t)
+	 #+END_SRC
+
+	 The refile targets generated are based off of my agenda files, and only
+	 goes down three levels.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
+	 #+END_SRC
+
 ** Headlines
   Give the ellipsis at the end of collapsed headlines some breathing room.
 
