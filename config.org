@@ -819,6 +819,33 @@ a
 			"." 'org-time-stamp)
 	 #+END_SRC
 
+*** Tree Manipulation
+		#+BEGIN_SRC emacs-lisp
+			(general-define-key
+			 :states 'normal
+			 :keymaps 'org-mode-map
+			 :prefix "SPC m S"
+			 "h" 'org-promote-subtree
+			 "j" 'org-move-subtree-up
+			 "k" 'org-move-subtree-down
+			 "l" 'org-demote-subtree)
+	 #+END_SRC
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:keymaps 'org-mode-map
+			"TAB" 'org-cycle
+			"$" 'org-end-of-line
+			"^" 'org-beginning-of-line
+			"gh" 'outline-up-heading
+			"gj" 'org-forward-heading-same-level
+			"gk" 'org-backward-heading-same-level
+			"gl" 'outline-next-visible-heading
+			"t" 'org-todo
+			"T" 'org-insert-todo-heading)
+	 #+END_SRC
+
 	 Evil-org supplements missing keybinds until I get off my ass and define them.
 
 	 #+BEGIN_SRC emacs-lisp
