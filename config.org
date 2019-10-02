@@ -808,7 +808,6 @@ a
 			"r" 'org-refile
 			"s" 'org-schedule
 			"t" 'org-show-todo-tree
-			"x" 'org-todo
 			"y" 'org-todo-yesterday
 			"!" 'org-time-stamp-inactive
 			"^" 'org-sort
@@ -861,3 +860,38 @@ a
 				 (require 'evil-org-agenda)
 				 (evil-org-agenda-set-keys)))
 	 #+END_SRC
+
+*** Emphasis
+		#+BEGIN_SRC emacs-lisp
+			(defun max/org-bold-region ()
+				(interactive)
+				(org-emphasize ?\*))
+			(defun max/org-code-region ()
+				(interactive)
+				(org-emphasize ?\~))
+			(defun max/org-italic-region ()
+				(interactive)
+				(org-emphasize ?\/))
+			(defun max/org-strike-through-region ()
+				(interactive)
+				(org-emphasize ?\+))
+			(defun max/org-underline-region ()
+				(interactive)
+				(org-emphasize ?\_))
+			(defun max/org-verbatim-region ()
+				(interactive)
+				(org-emphasize ?\=))
+		#+END_SRC
+		
+		#+BEGIN_SRC emacs-lisp
+			(general-define-key
+			 :states 'visual
+			 :keymaps 'org-mode-map
+			 :prefix "SPC m x"
+			 "b" 'max/org-bold-region
+			 "c" 'max/org-code-region
+			 "i" 'max/org-italic-region
+			 "s" 'max/org-strike-through-region
+			 "u" 'max/org-underline-region
+			 "v" 'max/org-verbatim-region)
+		#+END_SRC
