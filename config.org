@@ -762,10 +762,30 @@ a
 	 #+END_SRC
 
 ** Org-mode Bindings
+*** Global Access
 
 	 - Space + (o)rg-mode
 		 - (a)genda :: Open the org-mode agenda
 		 - (c)apture :: Capture an entry on the fly
+		 - t(o)do list ::  View a list of all non-done tasks
+		 - (s)earch view :: Create a list based off of search terms
+		 - (t)ags view :: Create a list of tasks based on tags
+		 - Clock (0)ut :: Clock out of the active timer
+	 as yesterday
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC o"
+			"a" 'org-agenda
+			"c" 'org-capture
+			"o" 'org-agenda-list
+			"s" 'org-search-view
+			"t" 'org-tags-view
+			"0" 'org-clock-out)
+	 #+END_SRC
+
+	 - Space + (o)rg-mode
 		 - (d)eadline :: Change the entries deadline
 		 - (r)efile :: Refile the entry
 		 - (s)chedule :: Change the entries scheduled time
