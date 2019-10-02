@@ -785,25 +785,38 @@ a
 			"0" 'org-clock-out)
 	 #+END_SRC
 
-	 - Space + (o)rg-mode
-		 - (d)eadline :: Change the entries deadline
-		 - (r)efile :: Refile the entry
-		 - (s)chedule :: Change the entries scheduled time
-		 - che(x)k :: Change the todo keyword
-		 - check (y)esterday :: Change the todo keyword, but mark the day completed
-	 as yesterday
-
+*** Headline Manipulation
 	 #+BEGIN_SRC emacs-lisp
 		 (general-define-key
 			:states 'normal
-			:prefix "SPC o"
+			:keymaps 'org-mode-map
+			:prefix "SPC m"
+			"a" 'org-archive-subtree
+			"b" 'org-tree-to-indirect-buffer
+			"c" 'org-toggle-checkbox
+			"d" 'org-deadline
+			"D" 'org-insert-drawer
+			"e" 'org-export-dispatch
+			"E" 'org-set-effort
+			"i" 'org-clock-in
+			"n" 'org-narrow-to-subtree
+			"N" 'widen
+			"o" 'org-open-at-point
+			"O" 'org-clock-out
+			"p" 'org-set-property
+			"Q" 'org-clock-cancel
+			"r" 'org-refile
+			"s" 'org-schedule
+			"t" 'org-show-todo-tree
 			"x" 'org-todo
 			"y" 'org-todo-yesterday
-			"s" 'org-schedule
-			"d" 'org-deadline
-			"r" 'org-refile
-			"a" 'org-agenda
-			"c" 'org-capture)
+			"!" 'org-time-stamp-inactive
+			"^" 'org-sort
+			"*" 'org-toggle-heading
+			"RET" 'org-insert-heading-respect-content
+			"'" 'org-edit-special
+			"/" 'org-sparse-tree
+			"." 'org-time-stamp)
 	 #+END_SRC
 
 	 Evil-org supplements missing keybinds until I get off my ass and define them.
