@@ -1002,3 +1002,22 @@ a
 			 "u" 'max/org-underline-region
 			 "v" 'max/org-verbatim-region)
 		#+END_SRC
+
+*** Capture/Source Buffer
+    | Keybind | Command              | Description                       |
+    |---------+----------------------+-----------------------------------|
+    | SPC m ' | org-edit-src-exit    | Save and exit the org edit buffer |
+    | SPC m k | org-edit-src-abort   | Abandon the changes in the buffer |
+    | SPC m " | org-capture-finalize | Save and file the capture buffer  |
+    | SPC m a | org-capture-kill     | Abandon the capture buffer        |
+
+		#+BEGIN_SRC emacs-lisp
+			(general-define-key
+			 :states 'visual
+			 :keymaps '(org-capture-mode-map org-src-mode-map)
+			 :prefix "SPC m"
+			 "'" 'org-edit-src-exit
+			 "k" 'org-edit-src-abort
+			 "\"" 'org-capture-finalize
+			 "a" 'org-capture-kill)
+		#+END_SRC
