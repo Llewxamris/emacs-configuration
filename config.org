@@ -937,6 +937,26 @@ a
 				 (evil-org-agenda-set-keys)))
 	 #+END_SRC
 
+*** Element Insertion
+    | Keybind   | Command                          | Description                                       |
+    |-----------+----------------------------------+---------------------------------------------------|
+    | SPC m h i | org-insert-heading-after-current | Exactly what it sounds like.                      |
+    | SPC m h I | org-insert-heading               | Insert heading at current point.                  |
+    | SPC m h s | org-insert-subheading            | Creates a new heading one level below the current |
+    |           |                                  | heading.                                          |
+    | SPC m h l | org-insert-link                  | Insert a org-mode link at point.                 |
+
+		#+BEGIN_SRC emacs-lisp
+			(general-define-key
+			 :states 'normal
+			 :keymaps 'org-mode-map
+			 :prefix "SPC m h"
+			 "i" 'org-insert-heading-after-current
+			 "I" 'org-insert-heading
+			 "s" 'org-insert-subheading
+			 "l" 'org-insert-link)
+	 #+END_SRC
+
 *** Emphasis
 		#+BEGIN_SRC emacs-lisp
 			(defun max/org-bold-region ()
