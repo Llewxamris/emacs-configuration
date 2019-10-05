@@ -47,7 +47,7 @@
 ;; General packages
 ;; (require 'my-evil)
 (require 'my-dired-x)
-(require 'my-ibuffer)
+;;(require 'my-ibuffer)
 (require 'my-magit)
 (require 'my-spellchecking)
 (require 'my-code-completion)
