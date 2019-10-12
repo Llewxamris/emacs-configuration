@@ -82,27 +82,32 @@
 ** General
 	 I prefer defining keys using the [[https://github.com/noctuid/general.el][General]] syntactic sugar style. It interops
 	 extremely well with Evil, and makes it absurdly easy to use mnemonic style
-	 motions. To demonstrate, behold my (h)elp (d)escribe something binds!
+	 motions. To demonstrate, behold my help binds!
 
-	 - Space + (h)elp + (d)escribe
-		 - (f)unction :: Describe a function
-		 - (k)ey :: Describe all functionalities assigned to a key
-		 - (m)ode :: Describe the modes currently active
-		 - (v)ariable :: Describe a variable
+*** Help Keybinds
+     | Keybind   | Command           | Description                                |
+     |-----------+-------------------+--------------------------------------------|
+     | SPC h d f | describe-function | Look up the definition of a function.      |
+     | SPC h d k | describe-key      | Look up the function invoked by the        |
+     |           |                   | given key.                                 |
+     | SPC h d m | describe-mode     | Displays the documentation for the current |
+     |           |                   | major and minor modes.                     |
+     | SPC h d s | describe-symbol   | Look up the definition of a symbol.        |
+     | SPC h d v | describe-variable | Look up the definition and value of a      |
+     |           |                   | variable.                                  |
 
-	 #+BEGIN_SRC emacs-lisp
-		 (use-package general
-			 :config
-			 (general-define-key
-				:states 'normal
-				:prefix "SPC h d"
-				"f" 'describe-function
-				"k" 'describe-key
-				"m" 'describe-mode
-				"v" 'describe-variable))
-	 #+END_SRC
-
-	 The rest of my keybindings are found in the section [[Keybindings]].
+		#+BEGIN_SRC emacs-lisp
+			(use-package general
+				:config
+				(general-define-key
+				 :states 'normal
+				 :prefix "SPC h d"
+				 "f" 'describe-function
+				 "k" 'describe-key
+				 "m" 'describe-mode
+				 "s" 'describe-symbol
+				 "v" 'describe-variable))
+		#+END_SRC
 
 ** Automatically Byte Compile Emacs Lisp Libraries
 	 Byte compiling Emacs Lisp files allows them to load and execute faster. I've
