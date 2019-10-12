@@ -129,11 +129,6 @@
 	 #+END_SRC
 
 * Look & Feel
-	#+BEGIN_QUOTE
-	I'm so three thousand and eight. You so two thousand and late.
-	---Stacy Ann "Fergie" Ferguson
-	#+END_QUOTE
-
 ** Emacs Essentials
 	 Disable the startup screen & message.
 
