@@ -82,27 +82,32 @@
 ** General
 	 I prefer defining keys using the [[https://github.com/noctuid/general.el][General]] syntactic sugar style. It interops
 	 extremely well with Evil, and makes it absurdly easy to use mnemonic style
-	 motions. To demonstrate, behold my (h)elp (d)escribe something binds!
+	 motions. To demonstrate, behold my help binds!
 
-	 - Space + (h)elp + (d)escribe
-		 - (f)unction :: Describe a function
-		 - (k)ey :: Describe all functionalities assigned to a key
-		 - (m)ode :: Describe the modes currently active
-		 - (v)ariable :: Describe a variable
+*** Help Keybinds
+     | Keybind   | Command           | Description                                |
+     |-----------+-------------------+--------------------------------------------|
+     | SPC h d f | describe-function | Look up the definition of a function.      |
+     | SPC h d k | describe-key      | Look up the function invoked by the        |
+     |           |                   | given key.                                 |
+     | SPC h d m | describe-mode     | Displays the documentation for the current |
+     |           |                   | major and minor modes.                     |
+     | SPC h d s | describe-symbol   | Look up the definition of a symbol.        |
+     | SPC h d v | describe-variable | Look up the definition and value of a      |
+     |           |                   | variable.                                  |
 
-	 #+BEGIN_SRC emacs-lisp
-		 (use-package general
-			 :config
-			 (general-define-key
-				:states 'normal
-				:prefix "SPC h d"
-				"f" 'describe-function
-				"k" 'describe-key
-				"m" 'describe-mode
-				"v" 'describe-variable))
-	 #+END_SRC
-
-	 The rest of my keybindings are found in the section [[Keybindings]].
+		#+BEGIN_SRC emacs-lisp
+			(use-package general
+				:config
+				(general-define-key
+				 :states 'normal
+				 :prefix "SPC h d"
+				 "f" 'describe-function
+				 "k" 'describe-key
+				 "m" 'describe-mode
+				 "s" 'describe-symbol
+				 "v" 'describe-variable))
+		#+END_SRC
 
 ** Automatically Byte Compile Emacs Lisp Libraries
 	 Byte compiling Emacs Lisp files allows them to load and execute faster. I've
@@ -126,6 +131,18 @@
 		 (defun max/reload-emacs-configuration ()
 			 (interactive)
 			 (load-file (concat user-emacs-directory "init.el")))
+	 #+END_SRC
+
+*** Reload Keybinds
+     | Keybind   | Command                        | Description                        |
+     |-----------+--------------------------------+------------------------------------|
+     | SPC f e R | max/reload-emacs-configuration | Reload my Emacs configuration file |
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC f e"
+			"R" 'max/reload-emacs-configuration
 	 #+END_SRC
 
 * Look & Feel
@@ -190,6 +207,47 @@
 	 #+BEGIN_SRC emacs-lisp
 	(auto-compression-mode t)
 	 #+END_SRC
+
+*** Essential Keybinds
+		| Keybind | Command                    | Description                                   |
+		|---------+----------------------------+-----------------------------------------------|
+		| SPC q q | save-buffers-kill-terminal | Prompt to save all buffers, then close Emacs. |
+		| SPC f r |                            |                                               |
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC q"
+			"q" 'save-buffers-kill-terminal)
+	 #+END_SRC
+
+    | Keybind | Command     | Description                           |
+    |---------+-------------+---------------------------------------|
+    | SPC f r | save-buffer | Save the currently focused buffer.    |
+    | SPC f w | find-file   | Navigate to a file via a tab-complete |
+    |         |             | path editor.                          |
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC f"
+			"r" 'save-buffer
+			"w" 'find-file)
+	 #+END_SRC
+
+    | Keybind | Command    | Description                                     |
+    |---------+------------+-------------------------------------------------|
+    | SPC b d | dired      | Prompt for a path, and open Dired at that path. |
+    | SPC b D | dired-jump | Opens Dired in the directory of the currently   |
+    |         |            | focused buffer.                                 |
+
+		 #+BEGIN_SRC emacs-lisp
+			 (general-define-key
+				:states 'normal
+				:prefix "SPC b"
+				"d" 'dired
+				"D" 'dired-jump)
+		 #+END_SRC
 
 ** Backups & History
    Emacs auto-backups files, which is great. But, it dumps them in the current
@@ -381,7 +439,7 @@ a
 																				 (interactive) (save-some-buffers t)))
 	 #+END_SRC
 
-** Winner
+** Window Management
 	 Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
 	 accidental destruction the layout of windows and buffers.
 
@@ -389,6 +447,32 @@ a
 		 (use-package winner
 			 :config
 			 (winner-mode 1))
+	 #+END_SRC
+
+*** Window Management Keybinds
+    | Keybind   | Command                   | Description                                     |
+    |-----------+---------------------------+-------------------------------------------------|
+    | SPC w d   | delete-window             | Delete (close) the currently focused window.    |
+    | SPC w h   | evil-window-left          | Focus the window to the left.                   |
+    | SPC w j   | evil-window-bottom        | Focus the window below.                         |
+    | SPC w k   | evil-window-up            | Focus the window above.                         |
+    | SPC w l   | evil-window-right         | Focus the window to the right.                  |
+    | SPC w s h | split-window-vertically   | Split the window, resulting in two vertically  |
+    |           |                           | side-by-side windows.                           |
+    | SPC w s v | split-window-horizontally | Split the window, resulting in two horizontally |
+    |           |                           | side-by-side windows.                           |
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC w"
+			"d" 'delete-window
+			"h" 'evil-window-left
+			"j" 'evil-window-bottom
+			"k" 'evil-window-up
+			"l" 'evil-window-right
+			"s h" 'split-window-vertically
+			"s v" 'split-window-horizontally)
 	 #+END_SRC
 
 * Evil Mode
@@ -427,605 +511,7 @@ a
 			:config
 			(evil-set-initial-state 'ibuffer-mode 'normal))
 	#+END_SRC
-
-* Org-mode
-	Org-mode was the killer feature that got me to try out Emacs to begin with,
-	and honestly it's probably the main reason I keep using Emacs.
-
-	I have tried many solutions to low tech or plain text note taking and
-	productivity tools, but until org-mode I was constantly disappointed.
-	Todo.txt, Markdown, XML with custom schemas, and Bullet Journals.
-	Bullet Journals was the closest to a perfect solution, but my natural
-  tendency to forget my journal at home lead to me dropping it as well.
-
-	Combining org-mode with Orgzly and Syncthing has become my perfect
-	organization, productivity, and note taking stack.
-
-	#+BEGIN_SRC emacs-lisp
-		(use-package org
-			:ensure org
-			:commands (org-mode org-capture org-agenda orgtbl-mode)
-			:mode ("\\.org$" . org-mode))
-	#+END_SRC
-
-** General Settings
-	The location of my Org files differs depending on what machine I am on. On my
-	personal machine, the directory is ~/home/max/doc/org/~. It is synced to
-  Nextcloud as a backup solution, and synced to my mobile phone with Syncthing.
-  On my work machine, it is under ~F:\org\~. This drive is a network drive. Not
-	really a backup, but better than only keeping it local.
-
-	#+BEGIN_SRC emacs-lisp
-		(defvar org-base-dir)
-
-		(if (eq system-type 'gnu/linux)
-				;; linux
-				(setq org-base-dir "/home/max/doc/org")
-			;; windows
-			(setq org-base-dir "f:/org"))
-
-		(setq org-directory org-base-dir)
-		(setq org-agenda-files (list (concat org-directory "/agenda")))
-		(setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
-	#+END_SRC
-
-	Automatically add a timestamp once a task is set to done.
-
-	#+BEGIN_SRC emacs-lisp
-		(setq org-log-done 'time)
-	#+END_SRC
-
-	Enable fast todo selection. By default, the task states have to be cycled
-	through. By setting fast todo, I can jump into any state.
-
-	#+BEGIN_SRC emacs-lisp
-		(setq org-use-fast-todo-selection t)
-	#+END_SRC
-
-** Keywords
-	 I keep three sequences for todo keywords. The task sequence, the blocked
-	 sequence, and the financial sequence. The task sequence is for tasks
-	 that are ongoing and not impeded. The blocked sequence are for tasks that I
-	 cannot actively work on. The financial sequence is for not forgetting to
-	 pay my phone bill again.
-
-	 The ~RAW~ state is for tasks that have been captured, but haven't yet been
-	 fleshed out. Maybe the task is just an idea, or it needs more information
-	 before it's actionable.
-
-	 The ~WAITING~, ~HOLD~, ~CANCELLED~, and ~OVERDUE~ state leave a timestamp
-	 and a require a comment whenever it is switched too. I use to document why
-	 a task has reached this (usually negative) state.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-todo-keywords
-					 '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-						 (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
-						 (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
-	 #+END_SRC
-
-	 I believe the keyword faces should represent the emotion I want the keyword
-	 to evoke. Some of these work out of the box, but others require some
-	 tweaking.
-
-	 ~RAW~ is set to the org-warning face. ~RAW~ should never be used outside of
-	 my inbox, as it represents an unfinished thought or task.
-
-	 ~WAITING~ & ~HOLD~ are set to a bold orange colour. Both states represent a
-	 task that is not actively being worked on by myself, but has not been
-	 completed or cancelled. Causes pause while still catching my eye and
-	 alerting me that the given task still requires input. This could trigger
-	 sending out an email to see progress, or evaluating the task and deciding to
-	 cancel.
-
-	 ~CANCELLED~ is set to the org-archived face. It is subdued and lets me know
-	 the task no longer needs my attention.
-
-	 ~OVERDUE~ is set to a bold red to signify the danger of unpaid expenses. I
-	 want to feel a wash of fear every time see that bold red inside my todo list.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-todo-keyword-faces
-					 '(("TODO" . (:foreground "#ebcb8b" :weight bold :underline t))
-						 ("STARTED" . (:foreground "#ebcb8b" :weight bold :underline t))
-						 ("RAW" . (:foreground "#ebcb8b" :weight bold :slant italic :underline t))
-						 ("WAITING" . (:foreground "#ff7800" :weight bold :underline t))
-						 ("HOLD" . (:foreground "#ff7800" :weight bold :underline t))
-						 ("EXPENSE" . (:foreground "#ebcb8b" :weight bold :underline t))
-						 ("DONE" . (:foreground "#a3be8c" :weight bold :underline t))
-						 ("CANCELLED" . (:inherit shadow :underline t))
-						 ("OVERDUE" . (:foreground "red"
-																			 :background "lightgrey"
-																			 :weight ultrabold
-																			 :underline t))))
-	 #+END_SRC
-
-** Tags
-	 I use tags to help prioritise my work. I use the Eisenhower matrix to
-	 prioritise my work. Each task is prioritised as either important or not
-	 important, and urgent or not urgent. Priority is assigned then from where
-	 on the matrix the task falls:
-
-	 1. Important & Urgent (Do ASAP)
-	 2. Important & Not Urgent (Schedule)
-	 3. Not Important & Urgent (Delegate if possible)
-	 4. Not Important & Not Urgent (Do it later)
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-tag-alist '(("important" . ?i)
-													 ("urgent" . ?u)
-													 ("!important" . ?I)
-													 ("!urgent" . ?U)))
-	 #+END_SRC
-
-** Capture
-	 Org-capture is a fantastic feature I wish I used more often. Most of the time
-	 when capturing would be useful I'm away from my laptop. I use Orgzly's quick
-	 note feature to accomplish a similar result, but the options for /how/ to
-	 capture the information is far more limited than org-capture proper.
-
-	 That being said, setting up capture templates for my work machine would
-	 probably be a blessing. I'm on that thing 7.5 hours a day.
-
-	 All templates are defined externally in ~*.txt~ files to keep this
-	 configuration file clean. The goal of each template is to capture the minimum
-	 amount of information required for the item to be actionable (excluding the
-	 ~RAW~ capture). These are my templates:
-
-	 - Task :: An actionable todo item with a proper name, estimate, some sort of
-						date, context tag, and priority tags. They are placed into the
-						general task bucket in my main org file
-	 - Raw task :: An idea, task, or note that requires refinement. Could be a
-								passing idea, a reminder, a quote, etc. Raw tasks are to never
-								leave the my inbox.
-	 - Note :: A name, timestamp, content. Just a note.
-
-	#+BEGIN_SRC emacs-lisp
-		(setq org-capture-templates
-					'(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
-						 (file "~/.emacs.d/capture-templates/task.txt"))
-						("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
-						 (file "~/.emacs.d/capture-templates/raw-task.txt"))
-						("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
-						 (file "~/.emacs.d/capture-templates/note.txt"))))
-	#+END_SRC
-
-** Refile
-	 Pick refile targets using paths. This works nicely with how I name "bucket"
-	 headlines for storing like tasks/notes.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-refile-use-outline-path t)
-	 #+END_SRC
-
-	 The refile targets generated are based off of my agenda files, and only
-	 goes down three levels.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
-	 #+END_SRC
-
-** Agenda
-	 By default, show today and the next two days when opening the agenda.
-	 When planning ahead, three days is usually good enough to see if I'm
-	 overworking myself.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-agenda-span 3)
-	 #+END_SRC
-
-	 Pushes off the tags if I'm viewing the agenda in a verticle split on the
-	 laptop. I'd rather see the content of the heading rather than the tags
-	 associated in most contexts.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-agenda-tags-column -100)
-	 #+END_SRC
-
-	 Do not show scheduled/deadlined tasks if the task is in a done state.
-	 Prevents cluttering with completed tasks,
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-agenda-skip-scheduled-if-done t)
-		 (setq org-agenda-skip-deadline-if-done t)
-	 #+END_SRC
-
-	 Do show the post-scheduled counter if the deadline counter is current
-	 visible in the agenda.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-	 #+END_SRC
-
-** Headlines
-  Give the ellipsis at the end of collapsed headlines some breathing room.
-
-  #+BEGIN_SRC emacs-lisp
-    (setq org-ellipsis " ... ")
-  #+END_SRC
-	
-	Increase headline font size based on the headline level. Going from level 1
-	(largest) to level 3 (smallest), and staying the same size from there on
-	out. Any smaller and it becomes hard to read.
-	
-	#+BEGIN_SRC emacs-lisp
-		(custom-set-faces
-		 '(org-level-1 ((nil (:weight bold :height 1.25 :foreground "#88c0d0"))))
-		 '(org-level-2 ((nil (:weight bold :height 1.1 :foreground "#88c0d0" :inherit nil))))
-		 '(org-level-3 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil))))
-		 '(org-level-4 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil)))))
-	#+END_SRC
-
-	Strike-through any "/done/" state headlines and shadow the headline text.
-
-	#+BEGIN_SRC emacs-lisp
-		;; Requires org-fonitfy-done-headline to be non-nil
-		(setq org-fontify-done-headline t)
-		(custom-set-faces '(org-headline-done
-												((nil (:inherit shadow :strike-through t)))))
-	#+END_SRC
-
-	Org-bullets changes out the asterisks for UTF-8 symbols.
-
-	#+BEGIN_SRC emacs-lisp
-		(use-package org-bullets
-			:ensure org-bullets
-			:config
-			(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-  #+END_SRC
-
-** Meta & Block Sections
-	 Make the document title larger like a proper title should be.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (custom-set-faces '(org-document-title ((nil (:height 1.5 :weight bold)))))
-	 #+END_SRC
-
-	 Shrinking the meta lines makes the easier to scan over.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (custom-set-faces '(org-meta-line ((nil (:height 0.65 :slant italic)))))
-	 #+END_SRC
-* Keybindings
-** General Bindings
-	 - Space + e(m)acs
-		 - (r)eload :: Reload Emacs configuration
-		 - (q)uit :: Quit Emacs
-		 - (e)val last s-expression :: Evaluates the Lisp expression before the pointer
-		 - correct (z)ee last word :: Runs flyspell against the incorrect word before the
-					pointer
-		 - (SCP) :: Jump to the next window
-
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:prefix "SPC m"
-			"r" 'max/reload-emacs-configuration
-			"q" 'save-buffers-kill-terminal
-			"e" 'eval-last-sexp
-			"z" 'flyspell-correct-previous
-      "SPC" 'other-window)
-	 #+END_SRC
-
-** File Manipulation
-	 - Space + (f)iles
-		 - (w)rite file :: Save the current buffer to disk
-		 - (r)ead file :: Open a file to a buffer
-
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:prefix "SPC f"
-			"w" 'save-buffer
-			"r" 'find-file)
-	 #+END_SRC
-
-** Buffer Creation
-	 - Space + (b)uffer
-		 - i(b)uffer :: Opens the iBuffer buffer
-		 - (d)ired :: Opens the X-Dired buffer
-		 - (D)ired Jump :: Opens the X-Dired buffer inside the directory of the file current
-										 active in the buffer
-
-		 #+BEGIN_SRC emacs-lisp
-			 (general-define-key
-				:states 'normal
-				:prefix "SPC b"
-				"d" 'dired
-				"D" 'dired-jump)
-		 #+END_SRC
-
-** Window Manipulation
-	 Navigate between windows using CTRL + Vim movement keys.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states '(normal motion)
-			"C-h" 'evil-window-left
-			"C-j" 'evil-window-bottom
-			"C-k" 'evil-window-up
-			"C-l" 'evil-window-right)
-	 #+END_SRC
-
-	 Create vertical and horizontal window splits.
-
-	 - Space + (w)indow
-		 - (c)lose :: Close window
-		 - (s)plit
-			 - (v)ertical :: Split the window vertically
-			 - (h)orizontal :: Split the window vertically
-
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:prefix "SPC w"
-			"c" 'delete-window
-			"s v" 'split-window-horizontally
-			"s h" 'split-window-vertically)
-	 #+END_SRC
-
-** Org-mode Bindings
-*** Global Access
-    | Keybind | Command         | Description                                     |
-    |---------+-----------------+-------------------------------------------------|
-    | SPC o a | org-agenda      | Opens the agenda command view. This lets me     |
-    |         |                 | interactively decide how I want to use the      |
-    |         |                 | org-mode agenda.                                |
-    | SPC o c | org-capture     | Opens the capture view with an interactive list |
-    |         |                 | of available org-capture templates.             |
-    | SPC o o | org-agenda-list | Opens the agenda list view. Shows me my agenda  |
-    |         |                 | For today and the next two days                 |
-    | SPC o s | org-search-view | Opens the search view for org-mode. Lets me     |
-    |         |                 | construct a complex search query.               |
-    | SPC o t | org-tags-view   | Opens a view to filter org-mode items by tag.   |
-    | SPC o 0 | org-clock-out   | Clocks out of the running clock.                |
-
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:prefix "SPC o"
-			"a" 'org-agenda
-			"c" 'org-capture
-			"o" 'org-agenda-list
-			"s" 'org-search-view
-			"t" 'org-tags-view
-			"0" 'org-clock-out)
-	 #+END_SRC
-
-*** Headline Manipulation
-		| Keybind   | Command                            | Description                                     |
-		|-----------+------------------------------------+-------------------------------------------------|
-		| spc m a   | org-archive-subtree                | takes the current subtree and moves it to an    |
-		|           |                                    | archive files. I do this periodically to hide   |
-		|           |                                    | done state entries without deleting them.       |
-		| SPC m b   | org-tree-to-indirect-buffer        | Opens the current subtree into a buffer where   |
-		|           |                                    | it is the sole subtree. This lets me edit the   |
-		|           |                                    | tree without visible distractions of the        |
-		|           |                                    | surrounding trees. As well, it removes the      |
-		|           |                                    | chance of accidental manipulating an unrelated  |
-		|           |                                    | tree.                                           |
-		| SPC m c   | org-toggle-checkbox                | Toggles a checkbox between checked and empty.   |
-		| SPC m d   | org-deadline                       | Adds a deadline to the entry.                   |
-		| SPC m D   | org-insert-drawer                  | Inserts a drawer at the cursor with a prompted  |
-		|           |                                    | name. Drawers are good for hiding information.  |
-		| SPC m e   | org-export-dispatch                | Opens the interactive export buffer. This is    |
-		|           |                                    | used by me to export org files to PDF when      |
-		|           |                                    | sharing my notes.                               |
-		| SPC m E   | org-set-effort                     | Creates an /effort/ property in the properties  |
-		|           |                                    | drawer. I set effort in the estimated amount    |
-		|           |                                    | of time it will take to do a task.              |
-		| SPC m i   | org-clock-in                       | Begin tracking the amount of time spent on a    |
-		|           |                                    | task.                                           |
-		| SPC m n   | org-narrow-to-subtree              | Like ~SPC m b~, but doesn't open a new buffer   |
-		|           |                                    | that isolates the subtree.                      |
-		| SPC m N   | widen                              | Undo ~SPC m n~.                                 |
-		| SPC m o   | org-open-at-point                  | Opens whatever the pointer is on. Used mainly   |
-		|           |                                    | for opening links.                              |
-		| SPC m O   | org-clock-out                      | Stop tracking time against a specific task.     |
-		| SPC m p   | org-set-property                   | Create a property with a given name and value.  |
-		| SPC m Q   | org-clock-cancel                   | Stop the current clock and undo all time        |
-		|           |                                    | tracked.                                        |
-		| SPC m r   | org-refile                         | Refile an entry.                                |
-		| SPC m s   | org-scheduled                      | Sets the scheduled property of an entry.        |
-		| SPC m t   | org-show-todo-tree                 | Show a tree of all todo's in the open buffer.   |
-		| SPC m y   | org-todo-yesterday                 | Change the status of a headline, but apply it   |
-		|           |                                    | as if it happened yesterday. Good if I forgot   |
-		|           |                                    | to complete a habit style task.                 |
-		| SPC m !   | org-time-stamp-inactive            | Creates an inactive timestamp.                  |
-		| SPC m ^   | org-sort                           | Sorts the entire active tree.                   |
-		| SPC m *   | org-toggle-heading                 | Toggled the data under the pointer into an org  |
-		|           |                                    | heading.                                        |
-		| SPC m RET | org-insert-heading-respect-content | Inserts a heading after the current subtree.    |
-		| SPC m :   | org-set-tags                       | Set the tags on a heading at the current point. |
-		| SPC m '   | org-edit-special                   | Used mostly when editing source code blocks     |
-		|           |                                    | inside an org file.                             |
-		| SPC m /   | org-sparse-tree                    | Create a sparse tree based on some filter       |
-		|           |                                    | criteria.                                       |
-		| SPC m .   | org-time-stamp                     | Create a time stamp.                            |
-
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:keymaps 'org-mode-map
-			:prefix "SPC m"
-			"a" 'org-archive-subtree
-			"b" 'org-tree-to-indirect-buffer
-			"c" 'org-toggle-checkbox
-			"d" 'org-deadline
-			"D" 'org-insert-drawer
-			"e" 'org-export-dispatch
-			"E" 'org-set-effort
-			"i" 'org-clock-in
-			"n" 'org-narrow-to-subtree
-			"N" 'widen
-			"o" 'org-open-at-point
-			"O" 'org-clock-out
-			"p" 'org-set-property
-			"Q" 'org-clock-cancel
-			"r" 'org-refile
-			"s" 'org-schedule
-			"t" 'org-show-todo-tree
-			"y" 'org-todo-yesterday
-			"!" 'org-time-stamp-inactive
-			"^" 'org-sort
-			"*" 'org-toggle-heading
-			"RET" 'org-insert-heading-respect-content
-			":" 'org-set-tags
-			"'" 'org-edit-special
-			"/" 'org-sparse-tree
-			"." 'org-time-stamp)
-	 #+END_SRC
-
-*** Tree Manipulation
-    | Keybind   | Command               | Description                               |
-    |-----------+-----------------------+-------------------------------------------|
-    | SPC m S h | org-demote-subtree    | Demote the entire subtree down one level. |
-    | SPC m S j | org-move-subtree-down | Move the subtree below the subtree        |
-    |           |                       | immediately after it.                     |
-    | SPC m S k | org-move-subtree-up   | Move the subtree above the subtree        |
-    |           |                       | immediately before it.                    |
-    | SPC m S l | org-promote-subtree   | Promote the entire subtree up one level.  |
-
-		#+BEGIN_SRC emacs-lisp
-			(general-define-key
-			 :states 'normal
-			 :keymaps 'org-mode-map
-			 :prefix "SPC m S"
-			 "h" 'org-demote-subtree
-			 "j" 'org-move-subtree-down
-			 "k" 'org-move-subtree-up
-			 "l" 'org-promote-subtree)
-	 #+END_SRC
-
-    | Keybind | Command                         | Description                                          |
-    |---------+---------------------------------+------------------------------------------------------|
-    | TAB     | org-cycle                       | Cycle the state of the headline at point (open/close |
-    |         |                                 | headlines).                                          |
-    | $       | org-end-of-line                 | Move cursor to the end of the line.                  |
-    | ^       | org-beginning-of-line           | The opposite of ~$~                                  |
-    | gh      | outline-up-heading              | Move cursor up one heading level.                    |
-    | gj      | org-forward-heading-same-level  | Move cursor down one heading within the same level.  |
-    | gk      | org-backward-heading-same-level | Move cursor up one heading within the same level.    |
-    | gl      | outline-next-visible-heading    | Move cursor down one heading level.                  |
-    | t       | org-todo                        | Change keyword state of heading.                     |
-    | T       | org-insert-todo-heading         | Insert a heading at point with TODO keyword already  |
-    |         |                                 | in place.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:keymaps 'org-mode-map
-			"TAB" 'org-cycle
-			"$" 'org-end-of-line
-			"^" 'org-beginning-of-line
-			"gh" 'outline-up-heading
-			"gj" 'org-forward-heading-same-level
-			"gk" 'org-backward-heading-same-level
-			"gl" 'outline-next-visible-heading
-			"t" 'org-todo
-			"T" 'org-insert-todo-heading)
-	 #+END_SRC
-
-	 Evil-org supplements missing keybinds until I get off my ass and define them.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (use-package evil-org
-			 :ensure t
-			 :after org
-			 :config
-			 (progn
-				 (add-hook 'org-mode-hook 'evil-org-mode)
-				 (add-hook 'evil-org-mode-hook
-									 (lambda ()
-										 (evil-org-set-key-theme)))
-				 (require 'evil-org-agenda)
-				 (evil-org-agenda-set-keys)))
-	 #+END_SRC
-
-*** Element Insertion
-    | Keybind   | Command                          | Description                                       |
-    |-----------+----------------------------------+---------------------------------------------------|
-    | SPC m h i | org-insert-heading-after-current | Exactly what it sounds like.                      |
-    | SPC m h I | org-insert-heading               | Insert heading at current point.                  |
-    | SPC m h s | org-insert-subheading            | Creates a new heading one level below the current |
-    |           |                                  | heading.                                          |
-    | SPC m h l | org-insert-link                  | Insert a org-mode link at point.                 |
-
-		#+BEGIN_SRC emacs-lisp
-			(general-define-key
-			 :states 'normal
-			 :keymaps 'org-mode-map
-			 :prefix "SPC m h"
-			 "i" 'org-insert-heading-after-current
-			 "I" 'org-insert-heading
-			 "s" 'org-insert-subheading
-			 "l" 'org-insert-link)
-	 #+END_SRC
-
-*** Emphasis
-		#+BEGIN_SRC emacs-lisp
-			(defun max/org-bold-region ()
-				(interactive)
-				(org-emphasize ?\*))
-			(defun max/org-code-region ()
-				(interactive)
-				(org-emphasize ?\~))
-			(defun max/org-italic-region ()
-				(interactive)
-				(org-emphasize ?\/))
-			(defun max/org-strike-through-region ()
-				(interactive)
-				(org-emphasize ?\+))
-			(defun max/org-underline-region ()
-				(interactive)
-				(org-emphasize ?\_))
-			(defun max/org-verbatim-region ()
-				(interactive)
-				(org-emphasize ?\=))
-		#+END_SRC
-
-    | Keybind   | Command                       | Description                       |
-    |-----------+-------------------------------+-----------------------------------|
-    | SPC m x b | max/org-bold-region           | Surround entire region with ~*~.  |
-    | SPC m x c | max/org-code-region           | Surround entire region with ~\~~. |
-    | SPC m x i | max/org-italic-region         | Surround entire region with ~/~.  |
-    | SPC m x s | max/org-strike-through-region | Surround entire region with ~+~.  |
-    | SPC m x u | max/org-underline-region      | Surround entire region with ~_~.  |
-    | SPC m x v | max/org-verbatim-region       | Surround entire region with ~=~.  |
-		
-		#+BEGIN_SRC emacs-lisp
-			(general-define-key
-			 :states 'visual
-			 :keymaps 'org-mode-map
-			 :prefix "SPC m x"
-			 "b" 'max/org-bold-region
-			 "c" 'max/org-code-region
-			 "i" 'max/org-italic-region
-			 "s" 'max/org-strike-through-region
-			 "u" 'max/org-underline-region
-			 "v" 'max/org-verbatim-region)
-		#+END_SRC
-
-*** Capture/Source Buffer
-    | Keybind | Command              | Description                       |
-    |---------+----------------------+-----------------------------------|
-    | SPC m ' | org-edit-src-exit    | Save and exit the org edit buffer |
-    | SPC m k | org-edit-src-abort   | Abandon the changes in the buffer |
-    | SPC m " | org-capture-finalize | Save and file the capture buffer  |
-    | SPC m a | org-capture-kill     | Abandon the capture buffer        |
-
-		#+BEGIN_SRC emacs-lisp
-			(general-define-key
-			 :states 'visual
-			 :keymaps '(org-capture-mode-map org-src-mode-map)
-			 :prefix "SPC m"
-			 "'" 'org-edit-src-exit
-			 "k" 'org-edit-src-abort
-			 "\"" 'org-capture-finalize
-			 "a" 'org-capture-kill)
-		#+END_SRC
-
-** iBuffer
+** iBuffer Keybinds
     | Keybind | Command | Description               |
     |---------+---------+---------------------------|
     | SPC b b | ibuffer | Open the iBuffer...buffer |
@@ -1162,3 +648,520 @@ a
 				"C-x 4 RET" 'ibuffer-visit-buffer-other-window
 				"C-x 5 RET" 'ibuffer-visit-buffer-other-frame)
 		 #+END_SRC
+
+* Org-mode
+	Org-mode was the killer feature that got me to try out Emacs to begin with,
+	and honestly it's probably the main reason I keep using Emacs.
+
+	I have tried many solutions to low tech or plain text note taking and
+	productivity tools, but until org-mode I was constantly disappointed.
+	Todo.txt, Markdown, XML with custom schemas, and Bullet Journals.
+	Bullet Journals was the closest to a perfect solution, but my natural
+  tendency to forget my journal at home lead to me dropping it as well.
+
+	Combining org-mode with Orgzly and Syncthing has become my perfect
+	organization, productivity, and note taking stack.
+
+	#+BEGIN_SRC emacs-lisp
+		(use-package org
+			:ensure org
+			:commands (org-mode org-capture org-agenda orgtbl-mode)
+			:mode ("\\.org$" . org-mode))
+	#+END_SRC
+
+** General Settings
+	The location of my Org files differs depending on what machine I am on. On my
+	personal machine, the directory is ~/home/max/doc/org/~. It is synced to
+  Nextcloud as a backup solution, and synced to my mobile phone with Syncthing.
+  On my work machine, it is under ~F:\org\~. This drive is a network drive. Not
+	really a backup, but better than only keeping it local.
+
+	#+BEGIN_SRC emacs-lisp
+		(defvar org-base-dir)
+
+		(if (eq system-type 'gnu/linux)
+				;; linux
+				(setq org-base-dir "/home/max/doc/org")
+			;; windows
+			(setq org-base-dir "f:/org"))
+
+		(setq org-directory org-base-dir)
+		(setq org-agenda-files (list (concat org-directory "/agenda")))
+		(setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
+	#+END_SRC
+
+	Automatically add a timestamp once a task is set to done.
+
+	#+BEGIN_SRC emacs-lisp
+		(setq org-log-done 'time)
+	#+END_SRC
+
+	Enable fast todo selection. By default, the task states have to be cycled
+	through. By setting fast todo, I can jump into any state.
+
+	#+BEGIN_SRC emacs-lisp
+		(setq org-use-fast-todo-selection t)
+	#+END_SRC
+
+*** Org-mode General Keybinds    | Keybind | Command         | Description                                     |
+    |---------+-----------------+-------------------------------------------------|
+    | SPC o a | org-agenda      | Opens the agenda command view. This lets me     |
+    |         |                 | interactively decide how I want to use the      |
+    |         |                 | org-mode agenda.                                |
+    | SPC o c | org-capture     | Opens the capture view with an interactive list |
+    |         |                 | of available org-capture templates.             |
+    | SPC o o | org-agenda-list | Opens the agenda list view. Shows me my agenda  |
+    |         |                 | For today and the next two days                 |
+    | SPC o s | org-search-view | Opens the search view for org-mode. Lets me     |
+    |         |                 | construct a complex search query.               |
+    | SPC o t | org-tags-view   | Opens a view to filter org-mode items by tag.   |
+    | SPC o 0 | org-clock-out   | Clocks out of the running clock.                |
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC o"
+			"a" 'org-agenda
+			"c" 'org-capture
+			"o" 'org-agenda-list
+			"s" 'org-search-view
+			"t" 'org-tags-view
+			"0" 'org-clock-out)
+	 #+END_SRC
+
+	 | Keybind   | Command               | Description                               |
+	 |-----------+-----------------------+-------------------------------------------|
+	 | SPC m S h | org-demote-subtree    | Demote the entire subtree down one level. |
+	 | SPC m S j | org-move-subtree-down | Move the subtree below the subtree        |
+	 |           |                       | immediately after it.                     |
+	 | SPC m S k | org-move-subtree-up   | Move the subtree above the subtree        |
+	 |           |                       | immediately before it.                    |
+	 | SPC m S l | org-promote-subtree   | Promote the entire subtree up one level.  |
+
+	 #+BEGIN_SRC emacs-lisp
+			(general-define-key
+			 :states 'normal
+			 :keymaps 'org-mode-map
+			 :prefix "SPC m S"
+			 "h" 'org-demote-subtree
+			 "j" 'org-move-subtree-down
+			 "k" 'org-move-subtree-up
+			 "l" 'org-promote-subtree)
+	 #+END_SRC
+
+	 | Keybind | Command                         | Description                                          |
+	 |---------+---------------------------------+------------------------------------------------------|
+	 | TAB     | org-cycle                       | Cycle the state of the headline at point (open/close |
+	 |         |                                 | headlines).                                          |
+	 | $       | org-end-of-line                 | Move cursor to the end of the line.                  |
+	 | ^       | org-beginning-of-line           | The opposite of ~$~                                  |
+	 | gh      | outline-up-heading              | Move cursor up one heading level.                    |
+	 | gj      | org-forward-heading-same-level  | Move cursor down one heading within the same level.  |
+	 | gk      | org-backward-heading-same-level | Move cursor up one heading within the same level.    |
+	 | gl      | outline-next-visible-heading    | Move cursor down one heading level.                  |
+	 | t       | org-todo                        | Change keyword state of heading.                     |
+	 | T       | org-insert-todo-heading         | Insert a heading at point with TODO keyword already  |
+	 |         |                                 | in place.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:keymaps 'org-mode-map
+			"TAB" 'org-cycle
+			"$" 'org-end-of-line
+			"^" 'org-beginning-of-line
+			"gh" 'outline-up-heading
+			"gj" 'org-forward-heading-same-level
+			"gk" 'org-backward-heading-same-level
+			"gl" 'outline-next-visible-heading
+			"t" 'org-todo
+			"T" 'org-insert-todo-heading)
+	 #+END_SRC
+
+	 Evil-org supplements missing keybinds until I get off my ass and define them.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (use-package evil-org
+			 :ensure t
+			 :after org
+			 :config
+			 (progn
+				 (add-hook 'org-mode-hook 'evil-org-mode)
+				 (add-hook 'evil-org-mode-hook
+									 (lambda ()
+										 (evil-org-set-key-theme)))
+				 (require 'evil-org-agenda)
+				 (evil-org-agenda-set-keys)))
+	 #+END_SRC
+
+** Emphasis
+	 #+BEGIN_SRC emacs-lisp
+		 (defun max/org-bold-region ()
+			 (interactive)
+			 (org-emphasize ?\*))
+		 (defun max/org-code-region ()
+			 (interactive)
+			 (org-emphasize ?\~))
+		 (defun max/org-italic-region ()
+			 (interactive)
+			 (org-emphasize ?\/))
+		 (defun max/org-strike-through-region ()
+			 (interactive)
+			 (org-emphasize ?\+))
+		 (defun max/org-underline-region ()
+			 (interactive)
+			 (org-emphasize ?\_))
+		 (defun max/org-verbatim-region ()
+			 (interactive)
+			 (org-emphasize ?\=))
+	 #+END_SRC
+
+*** Emphasis Keybinds
+		| Keybind   | Command                       | Description                       |
+		|-----------+-------------------------------+-----------------------------------|
+		| SPC m x b | max/org-bold-region           | Surround entire region with ~*~.  |
+		| SPC m x c | max/org-code-region           | Surround entire region with ~\~~. |
+		| SPC m x i | max/org-italic-region         | Surround entire region with ~/~.  |
+		| SPC m x s | max/org-strike-through-region | Surround entire region with ~+~.  |
+		| SPC m x u | max/org-underline-region      | Surround entire region with ~_~.  |
+		| SPC m x v | max/org-verbatim-region       | Surround entire region with ~=~.  |
+
+		#+BEGIN_SRC emacs-lisp
+			(general-define-key
+			 :states 'visual
+			 :keymaps 'org-mode-map
+			 :prefix "SPC m x"
+			 "b" 'max/org-bold-region
+			 "c" 'max/org-code-region
+			 "i" 'max/org-italic-region
+			 "s" 'max/org-strike-through-region
+			 "u" 'max/org-underline-region
+			 "v" 'max/org-verbatim-region)
+		#+END_SRC
+
+** Keywords
+	 I keep three sequences for todo keywords. The task sequence, the blocked
+	 sequence, and the financial sequence. The task sequence is for tasks
+	 that are ongoing and not impeded. The blocked sequence are for tasks that I
+	 cannot actively work on. The financial sequence is for not forgetting to
+	 pay my phone bill again.
+
+	 The ~RAW~ state is for tasks that have been captured, but haven't yet been
+	 fleshed out. Maybe the task is just an idea, or it needs more information
+	 before it's actionable.
+
+	 The ~WAITING~, ~HOLD~, ~CANCELLED~, and ~OVERDUE~ state leave a timestamp
+	 and a require a comment whenever it is switched too. I use to document why
+	 a task has reached this (usually negative) state.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-todo-keywords
+					 '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+						 (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
+						 (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
+	 #+END_SRC
+
+	 I believe the keyword faces should represent the emotion I want the keyword
+	 to evoke. Some of these work out of the box, but others require some
+	 tweaking.
+
+	 ~RAW~ is set to the org-warning face. ~RAW~ should never be used outside of
+	 my inbox, as it represents an unfinished thought or task.
+
+	 ~WAITING~ & ~HOLD~ are set to a bold orange colour. Both states represent a
+	 task that is not actively being worked on by myself, but has not been
+	 completed or cancelled. Causes pause while still catching my eye and
+	 alerting me that the given task still requires input. This could trigger
+	 sending out an email to see progress, or evaluating the task and deciding to
+	 cancel.
+
+	 ~CANCELLED~ is set to the org-archived face. It is subdued and lets me know
+	 the task no longer needs my attention.
+
+	 ~OVERDUE~ is set to a bold red to signify the danger of unpaid expenses. I
+	 want to feel a wash of fear every time see that bold red inside my todo list.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-todo-keyword-faces
+					 '(("TODO" . (:foreground "#ebcb8b" :weight bold :underline t))
+						 ("STARTED" . (:foreground "#ebcb8b" :weight bold :underline t))
+						 ("RAW" . (:foreground "#ebcb8b" :weight bold :slant italic :underline t))
+						 ("WAITING" . (:foreground "#ff7800" :weight bold :underline t))
+						 ("HOLD" . (:foreground "#ff7800" :weight bold :underline t))
+						 ("EXPENSE" . (:foreground "#ebcb8b" :weight bold :underline t))
+						 ("DONE" . (:foreground "#a3be8c" :weight bold :underline t))
+						 ("CANCELLED" . (:inherit shadow :underline t))
+						 ("OVERDUE" . (:foreground "red"
+																			 :background "lightgrey"
+																			 :weight ultrabold
+																			 :underline t))))
+	 #+END_SRC
+
+** Tags
+	 I use tags to help prioritise my work. I use the Eisenhower matrix to
+	 prioritise my work. Each task is prioritised as either important or not
+	 important, and urgent or not urgent. Priority is assigned then from where
+	 on the matrix the task falls:
+
+	 1. Important & Urgent (Do ASAP)
+	 2. Important & Not Urgent (Schedule)
+	 3. Not Important & Urgent (Delegate if possible)
+	 4. Not Important & Not Urgent (Do it later)
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-tag-alist '(("important" . ?i)
+													 ("urgent" . ?u)
+													 ("!important" . ?I)
+													 ("!urgent" . ?U)))
+	 #+END_SRC
+
+** Capture
+	 Org-capture is a fantastic feature I wish I used more often. Most of the time
+	 when capturing would be useful I'm away from my laptop. I use Orgzly's quick
+	 note feature to accomplish a similar result, but the options for /how/ to
+	 capture the information is far more limited than org-capture proper.
+
+	 That being said, setting up capture templates for my work machine would
+	 probably be a blessing. I'm on that thing 7.5 hours a day.
+
+	 All templates are defined externally in ~*.txt~ files to keep this
+	 configuration file clean. The goal of each template is to capture the minimum
+	 amount of information required for the item to be actionable (excluding the
+	 ~RAW~ capture). These are my templates:
+
+	 - Task :: An actionable todo item with a proper name, estimate, some sort of
+						date, context tag, and priority tags. They are placed into the
+						general task bucket in my main org file
+	 - Raw task :: An idea, task, or note that requires refinement. Could be a
+								passing idea, a reminder, a quote, etc. Raw tasks are to never
+								leave the my inbox.
+	 - Note :: A name, timestamp, content. Just a note.
+
+	#+BEGIN_SRC emacs-lisp
+		(setq org-capture-templates
+					'(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
+						 (file "~/.emacs.d/capture-templates/task.txt"))
+						("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
+						 (file "~/.emacs.d/capture-templates/raw-task.txt"))
+						("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
+						 (file "~/.emacs.d/capture-templates/note.txt"))))
+	#+END_SRC
+
+*** Capture/Source Keybinds
+    | Keybind | Command              | Description                       |
+    |---------+----------------------+-----------------------------------|
+    | SPC m ' | org-edit-src-exit    | Save and exit the org edit buffer |
+    | SPC m k | org-edit-src-abort   | Abandon the changes in the buffer |
+    | SPC m " | org-capture-finalize | Save and file the capture buffer  |
+    | SPC m a | org-capture-kill     | Abandon the capture buffer        |
+
+		#+BEGIN_SRC emacs-lisp
+			(general-define-key
+			 :states 'visual
+			 :keymaps '(org-capture-mode-map org-src-mode-map)
+			 :prefix "SPC m"
+			 "'" 'org-edit-src-exit
+			 "k" 'org-edit-src-abort
+			 "\"" 'org-capture-finalize
+			 "a" 'org-capture-kill)
+		#+END_SRC
+
+** Refile
+	 Pick refile targets using paths. This works nicely with how I name "bucket"
+	 headlines for storing like tasks/notes.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-refile-use-outline-path t)
+	 #+END_SRC
+
+	 The refile targets generated are based off of my agenda files, and only
+	 goes down three levels.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
+	 #+END_SRC
+
+** Agenda
+	 By default, show today and the next two days when opening the agenda.
+	 When planning ahead, three days is usually good enough to see if I'm
+	 overworking myself.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-agenda-span 3)
+	 #+END_SRC
+
+	 Pushes off the tags if I'm viewing the agenda in a verticle split on the
+	 laptop. I'd rather see the content of the heading rather than the tags
+	 associated in most contexts.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-agenda-tags-column -100)
+	 #+END_SRC
+
+	 Do not show scheduled/deadlined tasks if the task is in a done state.
+	 Prevents cluttering with completed tasks,
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-agenda-skip-scheduled-if-done t)
+		 (setq org-agenda-skip-deadline-if-done t)
+	 #+END_SRC
+
+	 Do show the post-scheduled counter if the deadline counter is current
+	 visible in the agenda.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+	 #+END_SRC
+
+** Headlines
+  Give the ellipsis at the end of collapsed headlines some breathing room.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq org-ellipsis " ... ")
+  #+END_SRC
+	
+	Increase headline font size based on the headline level. Going from level 1
+	(largest) to level 3 (smallest), and staying the same size from there on
+	out. Any smaller and it becomes hard to read.
+	
+	#+BEGIN_SRC emacs-lisp
+		(custom-set-faces
+		 '(org-level-1 ((nil (:weight bold :height 1.25 :foreground "#88c0d0"))))
+		 '(org-level-2 ((nil (:weight bold :height 1.1 :foreground "#88c0d0" :inherit nil))))
+		 '(org-level-3 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil))))
+		 '(org-level-4 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil)))))
+	#+END_SRC
+
+	Strike-through any "/done/" state headlines and shadow the headline text.
+
+	#+BEGIN_SRC emacs-lisp
+		;; Requires org-fonitfy-done-headline to be non-nil
+		(setq org-fontify-done-headline t)
+		(custom-set-faces '(org-headline-done
+												((nil (:inherit shadow :strike-through t)))))
+	#+END_SRC
+
+	Org-bullets changes out the asterisks for UTF-8 symbols.
+
+	#+BEGIN_SRC emacs-lisp
+		(use-package org-bullets
+			:ensure org-bullets
+			:config
+			(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  #+END_SRC
+
+*** Headline Keybinds
+		| Keybind   | Command                            | Description                                     |
+		|-----------+------------------------------------+-------------------------------------------------|
+		| spc m a   | org-archive-subtree                | takes the current subtree and moves it to an    |
+		|           |                                    | archive files. I do this periodically to hide   |
+		|           |                                    | done state entries without deleting them.       |
+		| SPC m b   | org-tree-to-indirect-buffer        | Opens the current subtree into a buffer where   |
+		|           |                                    | it is the sole subtree. This lets me edit the   |
+		|           |                                    | tree without visible distractions of the        |
+		|           |                                    | surrounding trees. As well, it removes the      |
+		|           |                                    | chance of accidental manipulating an unrelated  |
+		|           |                                    | tree.                                           |
+		| SPC m c   | org-toggle-checkbox                | Toggles a checkbox between checked and empty.   |
+		| SPC m d   | org-deadline                       | Adds a deadline to the entry.                   |
+		| SPC m D   | org-insert-drawer                  | Inserts a drawer at the cursor with a prompted  |
+		|           |                                    | name. Drawers are good for hiding information.  |
+		| SPC m e   | org-export-dispatch                | Opens the interactive export buffer. This is    |
+		|           |                                    | used by me to export org files to PDF when      |
+		|           |                                    | sharing my notes.                               |
+		| SPC m E   | org-set-effort                     | Creates an /effort/ property in the properties  |
+		|           |                                    | drawer. I set effort in the estimated amount    |
+		|           |                                    | of time it will take to do a task.              |
+		| SPC m i   | org-clock-in                       | Begin tracking the amount of time spent on a    |
+		|           |                                    | task.                                           |
+		| SPC m n   | org-narrow-to-subtree              | Like ~SPC m b~, but doesn't open a new buffer   |
+		|           |                                    | that isolates the subtree.                      |
+		| SPC m N   | widen                              | Undo ~SPC m n~.                                 |
+		| SPC m o   | org-open-at-point                  | Opens whatever the pointer is on. Used mainly   |
+		|           |                                    | for opening links.                              |
+		| SPC m O   | org-clock-out                      | Stop tracking time against a specific task.     |
+		| SPC m p   | org-set-property                   | Create a property with a given name and value.  |
+		| SPC m Q   | org-clock-cancel                   | Stop the current clock and undo all time        |
+		|           |                                    | tracked.                                        |
+		| SPC m r   | org-refile                         | Refile an entry.                                |
+		| SPC m s   | org-scheduled                      | Sets the scheduled property of an entry.        |
+		| SPC m t   | org-show-todo-tree                 | Show a tree of all todo's in the open buffer.   |
+		| SPC m y   | org-todo-yesterday                 | Change the status of a headline, but apply it   |
+		|           |                                    | as if it happened yesterday. Good if I forgot   |
+		|           |                                    | to complete a habit style task.                 |
+		| SPC m !   | org-time-stamp-inactive            | Creates an inactive timestamp.                  |
+		| SPC m ^   | org-sort                           | Sorts the entire active tree.                   |
+		| SPC m *   | org-toggle-heading                 | Toggled the data under the pointer into an org  |
+		|           |                                    | heading.                                        |
+		| SPC m RET | org-insert-heading-respect-content | Inserts a heading after the current subtree.    |
+		| SPC m :   | org-set-tags                       | Set the tags on a heading at the current point. |
+		| SPC m '   | org-edit-special                   | Used mostly when editing source code blocks     |
+		|           |                                    | inside an org file.                             |
+		| SPC m /   | org-sparse-tree                    | Create a sparse tree based on some filter       |
+		|           |                                    | criteria.                                       |
+		| SPC m .   | org-time-stamp                     | Create a time stamp.                            |
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:keymaps 'org-mode-map
+			:prefix "SPC m"
+			"a" 'org-archive-subtree
+			"b" 'org-tree-to-indirect-buffer
+			"c" 'org-toggle-checkbox
+			"d" 'org-deadline
+			"D" 'org-insert-drawer
+			"e" 'org-export-dispatch
+			"E" 'org-set-effort
+			"i" 'org-clock-in
+			"n" 'org-narrow-to-subtree
+			"N" 'widen
+			"o" 'org-open-at-point
+			"O" 'org-clock-out
+			"p" 'org-set-property
+			"Q" 'org-clock-cancel
+			"r" 'org-refile
+			"s" 'org-schedule
+			"t" 'org-show-todo-tree
+			"y" 'org-todo-yesterday
+			"!" 'org-time-stamp-inactive
+			"^" 'org-sort
+			"*" 'org-toggle-heading
+			"RET" 'org-insert-heading-respect-content
+			":" 'org-set-tags
+			"'" 'org-edit-special
+			"/" 'org-sparse-tree
+			"." 'org-time-stamp)
+	 #+END_SRC
+
+	 | Keybind   | Command                          | Description                                       |
+	 |-----------+----------------------------------+---------------------------------------------------|
+	 | SPC m h i | org-insert-heading-after-current | Exactly what it sounds like.                      |
+	 | SPC m h I | org-insert-heading               | Insert heading at current point.                  |
+	 | SPC m h s | org-insert-subheading            | Creates a new heading one level below the current |
+	 |           |                                  | heading.                                          |
+	 | SPC m h l | org-insert-link                  | Insert a org-mode link at point.                 |
+
+	 #+BEGIN_SRC emacs-lisp
+			(general-define-key
+			 :states 'normal
+			 :keymaps 'org-mode-map
+			 :prefix "SPC m h"
+			 "i" 'org-insert-heading-after-current
+			 "I" 'org-insert-heading
+			 "s" 'org-insert-subheading
+			 "l" 'org-insert-link)
+	 #+END_SRC
+
+** Meta & Block Sections
+	 Make the document title larger like a proper title should be.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (custom-set-faces '(org-document-title ((nil (:height 1.5 :weight bold)))))
+	 #+END_SRC
+
+	 Shrinking the meta lines makes the easier to scan over.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (custom-set-faces '(org-meta-line ((nil (:height 0.65 :slant italic)))))
+	 #+END_SRC
