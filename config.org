@@ -231,8 +231,8 @@
 		 (general-define-key
 			:states 'normal
 			:prefix "SPC f"
-			"r" 'save-buffer
-			"w" 'find-file)
+			"w" 'save-buffer
+			"r" 'find-file)
 	 #+END_SRC
 
     | Keybind | Command    | Description                                     |
