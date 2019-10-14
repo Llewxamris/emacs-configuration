@@ -45,13 +45,9 @@
 ;;; package does here. Instead, check each individual file for it's purpose.
 
 ;; General packages
-;; (require 'my-evil)
-(require 'my-dired-x)
-;;(require 'my-ibuffer)
 (require 'my-magit)
 (require 'my-spellchecking)
 (require 'my-code-completion)
-;; (require 'my-org)
 (require 'my-elfeed)
 (require 'my-autocomplete)
 

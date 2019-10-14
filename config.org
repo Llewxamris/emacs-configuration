@@ -649,6 +649,56 @@ a
 				"C-x 5 RET" 'ibuffer-visit-buffer-other-frame)
 		 #+END_SRC
 
+* Dired-X
+  Dired-X is the extended version of the Emacs file manager Dired. I'll be
+  honest, I do not use Dired-X very often. If I need to read a file, I'd
+  rather use the ~fine-file~ command and navigate my filesystem using
+  a path. For all filesystem level operations, I would much rather
+  switch to my shell. My Dired-X usage is mostly if I need to open a file
+  and I've forgotten the name and need a list of files/directories. And
+  even then, it's only if I feel pressed for time, or if a coworker is
+  over my shoulder.
+
+  The keybinds are only for vim-like navigation. Nothing special exists
+  outside of those.
+
+  I customise how the filesystem is displayed. Dired takes in standard ~ls~
+  flags, which is really nice.
+
+  | Switch                    | Description                                         |
+  |---------------------------+-----------------------------------------------------|
+  | -k                        | Default to 1024-byte blocks for disk usage.         |
+  | -a                        | Do not ingore entires starting with ~.~.            |
+  | -B                        | Do not list implied entries ending with =~=.        |
+  | -h                        | Use human readable file sizes (1G instead of 1024). |
+  | -l                        | Use a long listing format.                          |
+  | --group-directories-first | Show directories at the top of the listing.         |
+
+  #+BEGIN_SRC emacs-lisp
+		(use-package dired
+			:ensure nil
+			:config
+			(setq dired-listing-switches "-kaBhl --group-directories-first")
+
+			;; Disable nag when jumping to another dired-x buffer
+			(put 'dired-find-alternate-file nil)
+
+			(general-define-key
+			 :states 'normal
+			 :keymaps 'dired-mode-map
+			 "l" 'dired-find-alternate-file
+			 "h" 'my-dired-up-directory
+			 "o" 'dired-sort-toggle-or-edit
+			 "v" 'dired-toggle-marks
+			 "m" 'dired-mark
+			 "u" 'dired-unmark
+			 "U" 'dired-unmark-all-marks
+			 "c" 'dired-create-directory
+			 "n" 'evil-search-next
+			 "N" 'evil-search-previous
+			 "q" 'kill-this-buffer))
+  #+END_SRC
+
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,
 	and honestly it's probably the main reason I keep using Emacs.
