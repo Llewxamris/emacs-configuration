@@ -139,10 +139,10 @@
      | SPC f e R | max/reload-emacs-configuration | Reload my Emacs configuration file |
 
 	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:prefix "SPC f e"
-			"R" 'max/reload-emacs-configuration
+	   (general-define-key
+		  :states 'normal
+		  :prefix "SPC f e"
+		  "R" 'max/reload-emacs-configuration)
 	 #+END_SRC
 
 * Look & Feel
