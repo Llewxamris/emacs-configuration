@@ -674,28 +674,28 @@ a
   | --group-directories-first | Show directories at the top of the listing.         |
 
   #+BEGIN_SRC emacs-lisp
-		(use-package dired
-			:ensure nil
-			:config
-			(setq dired-listing-switches "-kaBhl --group-directories-first")
+    (use-package dired
+      :ensure nil
+      :config
+      (setq dired-listing-switches "-kaBhl --group-directories-first")
 
-			;; Disable nag when jumping to another dired-x buffer
-			(put 'dired-find-alternate-file nil)
+      ;; Disable nag when jumping to another dired-x buffer
+      (put 'dired-find-alternate-file 'disable nil)
 
-			(general-define-key
-			 :states 'normal
-			 :keymaps 'dired-mode-map
-			 "l" 'dired-find-alternate-file
-			 "h" 'my-dired-up-directory
-			 "o" 'dired-sort-toggle-or-edit
-			 "v" 'dired-toggle-marks
-			 "m" 'dired-mark
-			 "u" 'dired-unmark
-			 "U" 'dired-unmark-all-marks
-			 "c" 'dired-create-directory
-			 "n" 'evil-search-next
-			 "N" 'evil-search-previous
-			 "q" 'kill-this-buffer))
+      (general-define-key
+       :states 'normal
+       :keymaps 'dired-mode-map
+       "l" 'dired-find-alternate-file
+       "h" 'my-dired-up-directory
+       "o" 'dired-sort-toggle-or-edit
+       "v" 'dired-toggle-marks
+       "m" 'dired-mark
+       "u" 'dired-unmark
+       "U" 'dired-unmark-all-marks
+       "c" 'dired-create-directory
+       "n" 'evil-search-next
+       "N" 'evil-search-previous
+       "q" 'kill-this-buffer))
   #+END_SRC
 
 * Magit
