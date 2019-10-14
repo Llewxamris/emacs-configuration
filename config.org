@@ -753,7 +753,46 @@ a
       :config
       (add-hook 'flyspell-mode-hook 'auto-dictionary-mode))
   #+END_SRC
-   
+
+** Spellchecking Keybinds 
+    | Keybind | Command                   | Description                                             |
+    |---------+---------------------------+---------------------------------------------------------|
+    | SPC s b | flyspell-buffer           | Manually invoke flyspell and check the entire buffer.   |
+    | SPC s c | flyspell-correct-at-point | Correct the spelling of the work underneath the cursor. |
+    | SPC s n | flyspell-goto-next-error  | Move the cursor to the next Flyspell error.             |
+
+		 #+BEGIN_SRC emacs-lisp
+       (general-define-key
+        :states 'normal
+        :prefix "SPC s"
+        "b" 'flyspell-buffer
+        "c" 'flyspell-correct-at-point
+        "n" 'flyspell-goto-next-error)
+		 #+END_SRC
+
+    | Keybind | Command       | Description                            |
+    |---------+---------------+----------------------------------------|
+    | SPC t s | flyspell-mode | Toggle flyspell in the current buffer. |
+
+		 #+BEGIN_SRC emacs-lisp
+       (general-define-key
+        :states 'normal
+        :prefix "SPC t"
+        "s" 'flyspell-mode)
+		 #+END_SRC
+
+    | Keybind | Command               | Description                                |
+    |---------+-----------------------+--------------------------------------------|
+    | j, k    | popup-(next previous) | Go to the next/previous entry in the list. |
+
+		 #+BEGIN_SRC emacs-lisp
+       (general-define-key
+        :states 'normal
+        :keymaps 'popup-keymap
+        "j" 'popup-next
+        "k" 'popup-previous)
+		 #+END_SRC
+
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,
 	and honestly it's probably the main reason I keep using Emacs.
