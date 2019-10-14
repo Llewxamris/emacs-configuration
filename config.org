@@ -648,7 +648,6 @@ a
 				"C-x 4 RET" 'ibuffer-visit-buffer-other-window
 				"C-x 5 RET" 'ibuffer-visit-buffer-other-frame)
 		 #+END_SRC
-
 * Dired-X
   Dired-X is the extended version of the Emacs file manager Dired. I'll be
   honest, I do not use Dired-X very often. If I need to read a file, I'd
@@ -699,6 +698,35 @@ a
 			 "q" 'kill-this-buffer))
   #+END_SRC
 
+* Magit
+	Magit is a Git porcelain for Emacs. Just like with Dired-X, I normally
+	default to the shell and use the Git CLI. However, I've heard such
+	good things about Magit that I figure I should give it a proper shot.
+	
+	#+BEGIN_SRC emacs-lisp
+		(use-package magit)
+	#+END_SRC
+	
+  I am using the black magic [[https://github.com/emacs-evil/evil-magit][~evil-magit~]] package for Magit's keybinds. The
+  defaults seem sane enough, so I am going to stick with them until I feel like
+  it needs some configuration.
+
+	#+BEGIN_SRC emacs-lisp
+		(use-package evil-magit)
+	#+END_SRC
+
+** Magit Keybinds 
+    | Keybind | Command | Description                   |
+    |---------+---------+-------------------------------|
+    | SPC g s | magit   | Open the Magit status buffer. |
+
+		 #+BEGIN_SRC emacs-lisp
+			 (general-define-key
+				:states 'normal
+				:prefix "SPC g"
+				"s" 'magit)
+		 #+END_SRC
+   
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,
 	and honestly it's probably the main reason I keep using Emacs.
