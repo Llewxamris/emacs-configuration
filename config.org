@@ -726,6 +726,33 @@ a
 				:prefix "SPC g"
 				"s" 'magit)
 		 #+END_SRC
+* Spellchecking
+  I use Emacs for writing documents on a regular basis. Usually this means
+  an ~org~ or Markdown file, but this could also be LaTeX files. I also
+  this also could be comments within source code. Lastly, I like to draft emails
+  within Emacs. This means I need spellchecking on the fly within Emacs to keep
+  my documents professional. Flyspell is /the/ package for spell checking in
+  Emacs. I use the popup menu from ~flyspell-correct~ to go through correction
+  options. I also use ~auto-dictionary~ to automatically switch between
+  dictionaries. I need this occasionally to go between English and French
+  documents.
+  
+  #+BEGIN_SRC emacs-lisp
+    (use-package flyspell
+      :config
+      ;; Auto-start flyspell within Markdown, Org-mode, and TeX files
+      (add-hook 'markdown-mode-hook 'flyspell-mode)
+      (add-hook 'org-mode-hook 'flyspell-mode)
+      (add-hook 'latex-mode 'flyspell-mode))
+
+    (use-package flyspell-correct-popup
+      :ensure flyspell-correct-popup)
+
+    (use-package auto-dictionary
+      :ensure auto-dictionary
+      :config
+      (add-hook 'flyspell-mode-hook 'auto-dictionary-mode))
+  #+END_SRC
    
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,

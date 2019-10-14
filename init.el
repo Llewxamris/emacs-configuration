@@ -45,7 +45,6 @@
 ;;; package does here. Instead, check each individual file for it's purpose.
 
 ;; General packages
-(require 'my-spellchecking)
 (require 'my-code-completion)
 (require 'my-elfeed)
 (require 'my-autocomplete)
