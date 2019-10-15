@@ -792,6 +792,114 @@ a
         "j" 'popup-next
         "k" 'popup-previous)
 		 #+END_SRC
+* Programming
+	A little known fact. Occasionally, I use Emacs to program. Outrageous
+	I know, but it's true. For any language I use, I try to leverage a
+	Language Server if available. Using a lang. server simplifies the setup,
+	and allows me to share one server configuration across several editors. 
+	As long as the functionality is in the server, I can guarantee it will
+	be available in every editor I use. If no lang. server is available, or
+	if there is some functionality not available in the lang. server, I will
+  fall back to some sort of ~lang-mode~ package. Using both is also a valid
+	option, as long as they do not conflict or result in displaying some chunks
+	of information twice.
+
+	#+BEGIN_SRC emacs-lisp
+		(use-package lsp-mode
+			:config
+			;; Attempt to find a language server for any programming language mode
+			(add-hook 'shell-mode  #'lsp))
+	#+END_SRC
+
+	Flycheck is used for some linting by ~lsp-mode~.
+
+	#+BEGIN_SRC emacs-lisp
+		(use-package flycheck
+			;; Flycheck by default
+			:init (global-flycheck-mode)
+			:config
+			;; Disable flycheck on checkdoc
+			(setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+	#+END_SRC
+
+	Company is the completion framework I leverage with ~lsp-mode~.
+
+	#+BEGIN_SRC emacs-lisp
+		(use-package company
+			;; Run company-mode globally for the entire session
+			:hook ('after-init-hook . 'global-company-mode))
+
+		(use-package company-lsp
+			:config
+				;; Add company-lsp as a backend to company-mode
+				(push 'company-lsp company-backends)
+
+				;; Cache completions if the cached results are incomplete
+				(setq company-lsp-cache-candidates 'auto)
+
+				;; Fetch completion results asynchronously. No need to lock up just to
+				;; fetch results from the language server.
+				(setq company-lsp-async t)
+
+				;; Enable snippet expansion from the language sever.
+				(setq company-lsp-enable-snippet t)
+
+				;; Allow recompletion in the case there are other completion trigger
+				;; characters.
+				(setq company-lsp-enable-recompletion t))
+	#+END_SRC
+
+	~lsp-ui~ gives much higher-level interactions with ~lsp-mode~. Things like
+	code lenses, definition look-ups, documentation popups, etc.
+
+	#+BEGIN_SRC emacs-lisp
+		(use-package lsp-ui
+			:config
+				;; Disable sideline information and floating doc window. Neither works
+				;; in a way that I think is useful. The Doc window is close, but small bugs
+				;; within it makes it an eyesore more often than not.
+				(setq lsp-ui-sideline-enable nil)
+				(setq lsp-ui-doc-enable nil)
+
+				(defun toggle-lsp-ui-doc ()
+					"Toggle the UI Doc"
+					(interactive)
+					(if (lsp-ui-doc--visible-p)
+							(lsp-ui-doc-hide)
+						(lsp-ui-doc-show)))
+
+				(defun toggle-lsp-ui-imenu ()
+					"Toggle the ~lsp-ui~ ~imenu~ buffer."
+					(interactive)
+					(if (get-buffer "*lsp-ui-imenu*")
+							(kill-buffer "*lsp-ui-imenu*")
+						(lsp-ui-imenu))))
+	#+END_SRC
+
+** Language Server Protocol Keybindings 
+    | Keybind   | Command                      | Description                                      |
+    |-----------+------------------------------+--------------------------------------------------|
+    | SPC m f   | lsp-format-buffer            | Format the entire buffer.                        |
+    | SPC m o   | lsp-organize-imports         | If possible, organize all imports in the buffer. |
+    | SPC m r   | lsp-rename                   | Rename the item at point across the project.     |
+    | SPC m p d | lsp-ui-peek-find-definitions | Peek find the definition of the item at point.   |
+    | SPC m p r | lsp-ui-peek-find-references  | Peek find all references to the item at point.   |
+    | SPC m u   | toggle-lsp-ui-doc            | Show the doc window if the window is not already |
+    |           |                              | visible.                                         |
+    | SPC m m   | toggle-lsp-ui-imenu          | Show the imenu buffer if not already visible. |
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC m"
+			"f" 'lsp-format-buffer
+			"o" 'lsp-organize-imports
+			"r" 'lsp-rename
+			"p d" 'lsp-ui-peek-find-definitions
+			"p r" 'lsp-ui-peek-find-references
+			"u" 'toggle-lsp-ui-doc
+			"m" 'toggle-lsp-ui-imenu)
+	 #+END_SRC
 
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,

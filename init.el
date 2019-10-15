@@ -44,11 +44,6 @@
 ;;; of these packages are local configs. I won't go into detail of what each
 ;;; package does here. Instead, check each individual file for it's purpose.
 
-;; General packages
-(require 'my-code-completion)
-(require 'my-elfeed)
-(require 'my-autocomplete)
-
 ;; Language specific packages
 (require 'my-docker)
 (require 'my-markdown)
