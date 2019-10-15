@@ -44,7 +44,4 @@
 ;;; of these packages are local configs. I won't go into detail of what each
 ;;; package does here. Instead, check each individual file for it's purpose.
 
-;; Language specific packages
-(require 'my-typescript)
-
 (provide 'init)
