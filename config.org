@@ -955,7 +955,8 @@ a
 		(setq org-use-fast-todo-selection t)
 	#+END_SRC
 
-*** Org-mode General Keybinds    | Keybind | Command         | Description                                     |
+*** Org-mode General
+    | Keybind | Command         | Description                                     |
     |---------+-----------------+-------------------------------------------------|
     | SPC o a | org-agenda      | Opens the agenda command view. This lets me     |
     |         |                 | interactively decide how I want to use the      |
