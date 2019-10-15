@@ -56,6 +56,15 @@
 	 #+END_SRC
 
 ** Use Package
+   Check the package directory for manually installed packages.
+   
+   #+BEGIN_SRC emacs-lisp
+     (eval-and-compile
+       (defvar package-dir (expand-file-name "packages" user-emacs-directory)
+         "The packages directory")
+       (add-to-list 'load-path package-dir))
+   #+END_SRC
+
 	 /Ensure/ ~use-package~ is always installed alongside this configuration. I /ensure/
 	 to always /ensure/ my packages are available, and then /ensure/ I have the
 	 newest packages available.
