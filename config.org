@@ -808,7 +808,8 @@ a
 		(use-package lsp-mode
 			:config
 			;; Attempt to find a language server for any programming language mode
-			(add-hook 'shell-mode  #'lsp))
+			(add-hook 'shell-mode  #'lsp)
+      (add-hook 'dockerfile-mode #'lsp))
 	#+END_SRC
 
 	Flycheck is used for some linting by ~lsp-mode~.
@@ -900,6 +901,20 @@ a
 			"u" 'toggle-lsp-ui-doc
 			"m" 'toggle-lsp-ui-imenu)
 	 #+END_SRC
+
+** Programming & Markup Languages
+   The following are specific configurations for individual programming
+   and markup languages.
+
+*** Docker
+    ~~~
+    npm install --global dockerfile-language-server-nodejs
+    ~~~
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package dockerfile-mode
+        :mode (("Dockerfile\\'" . dockerfile-mode)))
+    #+END_SRC
 
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,
