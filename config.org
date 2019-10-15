@@ -941,6 +941,15 @@ a
         (setq gofmt-command "goimports")
         (add-hook 'before-save-hook 'gofmt-before-save))
     #+END_SRC
+
+*** Markdown
+    #+BEGIN_SRC emacs-lisp
+      (use-package markdown-mode
+        :commands (markdown-mode gfm-mode)
+        ;; Use GitHub markdown on README.md files, and regular Markdown on others
+        :mode (("README\\.md'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)))
+    #+END_SRC
     
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,

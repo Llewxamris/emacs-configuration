@@ -45,7 +45,6 @@
 ;;; package does here. Instead, check each individual file for it's purpose.
 
 ;; Language specific packages
-(require 'my-markdown)
 (require 'my-typescript)
 
 (provide 'init)
