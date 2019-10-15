@@ -805,11 +805,12 @@ a
 	of information twice.
 
 	#+BEGIN_SRC emacs-lisp
-		(use-package lsp-mode
-			:config
-			;; Attempt to find a language server for any programming language mode
-			(add-hook 'shell-mode  #'lsp)
-      (add-hook 'dockerfile-mode #'lsp))
+    (use-package lsp-mode
+      :config
+      ;; Attempt to find a language server for any programming language mode
+      (add-hook 'shell-mode  #'lsp)
+      (add-hook 'dockerfile-mode #'lsp)
+      (add-hook 'go-mode #'lsp))
 	#+END_SRC
 
 	Flycheck is used for some linting by ~lsp-mode~.
