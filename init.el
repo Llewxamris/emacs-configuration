@@ -46,7 +46,6 @@
 
 ;; Language specific packages
 (require 'my-markdown)
-(require 'my-golang)
 (require 'my-typescript)
 
 (provide 'init)
