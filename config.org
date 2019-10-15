@@ -916,6 +916,18 @@ a
         :mode (("Dockerfile\\'" . dockerfile-mode)))
     #+END_SRC
 
+*** Emacs Lisp
+    #+BEGIN_SRC emacs-lisp
+      (use-package elisp-slime-nav
+        :config
+        (add-hook 'emacs-lisp-mode-hook 'elisp-slime-nav-mode))
+
+      (general-define-key
+       :states 'normal
+       :prefix "SPC m"
+       "e" 'pp-eval-last-sexp)
+    #+END_SRC
+
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,
 	and honestly it's probably the main reason I keep using Emacs.
