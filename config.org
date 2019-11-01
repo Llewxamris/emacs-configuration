@@ -341,15 +341,18 @@ a
 		#+END_SRC
 
 *** Colour Theme
-		I've become a big fan of the [[https://www.nordtheme.com/][Nord]] theme. Something about its cool
-		colours is very calming, while still being easy on my eyes.
+		I've recently switched over to the [[https://github.com/fniessen/emacs-leuven-theme][Leuven]] theme. I've started switching
+		over to light-themes for my systems in general. I keep my brightness
+		relatively low, so dark-themes end up having poor contrast. Leuven
+		was built with Org-mode in mind, and gives Org files a more cohesive
+		feeling.
 
 		#+BEGIN_SRC emacs-lisp
-			(use-package nord-theme
+			(use-package leuven-theme
 				:config
-				;; Load the theme unless running inside a terminal session
+				;; Load the theme unless running without an interactive terminal.
 				(unless noninteractive
-					(load-theme 'nord t)))
+					(load-theme 'leuven t)))
 		#+END_SRC
 
 *** Columns
@@ -1178,42 +1181,6 @@ a
 						 (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
 	 #+END_SRC
 
-	 I believe the keyword faces should represent the emotion I want the keyword
-	 to evoke. Some of these work out of the box, but others require some
-	 tweaking.
-
-	 ~RAW~ is set to the org-warning face. ~RAW~ should never be used outside of
-	 my inbox, as it represents an unfinished thought or task.
-
-	 ~WAITING~ & ~HOLD~ are set to a bold orange colour. Both states represent a
-	 task that is not actively being worked on by myself, but has not been
-	 completed or cancelled. Causes pause while still catching my eye and
-	 alerting me that the given task still requires input. This could trigger
-	 sending out an email to see progress, or evaluating the task and deciding to
-	 cancel.
-
-	 ~CANCELLED~ is set to the org-archived face. It is subdued and lets me know
-	 the task no longer needs my attention.
-
-	 ~OVERDUE~ is set to a bold red to signify the danger of unpaid expenses. I
-	 want to feel a wash of fear every time see that bold red inside my todo list.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-todo-keyword-faces
-					 '(("TODO" . (:foreground "#ebcb8b" :weight bold :underline t))
-						 ("STARTED" . (:foreground "#ebcb8b" :weight bold :underline t))
-						 ("RAW" . (:foreground "#ebcb8b" :weight bold :slant italic :underline t))
-						 ("WAITING" . (:foreground "#ff7800" :weight bold :underline t))
-						 ("HOLD" . (:foreground "#ff7800" :weight bold :underline t))
-						 ("EXPENSE" . (:foreground "#ebcb8b" :weight bold :underline t))
-						 ("DONE" . (:foreground "#a3be8c" :weight bold :underline t))
-						 ("CANCELLED" . (:inherit shadow :underline t))
-						 ("OVERDUE" . (:foreground "red"
-																			 :background "lightgrey"
-																			 :weight ultrabold
-																			 :underline t))))
-	 #+END_SRC
-
 ** Tags
 	 I use tags to help prioritise my work. I use the Eisenhower matrix to
 	 prioritise my work. Each task is prioritised as either important or not
@@ -1331,31 +1298,9 @@ a
 	 #+END_SRC
 
 ** Headlines
-  Give the ellipsis at the end of collapsed headlines some breathing room.
-
-  #+BEGIN_SRC emacs-lisp
-    (setq org-ellipsis " ... ")
-  #+END_SRC
-	
-	Increase headline font size based on the headline level. Going from level 1
-	(largest) to level 3 (smallest), and staying the same size from there on
-	out. Any smaller and it becomes hard to read.
-	
-	#+BEGIN_SRC emacs-lisp
-		(custom-set-faces
-		 '(org-level-1 ((nil (:weight bold :height 1.25 :foreground "#88c0d0"))))
-		 '(org-level-2 ((nil (:weight bold :height 1.1 :foreground "#88c0d0" :inherit nil))))
-		 '(org-level-3 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil))))
-		 '(org-level-4 ((nil (:weight bold :height 1.0 :foreground "#88c0d0" :inherit nil)))))
-	#+END_SRC
-
-	Strike-through any "/done/" state headlines and shadow the headline text.
-
 	#+BEGIN_SRC emacs-lisp
 		;; Requires org-fonitfy-done-headline to be non-nil
 		(setq org-fontify-done-headline t)
-		(custom-set-faces '(org-headline-done
-												((nil (:inherit shadow :strike-through t)))))
 	#+END_SRC
 
 	Org-bullets changes out the asterisks for UTF-8 symbols.
@@ -1470,15 +1415,6 @@ a
 			 "l" 'org-insert-link)
 	 #+END_SRC
 
-** Meta & Block Sections
-	 Make the document title larger like a proper title should be.
 
-	 #+BEGIN_SRC emacs-lisp
-		 (custom-set-faces '(org-document-title ((nil (:height 1.5 :weight bold)))))
-	 #+END_SRC
-
-	 Shrinking the meta lines makes the easier to scan over.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (custom-set-faces '(org-meta-line ((nil (:height 0.65 :slant italic)))))
-	 #+END_SRC
+#  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC
+#  LocalWords:  emacs
