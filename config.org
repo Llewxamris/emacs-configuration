@@ -1190,11 +1190,19 @@ a
 	 3. Not Important & Urgent (Delegate if possible)
 	 4. Not Important & Not Urgent (Do it later)
 
+	 I use the ~PROJECT~ tag to indicate that all sub-headers are part of the same
+	 overarching task defined in the tagged header. I make sure to exclude this
+	 tag from the inheritance list so all sub-headers do not get the ~PROJECT~
+	 tag.
+
 	 #+BEGIN_SRC emacs-lisp
+		 (setq org-use-tag-inheritance t)
+		 (setq org-tags-exclude-from-inheritance '("PROJECT"))
 		 (setq org-tag-alist '(("important" . ?i)
 													 ("urgent" . ?u)
 													 ("!important" . ?I)
-													 ("!urgent" . ?U)))
+													 ("!urgent" . ?U)
+													 ("PROJECT" . ?P)))
 	 #+END_SRC
 
 ** Capture
