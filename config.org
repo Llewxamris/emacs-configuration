@@ -983,7 +983,11 @@ a
 		(use-package org
 			:ensure org
 			:commands (org-mode org-capture org-agenda orgtbl-mode)
-			:mode ("\\.org$" . org-mode))
+			:mode ("\\.org$" . org-mode)
+			:config
+			;; Linum mode on large (>1000 lines) Org files results in masive
+			;; slowdowns when going over a lot of collapsed lines.
+			(add-hook 'org-mode-hook (lambda() (linum-relative-mode -1))))
 	#+END_SRC
 
 ** General Settings
