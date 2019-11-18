@@ -223,6 +223,13 @@
 	(auto-compression-mode t)
 	 #+END_SRC
 
+	 If the cursor is on the end of a line, stay on the end of the line when
+	 moving to the next or previous line.
+
+	 #+BEGIN_SRC emacs-lisp
+	(setq track-eol t)
+	 #+END_SRC
+
 *** Essential Keybinds
 		| Keybind | Command                    | Description                                   |
 		|---------+----------------------------+-----------------------------------------------|
@@ -299,7 +306,7 @@
 			 :config
 			 (savehist-mode))
 	 #+END_SRC
-a
+
 ** Editor
 *** Character Encoding & General Formatting
 		Set the current font to [[https://typeof.net/Iosevka/][Iosevka Term SS04]] with a size of 11.
@@ -339,11 +346,22 @@ a
 		#+END_SRC
 
 		Use spaces instead of tabs.
-		There must be a better way of doing this, /but I sure as hell can't find it!/
+		There must be a better way of doing this, /but I sure as hell can't find
+		it!/
+
 		#+BEGIN_SRC emacs-lisp
 			(setq-default tab-width 2)
 			(setq-default tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80))
 			(setq indent-tabs-mode nil)
+		#+END_SRC
+
+		Automatically insert a closing symbol if an opening symbol is entered
+		(paren., bracket, brace, etc.). The closing symbol is after the point
+		of the cursor, so I can keep typing without having to adjust to the
+		newly entered text.
+
+		#+BEGIN_SRC emacs-lisp
+			(electric-pair-mode)
 		#+END_SRC
 
 *** Colour Theme
@@ -544,7 +562,8 @@ a
   #+END_SRC
 
 * iBuffer
-	iBuffer is a great tool for managing the many buffers created in day-to-day Emacs use.
+	iBuffer is a great tool for managing the many buffers created in day-to-day
+	Emacs use.
 
 	#+BEGIN_SRC emacs-lisp
 		(use-package ibuffer
