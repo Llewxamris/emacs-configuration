@@ -198,7 +198,7 @@
 	 me I'm doing okay when I start a motion and forget where to go next.
 
 	 #+BEGIN_SRC emacs-lisp
-		 (setq echo-keystrokes 0.1)
+		 (setq echo-keystrokes 0.01)
 
 		 (use-package which-key
 			 :hook (after-init . which-key-mode))
