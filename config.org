@@ -383,10 +383,15 @@ a
 		#+END_SRC
 
 *** Parenthesis
-		Show the matching parenthesis to the one currently covered by the cursor.
+		When the cursor is over a parenthesis, highlight all of the content between
+		that parenthesis and it's matching opening/closing parenthesis. This is
+		mostly useful when working with Lisp, but I have found it helpful in other
+		situations as well. So I set it globally.
 
 		#+BEGIN_SRC emacs-lisp
 			(show-paren-mode t)
+			(setq show-paren-style 'expression)
+			(setq show-paren-delay 0)
 		#+END_SRC
 
 *** Doom Modeline
