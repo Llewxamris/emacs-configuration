@@ -57,7 +57,7 @@
 
 ** Use Package
    Check the package directory for manually installed packages.
-   
+
    #+BEGIN_SRC emacs-lisp
      (eval-and-compile
        (defvar package-dir (expand-file-name "packages" user-emacs-directory)
@@ -526,7 +526,7 @@ a
   brute force of slamming it down in frustration during a heated moment. My pinky is
   barely even an appendage.
 
-	Evil mode gives me Vim-like keybindings without having to invest in any sort of 
+	Evil mode gives me Vim-like keybindings without having to invest in any sort of
   remapping. I, of course, still add my own mappings and remappings. Not because Vim
   lacks anything, but entirely due to personal preference. Without Evil, I don't think
   I could see myself ever using Emacs seriously.
@@ -545,7 +545,7 @@ a
 
 * iBuffer
 	iBuffer is a great tool for managing the many buffers created in day-to-day Emacs use.
-	
+
 	#+BEGIN_SRC emacs-lisp
 		(use-package ibuffer
 			:config
@@ -742,11 +742,11 @@ a
 	Magit is a Git porcelain for Emacs. Just like with Dired-X, I normally
 	default to the shell and use the Git CLI. However, I've heard such
 	good things about Magit that I figure I should give it a proper shot.
-	
+
 	#+BEGIN_SRC emacs-lisp
 		(use-package magit)
 	#+END_SRC
-	
+
   I am using the black magic [[https://github.com/emacs-evil/evil-magit][~evil-magit~]] package for Magit's keybinds. The
   defaults seem sane enough, so I am going to stick with them until I feel like
   it needs some configuration.
@@ -755,7 +755,7 @@ a
 		(use-package evil-magit)
 	#+END_SRC
 
-** Magit Keybinds 
+** Magit Keybinds
     | Keybind | Command | Description                   |
     |---------+---------+-------------------------------|
     | SPC g s | magit   | Open the Magit status buffer. |
@@ -776,7 +776,7 @@ a
   options. I also use ~auto-dictionary~ to automatically switch between
   dictionaries. I need this occasionally to go between English and French
   documents.
-  
+
   #+BEGIN_SRC emacs-lisp
     (use-package flyspell
       :config
@@ -794,7 +794,7 @@ a
       (add-hook 'flyspell-mode-hook 'auto-dictionary-mode))
   #+END_SRC
 
-** Spellchecking Keybinds 
+** Spellchecking Keybinds
     | Keybind | Command                   | Description                                             |
     |---------+---------------------------+---------------------------------------------------------|
     | SPC s b | flyspell-buffer           | Manually invoke flyspell and check the entire buffer.   |
@@ -836,7 +836,7 @@ a
 	A little known fact. Occasionally, I use Emacs to program. Outrageous
 	I know, but it's true. For any language I use, I try to leverage a
 	Language Server if available. Using a lang. server simplifies the setup,
-	and allows me to share one server configuration across several editors. 
+	and allows me to share one server configuration across several editors.
 	As long as the functionality is in the server, I can guarantee it will
 	be available in every editor I use. If no lang. server is available, or
 	if there is some functionality not available in the lang. server, I will
@@ -916,7 +916,7 @@ a
 						(lsp-ui-imenu))))
 	#+END_SRC
 
-** Language Server Protocol Keybindings 
+** Language Server Protocol Keybindings
     | Keybind   | Command                      | Description                                      |
     |-----------+------------------------------+--------------------------------------------------|
     | SPC m f   | lsp-format-buffer            | Format the entire buffer.                        |
@@ -993,7 +993,7 @@ a
     #+BEGIN_SRC emacs-lisp
       (use-package typescript-mode)
     #+END_SRC
- 
+
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,
 	and honestly it's probably the main reason I keep using Emacs.
