@@ -210,6 +210,12 @@
 		 (column-number-mode t)
 	 #+END_SRC
 
+	 Show the size of the current buffer in the modeline.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (size-indication-mode)
+	 #+END_SRC
+
 	 Automatically decompress archives when reading, and then compress again when
 	 writing.
 
