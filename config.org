@@ -1455,4 +1455,4 @@ a
 
 
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC
-#  LocalWords:  emacs
+#  LocalWords:  emacs modeline
