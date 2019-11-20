@@ -987,26 +987,30 @@
 ** Language Server Protocol Keybindings
     | Keybind   | Command                      | Description                                      |
     |-----------+------------------------------+--------------------------------------------------|
-    | SPC m f   | lsp-format-buffer            | Format the entire buffer.                        |
-    | SPC m o   | lsp-organize-imports         | If possible, organize all imports in the buffer. |
-    | SPC m r   | lsp-rename                   | Rename the item at point across the project.     |
-    | SPC m p d | lsp-ui-peek-find-definitions | Peek find the definition of the item at point.   |
-    | SPC m p r | lsp-ui-peek-find-references  | Peek find all references to the item at point.   |
-    | SPC m u   | toggle-lsp-ui-doc            | Show the doc window if the window is not already |
+    | SPC e b   | lsp-format-buffer            | Format the entire buffer.                        |
+    | SPC e o   | lsp-organize-imports         | If possible, organize all imports in the buffer. |
+    | SPC e r   | lsp-rename                   | Rename the item at point across the project.     |
+    | SPC e f d | lsp-ui-peek-find-definitions | Peek find the definition of the item at point.   |
+    | SPC e f r | lsp-ui-peek-find-references  | Peek find all references to the item at point.   |
+    | SPC e u   | toggle-lsp-ui-doc            | Show the doc window if the window is not already |
     |           |                              | visible.                                         |
-    | SPC m m   | toggle-lsp-ui-imenu          | Show the imenu buffer if not already visible. |
+    | SPC b m   | toggle-lsp-ui-imenu          | Show the imenu buffer if not already visible. |
 
 	 #+BEGIN_SRC emacs-lisp
 		 (general-define-key
 			:states 'normal
-			:prefix "SPC m"
-			"f" 'lsp-format-buffer
+			:prefix "SPC e"
+			"b" 'lsp-format-buffer
 			"o" 'lsp-organize-imports
 			"r" 'lsp-rename
-			"p d" 'lsp-ui-peek-find-definitions
-			"p r" 'lsp-ui-peek-find-references
-			"u" 'toggle-lsp-ui-doc
-			"m" 'toggle-lsp-ui-imenu)
+			"f d" 'lsp-ui-peek-find-definitions
+			"f r" 'lsp-ui-peek-find-references
+			"u" 'max/toggle-lsp-ui-doc)
+
+			(general-define-key
+			:states 'normal
+			:prefix "SPC b"
+			"m" 'max/toggle-lsp-ui-imenu)
 	 #+END_SRC
 
 ** Programming & Markup Languages
