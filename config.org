@@ -922,6 +922,9 @@
 	sometimes renders with an incorrect size. Instead, I have a key binding to
 	enable/disable the Doc. The same goes for the ~imenu~ buffer.
 
+	I change the face for the peek references to match the Leuven ~org-block~
+	colours.
+
 	The Sideline is a feature that I used to also disable, but after tweaking it
 	a bit and removing the symbol information I find it very handy. The few tweaks
 	I make are changing the face to match the ~ol1~ face from Leuven theme, and
@@ -944,14 +947,36 @@
 			(setq lsp-ui-flycheck-enable t)
 			(setq lsp-ui-doc-enable nil) ; Disable the Docs by default
 
-			(defun toggle-lsp-ui-doc ()
+			(set-face-attribute 'lsp-ui-peek-peek nil
+													:background "#FFFFE0")
+			(set-face-attribute 'lsp-ui-peek-list nil
+													:background "#FFFFE0")
+			(set-face-attribute 'lsp-ui-peek-filename nil
+													:foreground "#4183C4"
+													:background nil)
+			(set-face-attribute 'lsp-ui-peek-highlight nil
+													:background "#F6FECD"
+													:slant 'italic)
+			(set-face-attribute 'lsp-ui-peek-selection nil
+													:foreground "#333333"
+													:background "#F6FECD")
+			(set-face-attribute 'lsp-ui-peek-header nil
+													:underline "#A7A6AA"
+													:foreground "#555555"
+													:background "#E2E1D5")
+			(set-face-attribute 'lsp-ui-peek-footer nil
+													:underline "#A7A6AA"
+													:foreground "#555555"
+													:background "#E2E1D5")
+
+			(defun max/toggle-lsp-ui-doc ()
 				"Toggle the UI Doc"
 				(interactive)
 				(if (lsp-ui-doc--visible-p)
 						(lsp-ui-doc-hide)
 					(lsp-ui-doc-show)))
 
-			(defun toggle-lsp-ui-imenu ()
+			(defun max/toggle-lsp-ui-imenu ()
 				"Toggle the ~lsp-ui~ ~imenu~ buffer."
 				(interactive)
 				(if (get-buffer "*lsp-ui-imenu*")
