@@ -526,7 +526,7 @@
 			:prefix "SPC w"
 			"d" 'delete-window
 			"h" 'evil-window-left
-			"j" 'evil-window-bottom
+			"j" 'evil-window-down
 			"k" 'evil-window-up
 			"l" 'evil-window-right
 			"s h" 'split-window-vertically
