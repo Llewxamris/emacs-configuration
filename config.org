@@ -1,6 +1,7 @@
 #+TITLE: Maxwell Haley's Emacs Configuration
 #+OPTIONS: toc:4 h:4
 #+STARTUP: showeverything
+#  LocalWords:  Leuven Flycheck
 
 * Forward
 	My living monolith of a Emacs configuration file. Bred through trial, error, and
@@ -1078,9 +1079,8 @@
 *** Typescript
     #+BEGIN_SRC emacs-lisp
       (use-package typescript-mode)
+      (use-package json-mode)
     #+END_SRC
-
-#  LocalWords:  Leuven Flycheck
 
 * Org-mode
 	Org-mode was the killer feature that got me to try out Emacs to begin with,
