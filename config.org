@@ -1,11 +1,12 @@
+;;; -*- lexical-binding: t; -*-
 #+TITLE: Maxwell Haley's Emacs Configuration
 #+OPTIONS: toc:4 h:4
 #+STARTUP: showeverything
-#  LocalWords:  Leuven Flycheck
+#  LocalWords:  Leuven Flycheck modeline
 
 * Forward
-	My living monolith of a Emacs configuration file. Bred through trial, error, and
-	peeking at the configurations of people far more wise than I. Here's a list
+  My living monolith of a Emacs configuration file. Bred through trial, error, and
+  peeking at the configurations of people far more wise than I. Here's a list
 	of some of those configurations I've lifted. Can't let me get away red handed.
 
 	- [[https://github.com/angrybacon/dotemacs][angrybacon/dotemacs]]
@@ -34,13 +35,14 @@
 
 * Preparation & Package Management
 ** Custom
-	 Hide away the ~custom~ configurations. I try to avoid using ~custom~ in
-	 general. I find figuring out how to do it manually much more +infuriating+
-	 entertaining.
+	 Hide away the ~custom~ configurations by dumping it into the void. I try to
+   avoid using ~custom~ in general. I find figuring out how to do it manually
+   much more +infuriating+ entertaining.
 
 	 #+BEGIN_SRC emacs-lisp
-		 (setq custom-file (concat user-emacs-directory ".custom.el"))
-		 (load custom-file t)
+     (use-package cus-edit
+       :custom
+       (custom-file null-device))
 	 #+END_SRC
 
 ** Remote Package Archives
@@ -51,13 +53,14 @@
 	 Org is the Org mode repository.
 
 	 #+BEGIN_SRC emacs-lisp
-		 (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
-															("org" . "http://orgmode.org/elpa/")
-															("gnu" . "http://elpa.gnu.org/packages/")))
+     (require 'package)
+     (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
+                              ("org" . "http://orgmode.org/elpa/")
+                              ("gnu" . "http://elpa.gnu.org/packages/")))
 	 #+END_SRC
 
 ** Use Package
-   Check the package directory for manually installed packages.
+   Check the packages directory for manually installed packages.
 
    #+BEGIN_SRC emacs-lisp
      (eval-and-compile
@@ -74,19 +77,33 @@
 	 days after the previous upgrade was ran.
 
 	 #+BEGIN_SRC emacs-lisp
-		 (unless (package-installed-p 'use-package)
-			 (package-refresh-contents)
-			 (package-install 'use-package))
-		 (require 'use-package)
-		 (setq use-package-verbose t)
-		 (setq use-package-always-ensure t)
-		 (setq load-prefer-newer t)
+     (unless (package-installed-p 'use-package)
+       (package-refresh-contents)
+       (package-install 'use-package))
 
-		 (use-package auto-package-update
-			 :config
-			 (setq auto-package-update-delete-old-versions t)
-			 (setq auto-package-update-hide-results t)
-			 (auto-package-update-maybe))
+     (require 'use-package)
+
+     (use-package use-package-core
+       :ensure t
+       :custom
+       (use-package-verbose t)
+       (load-prefer-newer t))
+
+     (use-package auto-package-update
+       :ensure t
+       :config
+       (auto-package-update-maybe)
+       :custom
+       (auto-package-update-delete-old-versions t)
+       (auto-package-update-hide-results t))
+
+     (use-package system-packages
+       :ensure t
+       :custom
+       (system-packages-noconfirm t))
+
+     (use-package use-package-ensure-system-package
+       :ensure t)
 	 #+END_SRC
 
 ** General
@@ -155,80 +172,101 @@
 		  "R" 'max/reload-emacs-configuration)
 	 #+END_SRC
 
-* Look & Feel
-** Emacs Essentials
-	 Disable the startup screen & message.
+* Emacs General
+** Essentials
+	Emacs comes with a large set of defaults designed to make adoption simple for
+	new users. Once you get a hang of Emacs, some of these defaults can feel like
+	they get in the way or are unnecessary. There are also some settings that are
+	not set by default to avoid confusing new users. And like the set defaults,
+	some of them may be very useful once you are more familiar with Emacs.
 
 	 #+BEGIN_SRC emacs-lisp
-		(setq inhibit-splash-screen t)
-		(setq	inhibit-startup-echo-area-message t)
-		(setq	inhibit-startup-message t)
-	 #+END_SRC
+     (use-package emacs
+       :config
+       ;; Force syntax highlighting for all supported major modes.
+       (global-font-lock-mode t)
 
-	 Disable the bell that makes me feel shame every time it lets me know I fumbled a
-	 keystroke. Worse, its almost like hearing the bell guarantees the next
-	 few strokes will also be fumbled resulting in more bells. Disable this
-	 existential horror please.
+       ;; Change the "Yes or No" prompt to just be "y or n".
+       (defalias 'yes-or-no-p 'y-or-n-p)
+       :custom
+       ;;  Disable the startup screen & message.
+       (inhibit-startup-screen t)
+
+       ;; Disable the bell that makes me feel shame every time it lets me know I fumbled a
+       ;; keystroke. Worse, its almost like hearing the bell guarantees the next
+       ;; few strokes will also be fumbled resulting in more bells. Disable this
+       ;; existential horror please.
+       (ring-bell-function 'ignore); *ding-ding* SHAME. *ding-ding* SHAME.
+
+       ;;	Show keystrokes after 0.1 seconds. Any longer and the panic sets in.
+       (echo-keystrokes 0.01)
+
+       ;; Do not show a dialog box when mouse commands result in a question
+       ;; being asked. I actively avoid using the mouse, and accidently
+       ;; triggering a popup is very frustrating.
+       (use-dialog-box t)
+
+       ;; Use spaces instead of tabs. And when tabs are seen, limit them to two
+       ;; characters.
+       (indent-tabs-mode nil)
+       (tab-width 2)
+
+       ;; Use UTF-8 encoding, because this is ${CURRENT_YEAR}.
+       (locale-coding-system 'utf-8))
+	 #+END_SRC
 
 	 #+BEGIN_SRC emacs-lisp
-	(setq ring-bell-function 'ignore) ; *ding-ding* SHAME. *ding-ding* SHAME.
+     (use-package simple
+       :config
+       ;; Show column numbers on the modeline.
+       (column-number-mode)
+
+       ;; Show the size of the current buffer in the modeline.
+       (size-indication-mode)
+
+       ;; Visually wrap lines when the characters are too close to the fringe.
+     (global-visual-line-mode 1)
+       :custom
+       ;; If the cursor is on the end of a line, stay on the end of the line when
+       ;; moving to the next or previous line.
+       (track-eol t)
+
+       ;; Always show the current line number and column number
+       ;; in the buffer. When both enabled, they appear like this:
+       ;; ~~~
+       ;; (line, col)
+       ;; ~~~
+       (line-number-mode t)
+       (column-number-mode t)
+
+       ;; Adds some curly arrows to help show which lines are being effected by
+       ;; visual line wrapping.
+       (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)))
 	 #+END_SRC
 
-	 Seeing three bars on a slot machine is good. Seeing three bars on Emacs is bad.
-
-	 #+BEGIN_SRC emacs-lisp
-		(menu-bar-mode -1)
-		(scroll-bar-mode -1)
-		(tool-bar-mode -1)
-	 #+END_SRC
-
-	 Force syntax highlighting for all supported major modes.
-
-	 #+BEGIN_SRC emacs-lisp
-		(global-font-lock-mode t)
-	 #+END_SRC
-
-	 Change the "Yes or No" prompt to just be "y or n".
-
-	 #+BEGIN_SRC emacs-lisp
-		 (defalias 'yes-or-no-p 'y-or-n-p)
-	 #+END_SRC
-
-	 Show keystrokes after 0.1 seconds. Any longer and the panic sets in.
 	 Similarly, I like having which-key around to pat me on the back and tell
 	 me I'm doing okay when I start a motion and forget where to go next.
 
 	 #+BEGIN_SRC emacs-lisp
-		 (setq echo-keystrokes 0.01)
-
 		 (use-package which-key
 			 :hook (after-init . which-key-mode))
-	 #+END_SRC
-
-	 Show column numbers on the modeline.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (column-number-mode t)
-	 #+END_SRC
-
-	 Show the size of the current buffer in the modeline.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (size-indication-mode)
 	 #+END_SRC
 
 	 Automatically decompress archives when reading, and then compress again when
 	 writing.
 
 	 #+BEGIN_SRC emacs-lisp
-	(auto-compression-mode t)
+		 (auto-compression-mode t)
 	 #+END_SRC
 
-	 If the cursor is on the end of a line, stay on the end of the line when
-	 moving to the next or previous line.
+   Enable the Garbage Collector Magic Hack. This will kick in Emac's built in GC
+   whenever the system is idle,
 
 	 #+BEGIN_SRC emacs-lisp
-	(setq track-eol t)
+     (use-package gcmh
+       :ensure t
+       :init
+       (gcmh-mode 1))
 	 #+END_SRC
 
 *** Essential Keybinds
@@ -272,24 +310,52 @@
 				"D" 'dired-jump)
 		 #+END_SRC
 
-** Backups & History
-   Emacs auto-backups files, which is great. But, it dumps them in the current
-   directory, which is terrible. Instead, dump them into ~.emacs.d/~.
+** Files
+   Of course, the core purpose of a file editor is to edit files. And when we
+   have edited a file, that file needs to be saved. Emacs has plenty of built in
+   saving functionality, as well as the ability to make plenty of backups in
+   case you forgot to save.
 
    #+BEGIN_SRC emacs-lisp
-     (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+     (use-package files
+       :hook
+       ;; Always delete trailing whitespace when saving a file.
+       (before-save . delete-trailing-whitespace)
+
+       ;; Automatically save buffers when losing focus, or when a frame is deleted.
+       (focus-out-hook . save-some-buffers)
+       (delete-frame-functions . save-some-buffers)
+
+       :custom
+       ;; Emacs auto-backups files, which is great. But, it dumps them in the current
+       ;; directory, which is terrible. Instead, dump them into ~.emacs.d/~.
+       (backup-directory-alist '(("." . "~/.emacs.d/backups")))
+
+       ;; I don't want to have my hard drive littered with backups, so I set Emacs to
+       ;; only keep up to three backup versions. I also don't want to have a nag every
+       ;; time it wants to delete a backup. I also include version controlled files,
+       ;; just in case.
+       (version-control t)
+       (kept-old-versions 2)
+       (delete-old-versions t)
+       (vc-make-backup-files t)
+
+       ;; Always include a trailing newline at the end of a file.
+       (require-final-newline t))
    #+END_SRC
 
-	 I don't want to have my hard drive littered with backups, so I set Emacs to
-	 only keep up to three backup versions. I also don't want to have a nag every
-	 time it wants to delete a backup. I also include version controlled files,
-	 just in case.
+   It is also very useful to automatically refresh buffers. That is: If the
+   content of a buffer changes (such as a file changing on disk), then redraw
+   the buffer. I also set it to refresh non-file buffers (such as Dired
+   buffers), and to suppress the nag.
 
 	 #+BEGIN_SRC emacs-lisp
-		 (setq version-control t)
-		 (setq kept-old-versions 3)
-		 (setq delete-old-versions t)
-		 (setq vc-make-backup-files t)
+     (use-package autorevert
+       :config
+       (global-auto-revert-mode t)
+       :custom
+       (global-auto-revert-non-file-buffers t)
+       (auto-revert-verbose nil))
 	 #+END_SRC
 
 	 I also want to backup all of the commands I've used, so I can re-invoke them
@@ -308,6 +374,63 @@
 			 (savehist-mode))
 	 #+END_SRC
 
+** Graphical User Interface
+	 Seeing three bars on a slot machine is good. Seeing three bars on Emacs is bad.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (use-package menu-bar
+			 :config
+			 (menu-bar-mode -1))
+
+		 (use-package scroll-bar
+			 :config
+			 (scroll-bar-mode -1))
+
+		 (use-package tool-bar
+			 :config
+			 (tool-bar-mode -1))
+
+		 (use-package tooltip
+			 :defer t
+			 :custom
+			 (tooltip-mode -1))
+	 #+END_SRC
+
+	 Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
+	 accidental destruction the layout of windows and buffers.
+
+	 #+BEGIN_SRC emacs-lisp
+		 (use-package winner
+			 :config
+			 (winner-mode 1))
+	 #+END_SRC
+
+*** GUI Keybinds
+    | Keybind   | Command                   | Description                                     |
+    |-----------+---------------------------+-------------------------------------------------|
+    | SPC w d   | delete-window             | Delete (close) the currently focused window.    |
+    | SPC w h   | evil-window-left          | Focus the window to the left.                   |
+    | SPC w j   | evil-window-bottom        | Focus the window below.                         |
+    | SPC w k   | evil-window-up            | Focus the window above.                         |
+    | SPC w l   | evil-window-right         | Focus the window to the right.                  |
+    | SPC w s h | split-window-vertically   | Split the window, resulting in two vertically  |
+    |           |                           | side-by-side windows.                           |
+    | SPC w s v | split-window-horizontally | Split the window, resulting in two horizontally |
+    |           |                           | side-by-side windows.                           |
+
+	 #+BEGIN_SRC emacs-lisp
+		 (general-define-key
+			:states 'normal
+			:prefix "SPC w"
+			"d" 'delete-window
+			"h" 'evil-window-left
+			"j" 'evil-window-down
+			"k" 'evil-window-up
+			"l" 'evil-window-right
+			"s h" 'split-window-vertically
+			"s v" 'split-window-horizontally)
+	 #+END_SRC
+
 ** Editor
 *** Character Encoding & General Formatting
 		Set the current font to [[https://typeof.net/Iosevka/][Iosevka Term SS04]] with a size of 11.
@@ -320,15 +443,16 @@
 		my terminal of choice also supports UTF-8. No reason to not enable.
 
 		#+BEGIN_SRC emacs-lisp
-			(setq locale-coding-system 'utf-8)
-			(set-terminal-coding-system 'utf-8)
-			(set-keyboard-coding-system 'utf-8)
-			(set-selection-coding-system 'utf-8)
-			(prefer-coding-system 'utf-8)
+      (use-package mule
+        :config
+        (set-terminal-coding-system 'utf-8)
+        (set-keyboard-coding-system 'utf-8)
+        (set-selection-coding-system 'utf-8)
+        (prefer-coding-system 'utf-8))
 		#+END_SRC
 
 		To congratulate myself for taking a stand against non-UTF-8 encoding, I will
-		reward myself some pretty symbols.
+		reward myself with some pretty symbols.
 
 		#+BEGIN_SRC emacs-lisp
 			(use-package pretty-mode
@@ -343,26 +467,6 @@
 
 		#+BEGIN_SRC emacs-lisp
 			(setq sentence-end-double-space nil)
-			(setq require-final-newline t)
-		#+END_SRC
-
-		Use spaces instead of tabs.
-		There must be a better way of doing this, /but I sure as hell can't find
-		it!/
-
-		#+BEGIN_SRC emacs-lisp
-			(setq-default tab-width 2)
-			(setq-default tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80))
-			(setq indent-tabs-mode nil)
-		#+END_SRC
-
-		Automatically insert a closing symbol if an opening symbol is entered
-		(paren., bracket, brace, etc.). The closing symbol is after the point
-		of the cursor, so I can keep typing without having to adjust to the
-		newly entered text.
-
-		#+BEGIN_SRC emacs-lisp
-			(electric-pair-mode)
 		#+END_SRC
 
 *** Colour Theme
@@ -373,51 +477,47 @@
 		feeling.
 
 		#+BEGIN_SRC emacs-lisp
-			(use-package leuven-theme
-				:config
-				;; Load the theme unless running without an interactive terminal.
-				(unless noninteractive
-					(load-theme 'leuven t)))
+      (use-package leuven-theme
+        :ensure t
+        :config
+        ;; Load the theme unless running without an interactive terminal.
+        (unless noninteractive
+          (load-theme 'leuven t)))
 		#+END_SRC
 
-*** Columns
-		Always show the current line number and column number
-		in the buffer. When both enabled, they appear like this:
-		~~~
-		(line, col)
-		~~~
+*** Highlighting & Pair Matching
+    Highlight the row the cursor is currently on.
 
-		#+BEGIN_SRC emacs-lisp
-		 (setq line-number-mode t)
-		 (setq column-number-mode t)
-		#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package hl-line
+        :config
+        (global-hl-line-mode))
+    #+END_SRC
 
-		Visually wrap lines when they get too close to the fringe. Adds some curly
-		arrows to help show which lines are being effected.
+    When the cursor is over a parenthesis, highlight all of the content between
+    that parenthesis and it's matching opening/closing parenthesis. This is
+    mostly useful when working with Lisp, but I have found it helpful in other
+    situations as well. So I set it globally.
 
-		#+BEGIN_SRC emacs-lisp
-		 (global-visual-line-mode 1)
-		 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-		#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package paren
+        :config
+        (show-paren-mode)
+        :custom
+        (show-paren-style 'expression)
+        (show-paren-delay 0))
+    #+END_SRC
 
-*** Rows
-		Highlight the row the cursor is currently on.
+    Automatically insert a closing symbol if an opening symbol is entered
+    (paren., bracket, brace, etc.). The closing symbol is after the point
+    of the cursor, so I can keep typing without having to adjust to the
+    newly entered text.
 
-		#+BEGIN_SRC emacs-lisp
-			(global-hl-line-mode t)
-		#+END_SRC
-
-*** Parenthesis
-		When the cursor is over a parenthesis, highlight all of the content between
-		that parenthesis and it's matching opening/closing parenthesis. This is
-		mostly useful when working with Lisp, but I have found it helpful in other
-		situations as well. So I set it globally.
-
-		#+BEGIN_SRC emacs-lisp
-			(show-paren-mode t)
-			(setq show-paren-style 'expression)
-			(setq show-paren-delay 0)
-		#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package elec-pair
+        :config
+        (electric-pair-mode))
+    #+END_SRC
 
 *** Doom Modeline
 		A """minimalist""" modeline. It's minimalist, so that justifies satisfying
@@ -456,67 +556,6 @@
 				(smooth-scrolling-mode 1))
 		#+END_SRC
 
-** Autorevert
-	 Automatically refresh buffers. That is: If the content of a buffer changes
-	 (such as a file changing on disk), then redraw the buffer. I also set it
-	 to refresh non-file buffers (such as Dired buffers), and to suppress the
-	 nag.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (use-package autorevert
-			 :init
-			 (setq global-auto-revert-non-file-buffers t)
-			 (setq auto-revert-verbose nil)
-			 :config
-			 (global-auto-revert-mode t))
-	 #+END_SRC
-
-** Autosave
-	 Automatically save buffers when focus changes or frames are deleted. Prevent
-	 sudden crashes or battery deaths from losing data.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (add-hook 'focus-out-hook (lambda () (interactive) (save-some-buffers t)))
-		 (add-hook 'delete-frame-functions (lambda ()
-																				 (interactive) (save-some-buffers t)))
-	 #+END_SRC
-
-** Window Management
-	 Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
-	 accidental destruction the layout of windows and buffers.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (use-package winner
-			 :config
-			 (winner-mode 1))
-	 #+END_SRC
-
-*** Window Management Keybinds
-    | Keybind   | Command                   | Description                                     |
-    |-----------+---------------------------+-------------------------------------------------|
-    | SPC w d   | delete-window             | Delete (close) the currently focused window.    |
-    | SPC w h   | evil-window-left          | Focus the window to the left.                   |
-    | SPC w j   | evil-window-bottom        | Focus the window below.                         |
-    | SPC w k   | evil-window-up            | Focus the window above.                         |
-    | SPC w l   | evil-window-right         | Focus the window to the right.                  |
-    | SPC w s h | split-window-vertically   | Split the window, resulting in two vertically  |
-    |           |                           | side-by-side windows.                           |
-    | SPC w s v | split-window-horizontally | Split the window, resulting in two horizontally |
-    |           |                           | side-by-side windows.                           |
-
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:prefix "SPC w"
-			"d" 'delete-window
-			"h" 'evil-window-left
-			"j" 'evil-window-down
-			"k" 'evil-window-up
-			"l" 'evil-window-right
-			"s h" 'split-window-vertically
-			"s v" 'split-window-horizontally)
-	 #+END_SRC
-
 * Evil Mode
 	Vim has the superior input style. There. I said it. Modal-based bindings flow so much
   better for me, both in thinking and in executing. Using Emacs native modifier bindings
@@ -554,6 +593,7 @@
 			:config
 			(evil-set-initial-state 'ibuffer-mode 'normal))
 	#+END_SRC
+
 ** iBuffer Keybinds
     | Keybind | Command | Description               |
     |---------+---------+---------------------------|
@@ -691,6 +731,7 @@
 				"C-x 4 RET" 'ibuffer-visit-buffer-other-window
 				"C-x 5 RET" 'ibuffer-visit-buffer-other-frame)
 		 #+END_SRC
+
 * Dired-X
   Dired-X is the extended version of the Emacs file manager Dired. I'll be
   honest, I do not use Dired-X very often. If I need to read a file, I'd
