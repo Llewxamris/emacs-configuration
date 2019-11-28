@@ -574,15 +574,20 @@
   I could see myself ever using Emacs seriously.
 
 	#+BEGIN_SRC emacs-lisp
-		(use-package evil
-			:config
-			(evil-mode 1))
-	(use-package evil-commentary
-			:ensure t
-			:config
-			(progn
-				;; Enable by default
-				(evil-commentary-mode)))
+    (use-package evil
+      :config
+      (evil-mode))
+
+    (use-package evil-core
+      :config
+      (evil-set-initial-state 'ibuffer-mode 'normal))
+
+    (use-package evil-commentary
+      :ensure t
+      :config
+      (progn
+        ;; Enable by default
+        (evil-commentary-mode)))
   #+END_SRC
 
 * iBuffer
@@ -590,9 +595,7 @@
 	Emacs use.
 
 	#+BEGIN_SRC emacs-lisp
-		(use-package ibuffer
-			:config
-			(evil-set-initial-state 'ibuffer-mode 'normal))
+    (use-package ibuffer)
 	#+END_SRC
 
 ** iBuffer Keybinds
