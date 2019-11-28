@@ -1086,7 +1086,10 @@
 			:config
 			;; Linum mode on large (>1000 lines) Org files results in masive
 			;; slowdowns when going over a lot of collapsed lines.
-			(add-hook 'org-mode-hook (lambda() (linum-relative-mode -1))))
+			(add-hook 'org-mode-hook (lambda() (linum-relative-mode -1)))
+
+			;; Automatically wrap lines at the 80th column.
+			(add-hook 'org-mode-hook (lambda() (set-fill-column 80) (auto-fill-mode))))
 	#+END_SRC
 
 ** General Settings
