@@ -456,23 +456,6 @@
 				(smooth-scrolling-mode 1))
 		#+END_SRC
 
-*** 80 Column Rule
-		To follow the 80 column rule, I use the built-in white space mode to
-		highlight any characters that have gone past column 80. All of the other
-		solutions to displaying a column ruler are either far too heavy, or break
-		during some scenarios.
-
-    [[https://emacs.stackexchange.com/questions/147/how-can-i-get-a-ruler-at-column-80][Emacs version 27 will have a better built-in ruler]].
-
-		#+BEGIN_SRC emacs-lisp
-      (use-package whitespace
-        :init
-        (setq whitespace-line-column 80)
-        (setq whitespace-style '(face lines-tail))
-        :config
-        (global-whitespace-mode))
-		#+END_SRC
-
 ** Autorevert
 	 Automatically refresh buffers. That is: If the content of a buffer changes
 	 (such as a file changing on disk), then redraw the buffer. I also set it
