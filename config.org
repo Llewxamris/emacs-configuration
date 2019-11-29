@@ -888,48 +888,47 @@
 	of information twice.
 
 	#+BEGIN_SRC emacs-lisp
-		(use-package lsp-mode
-			:init
-			(add-hook 'prog-mode-hook #'lsp))
+    (use-package lsp-mode
+      :hook (prog-mode . lsp))
 	#+END_SRC
 
 	Flycheck is used for some linting by ~lsp-mode~.
 
 	#+BEGIN_SRC emacs-lisp
-		(use-package flycheck
-			;; Flycheck by default
-			:init (global-flycheck-mode)
-			:config
-			;; Disable flycheck on checkdoc
-			(setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+    (use-package flycheck
+      :config
+      ;; Flycheck by default
+      (global-flycheck-mode)
+      :custom
+      ;; Disable flycheck on checkdoc
+      (flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 	#+END_SRC
 
 	Company is the completion framework I leverage with ~lsp-mode~.
 
 	#+BEGIN_SRC emacs-lisp
     (use-package company
-      ;; Run company-mode globally for the entire session
       :config
-      (add-hook 'after-init-hook #'global-company-mode))
+      (global-company-mode))
 
     (use-package company-lsp
       :config
-        ;; Add company-lsp as a backend to company-mode
-        (push 'company-lsp company-backends)
+      ;; Add company-lsp as a backend to company-mode
+      (push 'company-lsp company-backends)
+      :custom
+      ;; Cache completions if the cached results are incomplete
+      (company-lsp-cache-candidates 'auto)
 
-        ;; Cache completions if the cached results are incomplete
-        (setq company-lsp-cache-candidates 'auto)
+      ;; Fetch completion results asynchronously. No need to lock up just to
+      ;; fetch results from the language server.
+      (company-lsp-async t)
 
-        ;; Fetch completion results asynchronously. No need to lock up just to
-        ;; fetch results from the language server.
-        (setq company-lsp-async t)
+      ;; Enable snippet expansion from the language sever.
+      (company-lsp-enable-snippet t)
 
-        ;; Enable snippet expansion from the language sever.
-        (setq company-lsp-enable-snippet t)
-
-        ;; Allow recompletion in the case there are other completion trigger
-        ;; characters.
-        (setq company-lsp-enable-recompletion t))
+      ;; Allow recompletion in the case there are other completion trigger
+      ;; characters.
+      (company-lsp-enable-recompletion t))
 	#+END_SRC
 
 	~lsp-ui~ gives much higher-level interactions with ~lsp-mode~:
@@ -957,55 +956,57 @@
 	bright green.
 
 	#+BEGIN_SRC emacs-lisp
-		(use-package lsp-ui
-			:config
-			(setq lsp-ui-sideline-enable t)
-			(setq lsp-ui-sideline-ignore-duplicate t)
-			(setq lsp-ui-sideline-code-actions-prefix " ℹ ")
-			(set-face-attribute 'lsp-ui-sideline-code-action nil
-													:weight 'bold
-													:overline "#A7A7A7"
-													:foreground "#3C3C3C"
-													:background "#F0F0F0")
+    (use-package lsp-ui
+      :after lsp
+      :hook (lsp . lsp-ui-mode)
+      :config
+      (defun max/toggle-lsp-ui-doc ()
+        "Toggle the UI Doc"
+        (interactive)
+        (if (lsp-ui-doc--visible-p)
+            (lsp-ui-doc-hide)
+          (lsp-ui-doc-show)))
 
-			(setq lsp-ui-flycheck-enable t)
-			(setq lsp-ui-doc-enable nil) ; Disable the Docs by default
+      (defun max/toggle-lsp-ui-imenu ()
+        "Toggle the ~lsp-ui~ ~imenu~ buffer."
+        (interactive)
+        (if (get-buffer "*lsp-ui-imenu*")
+            (kill-buffer "*lsp-ui-imenu*")
+          (lsp-ui-imenu)))
 
-			(set-face-attribute 'lsp-ui-peek-peek nil
-													:background "#FFFFE0")
-			(set-face-attribute 'lsp-ui-peek-list nil
-													:background "#FFFFE0")
-			(set-face-attribute 'lsp-ui-peek-filename nil
-													:foreground "#4183C4"
-													:background nil)
-			(set-face-attribute 'lsp-ui-peek-highlight nil
-													:background "#F6FECD"
-													:slant 'italic)
-			(set-face-attribute 'lsp-ui-peek-selection nil
-													:foreground "#333333"
-													:background "#F6FECD")
-			(set-face-attribute 'lsp-ui-peek-header nil
-													:underline "#A7A6AA"
-													:foreground "#555555"
-													:background "#E2E1D5")
-			(set-face-attribute 'lsp-ui-peek-footer nil
-													:underline "#A7A6AA"
-													:foreground "#555555"
-													:background "#E2E1D5")
+      :custom
+      (lsp-ui-sideline-enable t)
+      (lsp-ui-sideline-ignore-duplicate t)
+      (lsp-ui-sideline-code-actions-prefix " ℹ ")
+      (lsp-ui-flycheck-enable t)
+      (lsp-ui-doc-enable nil) ; Disable the Docs by default
 
-			(defun max/toggle-lsp-ui-doc ()
-				"Toggle the UI Doc"
-				(interactive)
-				(if (lsp-ui-doc--visible-p)
-						(lsp-ui-doc-hide)
-					(lsp-ui-doc-show)))
+      :custom-face
+      (lsp-ui-sideline-code-action ((t (
+                          :weight 'bold
+                          :overline "#A7A7A7"
+                          :foreground "#3C3C3C"
+                          :background "#F0F0F0"))))
 
-			(defun max/toggle-lsp-ui-imenu ()
-				"Toggle the ~lsp-ui~ ~imenu~ buffer."
-				(interactive)
-				(if (get-buffer "*lsp-ui-imenu*")
-						(kill-buffer "*lsp-ui-imenu*")
-					(lsp-ui-imenu))))
+      (lsp-ui-peek-peek ((t (:background "#FFFFE0"))))
+      (lsp-ui-peek-list ((t (:background "#FFFFE0"))))
+      (lsp-ui-peek-filename ((t (
+                            :foreground "#4183C4"
+                            :background nil))))
+      (lsp-ui-peek-highlight ((t (
+                             :background "#F6FECD"
+                             :slant 'italic))))
+      (lsp-ui-peek-selection ((t (
+                             :foreground "#333333"
+                             :background "#F6FECD"))))
+      (lsp-ui-peek-header ((t (
+                          :underline "#A7A6AA"
+                          :foreground "#555555"
+                          :background "#E2E1D5"))))
+      (lsp-ui-peek-footer ((t (
+                          :underline "#A7A6AA"
+                          :foreground "#555555"
+                          :background "#E2E1D5")))))
 	#+END_SRC
 
 ** Language Server Protocol Keybindings
@@ -1068,8 +1069,7 @@
 *** Emacs Lisp
     #+BEGIN_SRC emacs-lisp
       (use-package elisp-slime-nav
-        :config
-        (add-hook 'emacs-lisp-mode-hook 'elisp-slime-nav-mode))
+        :hook (emacs-lisp-mode . elisp-slime-nav-mode))
 
       (general-define-key
        :states 'normal
@@ -1084,10 +1084,10 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package go-mode
-        :config
+        :hook (before-save . gofmt-before-save)
+        :custom
         ;; Run goimports before saving a file
-        (setq gofmt-command "goimports")
-        (add-hook 'before-save-hook 'gofmt-before-save))
+        (gofmt-command "goimports"))
     #+END_SRC
 
 *** Markdown
