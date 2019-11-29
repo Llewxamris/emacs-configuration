@@ -813,6 +813,7 @@
 				:prefix "SPC g"
 				"s" 'magit)
 		 #+END_SRC
+
 * Spellchecking
   I use Emacs for writing documents on a regular basis. Usually this means
   an ~org~ or Markdown file, but this could also be LaTeX files. I also
@@ -826,19 +827,14 @@
 
   #+BEGIN_SRC emacs-lisp
     (use-package flyspell
-      :config
+      :hook
       ;; Auto-start flyspell within Markdown, Org-mode, and TeX files
-      (add-hook 'markdown-mode-hook 'flyspell-mode)
-      (add-hook 'org-mode-hook 'flyspell-mode)
-      (add-hook 'latex-mode 'flyspell-mode))
+      ((markdown-mode org-mode latex-mode git-commit-mode) . flyspell-mode))
 
-    (use-package flyspell-correct-popup
-      :ensure flyspell-correct-popup)
+    (use-package flyspell-correct-popup)
 
     (use-package auto-dictionary
-      :ensure auto-dictionary
-      :config
-      (add-hook 'flyspell-mode-hook 'auto-dictionary-mode))
+      :hook (flyspell-mode . auto-dictionary-mode))
   #+END_SRC
 
 ** Spellchecking Keybinds
