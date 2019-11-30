@@ -1118,53 +1118,119 @@
 	Combining org-mode with Orgzly and Syncthing has become my perfect
 	organization, productivity, and note taking stack.
 
-	#+BEGIN_SRC emacs-lisp
-		(use-package org
-			:ensure org
-			:commands (org-mode org-capture org-agenda orgtbl-mode)
-			:mode ("\\.org$" . org-mode)
-			:config
-			;; Linum mode on large (>1000 lines) Org files results in masive
-			;; slowdowns when going over a lot of collapsed lines.
-			(add-hook 'org-mode-hook (lambda() (linum-relative-mode -1)))
-
-			;; Automatically wrap lines at the 80th column.
-			(add-hook 'org-mode-hook (lambda() (set-fill-column 80) (auto-fill-mode))))
-	#+END_SRC
-
-** General Settings
 	The location of my Org files differs depending on what machine I am on. On my
 	personal machine, the directory is ~/home/max/doc/org/~. It is synced to
   Nextcloud as a backup solution, and synced to my mobile phone with Syncthing.
   On my work machine, it is under ~F:\org\~. This drive is a network drive. Not
 	really a backup, but better than only keeping it local.
 
-	#+BEGIN_SRC emacs-lisp
-		(defvar org-base-dir)
+  I keep three sequences for todo keywords. The task sequence, the blocked
+  sequence, and the financial sequence. The task sequence is for tasks
+  that are ongoing and not impeded. The blocked sequence are for tasks that I
+  cannot actively work on. The financial sequence is for not forgetting to
+  pay my phone bill again.
 
-		(if (eq system-type 'gnu/linux)
-				;; linux
-				(setq org-base-dir "/home/max/doc/org")
-			;; windows
-			(setq org-base-dir "f:/org"))
+  The ~RAW~ state is for tasks that have been captured, but haven't yet been
+  fleshed out. Maybe the task is just an idea, or it needs more information
+  before it's actionable.
 
-		(setq org-directory org-base-dir)
-		(setq org-agenda-files (list (concat org-directory "/agenda")))
-		(setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
+  The ~WAITING~, ~HOLD~, ~CANCELLED~, and ~OVERDUE~ state leave a timestamp
+  and a require a comment whenever it is switched too. I use to document why
+  a task has reached this (usually negative) state.
+
+  I use tags to help prioritise my work. I use the Eisenhower matrix to
+  prioritise my work. Each task is prioritised as either important or not
+  important, and urgent or not urgent. Priority is assigned then from where
+  on the matrix the task falls:
+
+  1. Important & Urgent (Do ASAP)
+  2. Important & Not Urgent (Schedule)
+  3. Not Important & Urgent (Delegate if possible)
+  4. Not Important & Not Urgent (Do it later)
+
+  I use the ~PROJECT~ tag to indicate that all sub-headers are part of the same
+  overarching task defined in the tagged header. I make sure to exclude this
+  tag from the inheritance list so all sub-headers do not get the ~PROJECT~
+  tag.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package org
+      :ensure t
+      :init
+      ;;; Set the base directory depending on what OS I am currently on.
+      (defvar org-base-dir)
+      (if (eq system-type 'gnu/linux)
+          ;; Linux
+          (setq org-base-dir "/home/max/doc/org")
+        ;; Windows
+        (setq org-base-dir "f:/org"))
+
+      ;; Linum mode on large (>1000 lines) Org files results in masive
+      ;; slowdowns when going over a lot of collapsed lines.
+      (add-hook 'org-mode-hook (lambda() (linum-relative-mode -1)))
+
+      ;; Automatically wrap lines at the 80th column.
+      (add-hook 'org-mode-hook (lambda() (set-fill-column 80) (auto-fill-mode)))
+
+      :commands (org-mode org-capture org-agenda orgtbl-mode)
+      :mode ("\\.org$" . org-mode)
+      :config
+      ;; The following variables are set here instead of in the ~:custom~ body
+      ;; because the ~:custom~ body does not see variables set in the scope of
+      ;; the ~:init~ body.
+      (setq org-directory org-base-dir)
+      (setq org-agenda-files (list (concat org-directory "/agenda")))
+      (setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
+
+      ;; Functions to quickly emphasize a region.
+      (defun max/org-bold-region ()
+        (interactive)
+        (org-emphasize ?\*))
+      (defun max/org-code-region ()
+        (interactive)
+        (org-emphasize ?\~))
+      (defun max/org-italic-region ()
+        (interactive)
+        (org-emphasize ?\/))
+      (defun max/org-strike-through-region ()
+        (interactive)
+        (org-emphasize ?\+))
+      (defun max/org-underline-region ()
+        (interactive)
+        (org-emphasize ?\_))
+      (defun max/org-verbatim-region ()
+        (interactive)
+        (org-emphasize ?\=))
+
+      :custom
+      (org-log-done 'time "Inserts a timestamp on task completion.")
+      (org-use-fast-todo-selection t "Enable jumping to specific states.")
+      (org-todo-keywords
+       '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+         (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
+         (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
+      (org-use-tag-inheritance t)
+      (org-tags-exclude-from-inheritance '("PROJECT"))
+      (org-tag-alist '(("important" . ?i)
+                       ("urgent" . ?u)
+                       ("!important" . ?I)
+                       ("!urgent" . ?U)
+                       ("PROJECT" . ?P)))
+      (org-refile-use-outline-path t "
+       Pick refile targets using paths. This works nicely with how I name bucket
+       headlines for storing like tasks/notes.")
+      (org-refile-targets '((org-agenda-files . (:maxlevel . 3))) "
+    The refile targets are based off my agenda files, and only goes down three
+    levels.")
+      (org-fontify-done-headline t))
 	#+END_SRC
 
-	Automatically add a timestamp once a task is set to done.
+	Org-bullets changes out the asterisks for UTF-8 symbols.
 
 	#+BEGIN_SRC emacs-lisp
-		(setq org-log-done 'time)
-	#+END_SRC
-
-	Enable fast todo selection. By default, the task states have to be cycled
-	through. By setting fast todo, I can jump into any state.
-
-	#+BEGIN_SRC emacs-lisp
-		(setq org-use-fast-todo-selection t)
-	#+END_SRC
+    (use-package org-bullets
+      :hook (org-mode . org-bullets-mode))
+  #+END_SRC
 
 *** Org-mode General
     | Keybind | Command         | Description                                     |
@@ -1181,117 +1247,95 @@
     | SPC o t | org-tags-view   | Opens a view to filter org-mode items by tag.   |
     | SPC o 0 | org-clock-out   | Clocks out of the running clock.                |
 
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:prefix "SPC o"
-			"a" 'org-agenda
-			"c" 'org-capture
-			"o" 'org-agenda-list
-			"s" 'org-search-view
-			"t" 'org-tags-view
-			"0" 'org-clock-out)
-	 #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+	   (general-define-key
+		  :states 'normal
+		  :prefix "SPC o"
+		  "a" 'org-agenda
+		  "c" 'org-capture
+		  "o" 'org-agenda-list
+		  "s" 'org-search-view
+		  "t" 'org-tags-view
+		  "0" 'org-clock-out)
+   #+END_SRC
 
-	 | Keybind   | Command               | Description                               |
-	 |-----------+-----------------------+-------------------------------------------|
-	 | SPC m S h | org-demote-subtree    | Demote the entire subtree down one level. |
-	 | SPC m S j | org-move-subtree-down | Move the subtree below the subtree        |
-	 |           |                       | immediately after it.                     |
-	 | SPC m S k | org-move-subtree-up   | Move the subtree above the subtree        |
-	 |           |                       | immediately before it.                    |
-	 | SPC m S l | org-promote-subtree   | Promote the entire subtree up one level.  |
+   | Keybind   | Command               | Description                               |
+   |-----------+-----------------------+-------------------------------------------|
+   | SPC m S h | org-demote-subtree    | Demote the entire subtree down one level. |
+   | SPC m S j | org-move-subtree-down | Move the subtree below the subtree        |
+   |           |                       | immediately after it.                     |
+   | SPC m S k | org-move-subtree-up   | Move the subtree above the subtree        |
+   |           |                       | immediately before it.                    |
+   | SPC m S l | org-promote-subtree   | Promote the entire subtree up one level.  |
 
-	 #+BEGIN_SRC emacs-lisp
-			(general-define-key
-			 :states 'normal
-			 :keymaps 'org-mode-map
-			 :prefix "SPC m S"
-			 "h" 'org-demote-subtree
-			 "j" 'org-move-subtree-down
-			 "k" 'org-move-subtree-up
-			 "l" 'org-promote-subtree)
-	 #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+		  (general-define-key
+		   :states 'normal
+		   :keymaps 'org-mode-map
+		   :prefix "SPC m S"
+		   "h" 'org-demote-subtree
+		   "j" 'org-move-subtree-down
+		   "k" 'org-move-subtree-up
+		   "l" 'org-promote-subtree)
+   #+END_SRC
 
-	 | Keybind | Command                         | Description                                          |
-	 |---------+---------------------------------+------------------------------------------------------|
-	 | TAB     | org-cycle                       | Cycle the state of the headline at point (open/close |
-	 |         |                                 | headlines).                                          |
-	 | $       | org-end-of-line                 | Move cursor to the end of the line.                  |
-	 | ^       | org-beginning-of-line           | The opposite of ~$~                                  |
-	 | gh      | outline-up-heading              | Move cursor up one heading level.                    |
-	 | gj      | org-forward-heading-same-level  | Move cursor down one heading within the same level.  |
-	 | gk      | org-backward-heading-same-level | Move cursor up one heading within the same level.    |
-	 | gl      | outline-next-visible-heading    | Move cursor down one heading level.                  |
-	 | t       | org-todo                        | Change keyword state of heading.                     |
-	 | T       | org-insert-todo-heading         | Insert a heading at point with TODO keyword already  |
-	 |         |                                 | in place.
+   | Keybind | Command                         | Description                                          |
+   |---------+---------------------------------+------------------------------------------------------|
+   | TAB     | org-cycle                       | Cycle the state of the headline at point (open/close |
+   |         |                                 | headlines).                                          |
+   | $       | org-end-of-line                 | Move cursor to the end of the line.                  |
+   | ^       | org-beginning-of-line           | The opposite of ~$~                                  |
+   | gh      | outline-up-heading              | Move cursor up one heading level.                    |
+   | gj      | org-forward-heading-same-level  | Move cursor down one heading within the same level.  |
+   | gk      | org-backward-heading-same-level | Move cursor up one heading within the same level.    |
+   | gl      | outline-next-visible-heading    | Move cursor down one heading level.                  |
+   | t       | org-todo                        | Change keyword state of heading.                     |
+   | T       | org-insert-todo-heading         | Insert a heading at point with TODO keyword already  |
+   |         |                                 | in place.
 
-	 #+BEGIN_SRC emacs-lisp
-		 (general-define-key
-			:states 'normal
-			:keymaps 'org-mode-map
-			"TAB" 'org-cycle
-			"$" 'org-end-of-line
-			"^" 'org-beginning-of-line
-			"gh" 'outline-up-heading
-			"gj" 'org-forward-heading-same-level
-			"gk" 'org-backward-heading-same-level
-			"gl" 'outline-next-visible-heading
-			"t" 'org-todo
-			"T" 'org-insert-todo-heading)
-	 #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+	   (general-define-key
+		  :states 'normal
+		  :keymaps 'org-mode-map
+		  "TAB" 'org-cycle
+		  "$" 'org-end-of-line
+		  "^" 'org-beginning-of-line
+		  "gh" 'outline-up-heading
+		  "gj" 'org-forward-heading-same-level
+		  "gk" 'org-backward-heading-same-level
+		  "gl" 'outline-next-visible-heading
+		  "t" 'org-todo
+		  "T" 'org-insert-todo-heading)
+   #+END_SRC
 
-	 Evil-org supplements missing keybinds until I get off my ass and define them.
+   Evil-org supplements missing keybinds until I get off my ass and define them.
 
-	 #+BEGIN_SRC emacs-lisp
-		 (use-package evil-org
-			 :ensure t
-			 :after org
-			 :config
-			 (progn
-				 (add-hook 'org-mode-hook 'evil-org-mode)
-				 (add-hook 'evil-org-mode-hook
-									 (lambda ()
-										 (evil-org-set-key-theme)))
-				 (require 'evil-org-agenda)
-				 (evil-org-agenda-set-keys)))
-	 #+END_SRC
-
-** Emphasis
-	 #+BEGIN_SRC emacs-lisp
-		 (defun max/org-bold-region ()
-			 (interactive)
-			 (org-emphasize ?\*))
-		 (defun max/org-code-region ()
-			 (interactive)
-			 (org-emphasize ?\~))
-		 (defun max/org-italic-region ()
-			 (interactive)
-			 (org-emphasize ?\/))
-		 (defun max/org-strike-through-region ()
-			 (interactive)
-			 (org-emphasize ?\+))
-		 (defun max/org-underline-region ()
-			 (interactive)
-			 (org-emphasize ?\_))
-		 (defun max/org-verbatim-region ()
-			 (interactive)
-			 (org-emphasize ?\=))
-	 #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+	   (use-package evil-org
+		   :ensure t
+		   :after org
+		   :config
+		   (progn
+			   (add-hook 'org-mode-hook 'evil-org-mode)
+			   (add-hook 'evil-org-mode-hook
+								   (lambda ()
+									   (evil-org-set-key-theme)))
+			   (require 'evil-org-agenda)
+			   (evil-org-agenda-set-keys)))
+   #+END_SRC
 
 *** Emphasis Keybinds
-		| Keybind   | Command                       | Description                       |
-		|-----------+-------------------------------+-----------------------------------|
-		| SPC m x b | max/org-bold-region           | Surround entire region with ~*~.  |
-		| SPC m x c | max/org-code-region           | Surround entire region with ~\~~. |
-		| SPC m x i | max/org-italic-region         | Surround entire region with ~/~.  |
-		| SPC m x s | max/org-strike-through-region | Surround entire region with ~+~.  |
-		| SPC m x u | max/org-underline-region      | Surround entire region with ~_~.  |
-		| SPC m x v | max/org-verbatim-region       | Surround entire region with ~=~.  |
+	  | Keybind   | Command                       | Description                       |
+	  |-----------+-------------------------------+-----------------------------------|
+	  | SPC m x b | max/org-bold-region           | Surround entire region with ~*~.  |
+	  | SPC m x c | max/org-code-region           | Surround entire region with ~\~~. |
+	  | SPC m x i | max/org-italic-region         | Surround entire region with ~/~.  |
+	  | SPC m x s | max/org-strike-through-region | Surround entire region with ~+~.  |
+	  | SPC m x u | max/org-underline-region      | Surround entire region with ~_~.  |
+	  | SPC m x v | max/org-verbatim-region       | Surround entire region with ~=~.  |
 
-		#+BEGIN_SRC emacs-lisp
-			(general-define-key
+	  #+BEGIN_SRC emacs-lisp
+		  (general-define-key
 			 :states 'visual
 			 :keymaps 'org-mode-map
 			 :prefix "SPC m x"
@@ -1301,168 +1345,7 @@
 			 "s" 'max/org-strike-through-region
 			 "u" 'max/org-underline-region
 			 "v" 'max/org-verbatim-region)
-		#+END_SRC
-
-** Keywords
-	 I keep three sequences for todo keywords. The task sequence, the blocked
-	 sequence, and the financial sequence. The task sequence is for tasks
-	 that are ongoing and not impeded. The blocked sequence are for tasks that I
-	 cannot actively work on. The financial sequence is for not forgetting to
-	 pay my phone bill again.
-
-	 The ~RAW~ state is for tasks that have been captured, but haven't yet been
-	 fleshed out. Maybe the task is just an idea, or it needs more information
-	 before it's actionable.
-
-	 The ~WAITING~, ~HOLD~, ~CANCELLED~, and ~OVERDUE~ state leave a timestamp
-	 and a require a comment whenever it is switched too. I use to document why
-	 a task has reached this (usually negative) state.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-todo-keywords
-					 '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-						 (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
-						 (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
-	 #+END_SRC
-
-** Tags
-	 I use tags to help prioritise my work. I use the Eisenhower matrix to
-	 prioritise my work. Each task is prioritised as either important or not
-	 important, and urgent or not urgent. Priority is assigned then from where
-	 on the matrix the task falls:
-
-	 1. Important & Urgent (Do ASAP)
-	 2. Important & Not Urgent (Schedule)
-	 3. Not Important & Urgent (Delegate if possible)
-	 4. Not Important & Not Urgent (Do it later)
-
-	 I use the ~PROJECT~ tag to indicate that all sub-headers are part of the same
-	 overarching task defined in the tagged header. I make sure to exclude this
-	 tag from the inheritance list so all sub-headers do not get the ~PROJECT~
-	 tag.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-use-tag-inheritance t)
-		 (setq org-tags-exclude-from-inheritance '("PROJECT"))
-		 (setq org-tag-alist '(("important" . ?i)
-													 ("urgent" . ?u)
-													 ("!important" . ?I)
-													 ("!urgent" . ?U)
-													 ("PROJECT" . ?P)))
-	 #+END_SRC
-
-** Capture
-	 Org-capture is a fantastic feature I wish I used more often. Most of the time
-	 when capturing would be useful I'm away from my laptop. I use Orgzly's quick
-	 note feature to accomplish a similar result, but the options for /how/ to
-	 capture the information is far more limited than org-capture proper.
-
-	 That being said, setting up capture templates for my work machine would
-	 probably be a blessing. I'm on that thing 7.5 hours a day.
-
-	 All templates are defined externally in ~*.txt~ files to keep this
-	 configuration file clean. The goal of each template is to capture the minimum
-	 amount of information required for the item to be actionable (excluding the
-	 ~RAW~ capture). These are my templates:
-
-	 - Task :: An actionable todo item with a proper name, estimate, some sort of
-						date, context tag, and priority tags. They are placed into the
-						general task bucket in my main org file
-	 - Raw task :: An idea, task, or note that requires refinement. Could be a
-								passing idea, a reminder, a quote, etc. Raw tasks are to never
-								leave the my inbox.
-	 - Note :: A name, timestamp, content. Just a note.
-
-	#+BEGIN_SRC emacs-lisp
-		(setq org-capture-templates
-					'(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
-						 (file "~/.emacs.d/capture-templates/task.txt"))
-						("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
-						 (file "~/.emacs.d/capture-templates/raw-task.txt"))
-						("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
-						 (file "~/.emacs.d/capture-templates/note.txt"))))
-	#+END_SRC
-
-*** Capture/Source Keybinds
-    | Keybind | Command              | Description                       |
-    |---------+----------------------+-----------------------------------|
-    | SPC m ' | org-edit-src-exit    | Save and exit the org edit buffer |
-    | SPC m k | org-edit-src-abort   | Abandon the changes in the buffer |
-    | SPC m " | org-capture-finalize | Save and file the capture buffer  |
-    | SPC m a | org-capture-kill     | Abandon the capture buffer        |
-
-		#+BEGIN_SRC emacs-lisp
-			(general-define-key
-			 :states 'visual
-			 :keymaps '(org-capture-mode-map org-src-mode-map)
-			 :prefix "SPC m"
-			 "'" 'org-edit-src-exit
-			 "k" 'org-edit-src-abort
-			 "\"" 'org-capture-finalize
-			 "a" 'org-capture-kill)
-		#+END_SRC
-
-** Refile
-	 Pick refile targets using paths. This works nicely with how I name "bucket"
-	 headlines for storing like tasks/notes.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-refile-use-outline-path t)
-	 #+END_SRC
-
-	 The refile targets generated are based off of my agenda files, and only
-	 goes down three levels.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
-	 #+END_SRC
-
-** Agenda
-	 By default, show today and the next two days when opening the agenda.
-	 When planning ahead, three days is usually good enough to see if I'm
-	 overworking myself.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-agenda-span 3)
-	 #+END_SRC
-
-	 Pushes off the tags if I'm viewing the agenda in a verticle split on the
-	 laptop. I'd rather see the content of the heading rather than the tags
-	 associated in most contexts.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-agenda-tags-column -100)
-	 #+END_SRC
-
-	 Do not show scheduled/deadlined tasks if the task is in a done state.
-	 Prevents cluttering with completed tasks,
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-agenda-skip-scheduled-if-done t)
-		 (setq org-agenda-skip-deadline-if-done t)
-	 #+END_SRC
-
-	 Do show the post-scheduled counter if the deadline counter is current
-	 visible in the agenda.
-
-	 #+BEGIN_SRC emacs-lisp
-		 (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-	 #+END_SRC
-
-** Headlines
-	#+BEGIN_SRC emacs-lisp
-		;; Requires org-fonitfy-done-headline to be non-nil
-		(setq org-fontify-done-headline t)
-	#+END_SRC
-
-	Org-bullets changes out the asterisks for UTF-8 symbols.
-
-	#+BEGIN_SRC emacs-lisp
-		(use-package org-bullets
-			:ensure org-bullets
-			:config
-			(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-  #+END_SRC
+	  #+END_SRC
 
 *** Headline Keybinds
 		| Keybind   | Command                            | Description                                     |
@@ -1570,3 +1453,69 @@
 
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC
 #  LocalWords:  emacs modeline
+** Capture
+	 Org-capture is a fantastic feature I wish I used more often. Most of the time
+	 when capturing would be useful I'm away from my laptop. I use Orgzly's quick
+	 note feature to accomplish a similar result, but the options for /how/ to
+	 capture the information is far more limited than org-capture proper.
+
+	 That being said, setting up capture templates for my work machine would
+	 probably be a blessing. I'm on that thing 7.5 hours a day.
+
+	 All templates are defined externally in ~*.txt~ files to keep this
+	 configuration file clean. The goal of each template is to capture the minimum
+	 amount of information required for the item to be actionable (excluding the
+	 ~RAW~ capture). These are my templates:
+
+	 - Task :: An actionable todo item with a proper name, estimate, some sort of
+						date, context tag, and priority tags. They are placed into the
+						general task bucket in my main org file
+	 - Raw task :: An idea, task, or note that requires refinement. Could be a
+								passing idea, a reminder, a quote, etc. Raw tasks are to never
+								leave the my inbox.
+	 - Note :: A name, timestamp, content. Just a note.
+
+	#+BEGIN_SRC emacs-lisp
+    (use-package org-capture
+      :custom
+      (org-capture-templates
+       '(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
+          (file "~/.emacs.d/capture-templates/task.txt"))
+         ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
+          (file "~/.emacs.d/capture-templates/raw-task.txt"))
+         ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
+          (file "~/.emacs.d/capture-templates/note.txt")))))
+	#+END_SRC
+
+*** Capture/Source Keybinds
+    | Keybind | Command              | Description                       |
+    |---------+----------------------+-----------------------------------|
+    | SPC m ' | org-edit-src-exit    | Save and exit the org edit buffer |
+    | SPC m k | org-edit-src-abort   | Abandon the changes in the buffer |
+    | SPC m " | org-capture-finalize | Save and file the capture buffer  |
+    | SPC m a | org-capture-kill     | Abandon the capture buffer        |
+
+		#+BEGIN_SRC emacs-lisp
+			(general-define-key
+			 :states 'visual
+			 :keymaps '(org-capture-mode-map org-src-mode-map)
+			 :prefix "SPC m"
+			 "'" 'org-edit-src-exit
+			 "k" 'org-edit-src-abort
+			 "\"" 'org-capture-finalize
+			 "a" 'org-capture-kill)
+		#+END_SRC
+
+** Agenda
+	 #+BEGIN_SRC emacs-lisp
+     (use-package org-agenda
+       :custom
+       (org-agenda-span 3 "
+         By default, show today and the next two days when opening the agenda.
+         When planning ahead, three days is usually good enough to see if I'm
+         overworking myself.")
+       (org-agenda-tags-column -100 "
+         Pushes off the tags if I'm viewing the agenda in a vertical split on the
+         laptop. I'd rather see the content of the heading rather than the tags
+         associated in most contexts."))
+	 #+END_SRC
