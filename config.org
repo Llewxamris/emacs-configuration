@@ -82,13 +82,13 @@
        (package-refresh-contents)
        (package-install 'use-package))
 
-     (require 'use-package)
+     (eval-when-compile
+       (require 'use-package))
 
-     (use-package use-package-core
-       :ensure t
-       :custom
-       (use-package-verbose t)
-       (load-prefer-newer t))
+     (put 'use-package 'lisp-indent-function 1)
+
+     (setq use-package-verbose t)
+     (setq load-prefer-newer t)
 
      (use-package auto-package-update
        :ensure t
