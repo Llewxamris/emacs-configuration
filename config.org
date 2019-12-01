@@ -983,7 +983,7 @@
 
       :custom-face
       (lsp-ui-sideline-code-action ((t (
-                          :weight 'bold
+                          :weight bold
                           :overline "#A7A7A7"
                           :foreground "#3C3C3C"
                           :background "#F0F0F0"))))
@@ -995,7 +995,7 @@
                             :background nil))))
       (lsp-ui-peek-highlight ((t (
                              :background "#F6FECD"
-                             :slant 'italic))))
+                             :slant italic))))
       (lsp-ui-peek-selection ((t (
                              :foreground "#333333"
                              :background "#F6FECD"))))
