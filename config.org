@@ -1254,6 +1254,7 @@
       (setq org-directory org-base-dir)
       (setq org-agenda-files (list (concat org-directory "/agenda")))
       (setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
+      (setq org-archive-location (concat (car org-agenda-files) "/archive.org::* Archives"))
 
       ;; Functions to quickly emphasize a region.
       (defun max/org-bold-region ()
