@@ -1018,10 +1018,10 @@
        "m" 'max/toggle-lsp-ui-imenu)
 
       ;; Fix 'q' not quiting the Flycheck list buffer
-      (general-define-key
-       :states 'normal
-       :keymap 'lsp-ui-flycheck-list-mode-map
-       "q" 'lsp-ui-flycheck-list--quit)
+      ;; (general-define-key
+      ;;  :states 'normal
+      ;;  :keymap 'lsp-ui-flycheck-list-mode-map
+      ;;  "q" 'lsp-ui-flycheck-list--quit)
 
       :custom
       (lsp-ui-sideline-enable t)
