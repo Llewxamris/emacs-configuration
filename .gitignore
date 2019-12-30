@@ -24,3 +24,5 @@ bookmarks
 config.*
 !config.org
 .custom.el
+/.org-id-locations
+/org-gcal/
