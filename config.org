@@ -1451,7 +1451,9 @@
          ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
           (file "~/.emacs.d/capture-templates/raw-task.txt"))
          ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
-          (file "~/.emacs.d/capture-templates/note.txt")))))
+          (file "~/.emacs.d/capture-templates/note.txt"))
+         ("j" "Journal Entry" entry (file+olp "~/doc/org/journal.org" "January" "W01")
+          (file "~/.emacs.d/capture-templates/journal-entry.txt")))))
 	#+END_SRC
 
 ** Agenda

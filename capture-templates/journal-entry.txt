@@ -1,0 +1,8 @@
+* %<%A, %B %d, %Y>
+ :PROPERTIES:
+ :CREATED: %U
+ :WOKE: %^{What time did I wake up at?}
+ :SLEPT:
+ :END:
+
+ %?
