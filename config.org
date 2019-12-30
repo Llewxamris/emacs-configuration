@@ -384,6 +384,19 @@
 			 (savehist-mode))
 	 #+END_SRC
 
+   Tramp let's me use Emacs to edit remote files. For example, changing a Docker
+   compose file from the comfort of my local machine. I default to editing over
+   SSH instead of using SCP. [[https://www.emacswiki.org/emacs/TrampMode#toc12][I also need to override the shell prompt pattern to
+   prevent Tramp from hanging.]]
+
+	 #+BEGIN_SRC emacs-lisp
+     (use-package tramp
+       :custom
+       (tramp-default-method "ssh" "SSH is faster than SCP.")
+       (tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*"
+                                   "Not having this pattern set causes Tramp to hang on connection."))
+	 #+END_SRC
+
 ** Graphical User Interface
 	 Seeing three bars on a slot machine is good. Seeing three bars on Emacs is bad.
 
