@@ -1,3 +1,6 @@
 * RAW %^{task-name}
-  %U
+ :PROPERTIES:
+ :CREATED: %U
+ :END:
+
   %?

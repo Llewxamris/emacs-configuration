@@ -1,7 +1,7 @@
 * TODO %^{task-name} %^{@context}G
   :PROPERTIES:
+  :CREATED: %U
   :EFFORT: %^{effort|00:05|00:15|00:30|01:00|02:00|03:00|04:00}
   :END:
-  SCHEDULED: %^{scheduled}T
-  DEADLINE: %^{deadline}T
+
   %?
