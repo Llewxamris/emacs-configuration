@@ -1,0 +1,8 @@
+* %:description
+  :PROPERTIES:
+  :CREATED: %U
+  :END:
+
+  %:link
+
+  %i

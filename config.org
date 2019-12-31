@@ -1422,13 +1422,23 @@
                 passing idea, a reminder, a quote, etc. Raw tasks are to never
                 leave the my inbox.
    - Note :: A name, timestamp, content. Just a note.
+   - Org Protocol Capture :: Used when capturing a web page via ~org-protocol~
+        in Firefox. When used, it grabs the title of the web page, the full URL,
+        and any text that was highlighted when the capture was initiated. This
+        is the bookmarklet code:
 
-            | Keybind | Command              | Description                       |
-            |---------+----------------------+-----------------------------------|
-            | SPC m " | org-capture-finalize | Save and file the capture buffer  |
-            | SPC m a | org-capture-kill     | Abandon the capture buffer        |
+   #+BEGIN_SRC javascript
+   javascript:location.href='org-protocol://capture?template=p&url='+encodeURIComponent(location.href)
+       + '&title='+encodeURIComponent(document.title)
+       + '&body='+encodeURIComponent(window.getSelection())
+   #+END_SRC
 
-	#+BEGIN_SRC emacs-lisp
+        | Keybind | Command              | Description                       |
+        |---------+----------------------+-----------------------------------|
+        | SPC m " | org-capture-finalize | Save and file the capture buffer  |
+        | SPC m a | org-capture-kill     | Abandon the capture buffer        |
+
+  #+BEGIN_SRC emacs-lisp
     (use-package org-capture
       :config
       ;;; Keybinds
@@ -1453,7 +1463,9 @@
          ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
           (file "~/.emacs.d/capture-templates/note.txt"))
          ("j" "Journal Entry" entry (file+olp "~/doc/org/journal.org" "January" "W01")
-          (file "~/.emacs.d/capture-templates/journal-entry.txt")))))
+          (file "~/.emacs.d/capture-templates/journal-entry.txt"))
+         ("p" "Org Protocol Capture" entry (file "~/doc/org/agenda/inbox.org")
+          (file "~/.emacs.d/capture-templates/protocol.txt")))))
 	#+END_SRC
 
 ** Agenda
