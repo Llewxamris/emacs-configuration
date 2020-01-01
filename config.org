@@ -2,9 +2,10 @@
 #+TITLE: Maxwell Haley's Emacs Configuration
 #+OPTIONS: toc:4 h:4
 #+STARTUP: showeverything
-#  LocalWords:  Leuven Flycheck modeline keybinds Cliplink ido minibuffer
-#  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC
-#  LocalWords:  emacs modeline
+#  LocalWords:  Leuven Flycheck modeline keybinds Cliplink ido minibuffer GC ui
+#  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC SCP UTF CLI
+#  LocalWords:  emacs modeline paren pinky dired magit Magit's LaTeX Flyspell
+#  LocalWords:  flyspell lang lsp flycheck imenu ibuffer
 
 * Forward
   My living monolith of a Emacs configuration file. Bred through trial, error, and
@@ -16,7 +17,7 @@
 	- [[https://github.com/sachac/.emacs.d][sachac/.emacs.d]]
 	- [[https://github.com/wasamasa/dotemacs][wasamasa/dotemacs]]
 
-	The entire configuration file is written out in Emac's Org Mode. The goal is to
+	The entire configuration file is written out in Emacs Org Mode. The goal is to
 	describe and justify my decisions in a way that both:
 
 	1. Anyone interested in building their own configuration can browse through my
@@ -260,7 +261,7 @@
 		 (auto-compression-mode t)
 	 #+END_SRC
 
-   Enable the Garbage Collector Magic Hack. This will kick in Emac's built in GC
+   Enable the Garbage Collector Magic Hack. This will kick in the built in GC
    whenever the system is idle,
 
 	 #+BEGIN_SRC emacs-lisp
@@ -529,7 +530,7 @@
 		#+END_SRC
 
 *** Relative Line Numbering
-		I really like Vims relative line number feature. I find it makes taking
+		I really like Vim's relative line number feature. I find it makes taking
 		advantage of motions easier since it removes any sort of mental math. I
 		use the [[https://github.com/coldnew/linum-relative][linum-relative]] package for this.
 
@@ -565,7 +566,7 @@
   barely even an appendage.
 
 	Evil mode gives me Vim-like keybindings without having to invest in any sort of
-  remapping. I, of course, still add my own mappings and remappings. Not because Vim
+  remapping. I, of course, still add my own mappings and re-mappings. Not because Vim
   lacks anything, but entirely due to personal preference. Without Evil, I don't think
   I could see myself ever using Emacs seriously.
 
@@ -945,7 +946,7 @@
 * Programming
 	A little known fact. Occasionally, I use Emacs to program. Outrageous
 	I know, but it's true. For any language I use, I try to leverage a
-	Language Server if available. Using a lang. server simplifies the setup,
+	Language Server if available. Using a lang server simplifies the setup,
 	and allows me to share one server configuration across several editors.
 	As long as the functionality is in the server, I can guarantee it will
 	be available in every editor I use. If no lang. server is available, or
