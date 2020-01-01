@@ -881,6 +881,9 @@
 
   #+BEGIN_SRC emacs-lisp
     (use-package magit
+      ;; Don't load Magit on my work (Windows) machine.
+      :if (eq system-type 'gnu/linux)
+      :ensure t
       :config
       (general-define-key
        :states 'normal
@@ -889,7 +892,6 @@
 
       :custom
       (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
-
 	#+END_SRC
 
   I am using the black magic [[https://github.com/emacs-evil/evil-magit][~evil-magit~]] package for Magit's keybinds. The
@@ -897,7 +899,9 @@
   it needs some configuration.
 
 	#+BEGIN_SRC emacs-lisp
-		(use-package evil-magit)
+    (use-package evil-magit
+      :ensure t
+      :requires magit)
 	#+END_SRC
 
 * Spellchecking
