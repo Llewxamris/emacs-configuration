@@ -2,7 +2,7 @@
 #+TITLE: Maxwell Haley's Emacs Configuration
 #+OPTIONS: toc:4 h:4
 #+STARTUP: showeverything
-#  LocalWords:  Leuven Flycheck modeline keybinds Cliplink
+#  LocalWords:  Leuven Flycheck modeline keybinds Cliplink ido minibuffer
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC
 #  LocalWords:  emacs modeline
 
@@ -603,6 +603,65 @@
         (evil-commentary-mode)))
   #+END_SRC
 
+* ido
+ [[https://www.emacswiki.org/emacs/InteractivelyDoThings][Ido]] (Interactively Do Things) is a built-in minor mode that provides
+ "interactive" text entry. This mostly means the minibuffer will filter away all
+ entries that could not match your input without having to hit ~TAB~ each time.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ido
+      :config
+      (ido-mode)
+      :custom
+      (ido-everywhere t "Enables ido for all buffer/file reading.")
+      (ido-enable-flex-matching t "If no prefix matches are found, look for the \
+                                    sequence of characters anywhere in an entry."))
+  #+END_SRC
+
+  I do not like the default in-line display used by ido. [[https://github.com/creichert/ido-vertical-mode.el][Ido-vertical-mode]] reads
+  better to me, displaying all entries in a single column.
+
+  I would prefer something grid-like, such as [[https://github.com/larkery/ido-grid-mode.el][ido-grid-mode]], but I have found it
+  slows down Emacs too much.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ido-vertical-mode
+       :ensure t
+       :after ido
+       :config
+       (ido-vertical-mode)
+       :custom
+       (ido-vertical-define-keys 'C-n-and-C-p-only "Use C-n/C-p to move selection."))
+
+  #+END_SRC
+
+  Ido-everywhere unfortunately does not apply everywhere. To get Ido completion
+  nearly everywhere, I use the [[https://github.com/DarwinAwardWinner/ido-completing-read-plus][ido-completing-read+]] package. Assisting is the
+  [[https://github.com/DarwinAwardWinner/crm-custom][crm-custom]] package that allows Ido completion in functions that can take in
+  multiple inputs.
+
+  To supplement anything else that doesn't get Ido completion, I enable the
+  built-in ~icomplete~ mode.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ido-completing-read+
+      :ensure t
+      :after ido
+      :config
+      (ido-ubiquitous-mode))
+
+    (use-package crm-custom
+      :ensure t
+      :after ido-completing-read+
+      :config
+      (crm-custom-mode))
+
+    (use-package icomplete
+      :after ido-completing-read+
+      :config
+      (icomplete-mode))
+  #+END_SRC
+
 * iBuffer
 	iBuffer is a great tool for managing the many buffers created in day-to-day
 	Emacs use.
@@ -825,7 +884,10 @@
       (general-define-key
        :states 'normal
        :prefix "SPC g"
-       "s" 'magit))
+       "s" 'magit)
+
+      :custom
+      (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
 
 	#+END_SRC
 
