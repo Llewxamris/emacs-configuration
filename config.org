@@ -2,7 +2,7 @@
 #+TITLE: Maxwell Haley's Emacs Configuration
 #+OPTIONS: toc:4 h:4
 #+STARTUP: showeverything
-#  LocalWords:  Leuven Flycheck modeline keybinds
+#  LocalWords:  Leuven Flycheck modeline keybinds Cliplink
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC
 #  LocalWords:  emacs modeline
 
@@ -1587,3 +1587,25 @@
 		#+END_SRC
 
 --
+** Cliplink
+   [[https://github.com/rexim/org-cliplink][org-cliplink]] grabs a URL from the clipboard, fetches the title of the web page,
+   then inserts a link element with the URL as the link and the title as the
+   description. I use this over ~org-protocol~ when I only want to use the web
+   page as a reference point and not as an entry.
+
+   | Keybind   | Command      | Description                       |
+   |-----------+--------------+-----------------------------------|
+   | SPC m L h | org-cliplink | Create a link based on the URL in |
+   |           |              | the clipboard.                    |
+
+   #+BEGIN_SRC emacs-lisp
+    (use-package org-cliplink
+      :ensure t
+      :after org
+      :config
+      (general-define-key
+       :states 'normal
+       :keymaps 'org-mode-map
+       :prefix "SPC m"
+       "L" 'org-cliplink))
+   #+END_SRC
