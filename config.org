@@ -31,9 +31,8 @@
 	kicking off the package initialization.
 
 	#+BEGIN_SRC emacs-lisp
-	(setq user-full-name "Maxwell R. Haley")
-	(setq user-mail-address "maxwell.r.haley@gmail.com")
-	(package-initialize)
+    (setq user-full-name "Maxwell R. Haley")
+    (setq user-mail-address "maxwell.r.haley@gmail.com")
 	#+END_SRC
 
 * Preparation & Package Management
@@ -1709,3 +1708,4 @@
        :prefix "SPC m"
        "L" 'org-cliplink))
    #+END_SRC
+
