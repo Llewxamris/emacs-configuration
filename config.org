@@ -175,26 +175,6 @@
    #+BEGIN_SRC emacs-lisp
      (use-package emacs
        :ensure nil
-       :config
-       ;; Force syntax highlighting for all supported major modes.
-       (global-font-lock-mode t)
-
-       ;; Change the "Yes or No" prompt to just be "y or n".
-       (defalias 'yes-or-no-p 'y-or-n-p)
-
-       ;;; Keybinds
-       (general-define-key
-        :states 'normal
-        :prefix "SPC w"
-        "d" 'delete-window
-        "s h" 'split-window-vertically
-        "s v" 'split-window-horizontally)
-
-       (general-define-key
-        :states 'normal
-        :prefix "SPC e"
-        "N" 'widen)
-
        :custom
        ;;  Disable the startup screen & message.
        (inhibit-startup-screen t)
@@ -219,7 +199,29 @@
        (tab-width 2)
 
        ;; Use UTF-8 encoding, because this is ${CURRENT_YEAR}.
-       (locale-coding-system 'utf-8))
+       (locale-coding-system 'utf-8)
+
+       ;; Always load the newest version of a file.
+       (load-prefer-newer t)
+       :config
+       ;; Force syntax highlighting for all supported major modes.
+       (global-font-lock-mode t)
+
+       ;; Change the "Yes or No" prompt to just be "y or n".
+       (defalias 'yes-or-no-p 'y-or-n-p)
+
+       ;;; Keybinds
+       (general-define-key
+        :states 'normal
+        :prefix "SPC w"
+        "d" 'delete-window
+        "s h" 'split-window-vertically
+        "s v" 'split-window-horizontally)
+
+       (general-define-key
+        :states 'normal
+        :prefix "SPC e"
+        "N" 'widen))
 	 #+END_SRC
 
 	 #+BEGIN_SRC emacs-lisp
