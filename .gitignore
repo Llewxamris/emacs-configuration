@@ -26,3 +26,6 @@ config.*
 .custom.el
 /.org-id-locations
 /org-gcal/
+/ido.last
+/quelpa/
+/tramp
