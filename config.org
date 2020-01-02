@@ -44,6 +44,7 @@
 
 	 #+BEGIN_SRC emacs-lisp
      (use-package cus-edit
+       :ensure nil
        :custom
        (custom-file null-device))
 	 #+END_SRC
@@ -56,12 +57,18 @@
 	 Org is the Org mode repository.
 
 	 #+BEGIN_SRC emacs-lisp
-     (require 'package)
      (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                               ("org" . "http://orgmode.org/elpa/")
                               ("gnu" . "http://elpa.gnu.org/packages/")))
-     (package-initialize)
-	 #+END_SRC
+
+     (require 'package)
+     (unless (bound-and-true-p package--initialized)
+       (setq package-enable-at-startup nil)
+       (package-initialize))
+
+     (eval-and-compile
+       (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
+   #+END_SRC
 
 ** Use Package
    Check the packages directory for manually installed packages.
@@ -77,7 +84,11 @@
 	 to always /ensure/ my packages are available, and then /ensure/ I have the
 	 newest packages available.
 
-	 Also included is ~auto-package-update~. It automatically updates packages seven
+   Any built-in Emacs packages, or packages that are actually apart of a
+   separate package, are not ensured by adding ~:ensure nil~ to their
+   declaration.
+
+	 Also included is ~auto-package-update~. It automatically updates packages three
 	 days after the previous upgrade was ran.
 
 	 #+BEGIN_SRC emacs-lisp
@@ -85,29 +96,22 @@
        (package-refresh-contents)
        (package-install 'use-package))
 
+     (eval-and-compile
+       (setq use-package-always-ensure t))
+
      (eval-when-compile
        (require 'use-package))
 
      (put 'use-package 'lisp-indent-function 1)
 
-     (setq use-package-verbose t)
-     (setq load-prefer-newer t)
-
      (use-package auto-package-update
-       :ensure t
-       :config
-       (auto-package-update-maybe)
        :custom
+       (auto-package-update-interval 3)
        (auto-package-update-delete-old-versions t)
-       (auto-package-update-hide-results t))
+       (auto-package-update-hide-results t)
+       :config
+       (auto-package-update-maybe))
 
-     (use-package system-packages
-       :ensure t
-       :custom
-       (system-packages-noconfirm t))
-
-     (use-package use-package-ensure-system-package
-       :ensure t)
 	 #+END_SRC
 
 ** General
@@ -170,6 +174,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package emacs
+       :ensure nil
        :config
        ;; Force syntax highlighting for all supported major modes.
        (global-font-lock-mode t)
@@ -219,6 +224,7 @@
 
 	 #+BEGIN_SRC emacs-lisp
      (use-package simple
+       :ensure nil
        :config
        ;; Show column numbers on the modeline.
        (column-number-mode)
@@ -288,6 +294,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package help-fns
+       :ensure nil
        :config
        (general-define-key
         :states 'normal
@@ -314,6 +321,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package files
+       :ensure nil
        :hook
        ;; Always delete trailing whitespace when saving a file.
        (before-save . delete-trailing-whitespace)
@@ -362,6 +370,7 @@
 
 	 #+BEGIN_SRC emacs-lisp
      (use-package autorevert
+       :ensure nil
        :config
        (global-auto-revert-mode t)
        :custom
@@ -373,16 +382,17 @@
    in later sessions. Command history is essential for any command based environment.
 
 	 #+BEGIN_SRC emacs-lisp
-		 (use-package savehist
-			 :init
-			 (setq savehist-file "~/.emacs.d/savehist")
-			 (setq savehist-save-minibuffer-history +1)
-			 (setq savehist-additional-variables
-						 '(kill-ring
-							 search-ring
-							 regexp-search-ring))
-			 :config
-			 (savehist-mode))
+     (use-package savehist
+       :ensure nil
+       :init
+       (setq savehist-file "~/.emacs.d/savehist")
+       (setq savehist-save-minibuffer-history +1)
+       (setq savehist-additional-variables
+             '(kill-ring
+               search-ring
+               regexp-search-ring))
+       :config
+       (savehist-mode))
 	 #+END_SRC
 
    Tramp let's me use Emacs to edit remote files. For example, changing a Docker
@@ -392,6 +402,7 @@
 
 	 #+BEGIN_SRC emacs-lisp
      (use-package tramp
+       :ensure nil
        :custom
        (tramp-default-method "ssh" "SSH is faster than SCP.")
        (tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*"
@@ -402,31 +413,36 @@
 	 Seeing three bars on a slot machine is good. Seeing three bars on Emacs is bad.
 
 	 #+BEGIN_SRC emacs-lisp
-		 (use-package menu-bar
-			 :config
-			 (menu-bar-mode -1))
+     (use-package menu-bar
+       :ensure nil
+       :config
+       (menu-bar-mode -1))
 
-		 (use-package scroll-bar
-			 :config
-			 (scroll-bar-mode -1))
+     (use-package scroll-bar
+       :ensure nil
+       :config
+       (scroll-bar-mode -1))
 
-		 (use-package tool-bar
-			 :config
-			 (tool-bar-mode -1))
+     (use-package tool-bar
+       :ensure nil
+       :config
+       (tool-bar-mode -1))
 
-		 (use-package tooltip
-			 :defer t
-			 :custom
-			 (tooltip-mode -1))
+     (use-package tooltip
+       :ensure nil
+       :defer t
+       :custom
+       (tooltip-mode -1))
 	 #+END_SRC
 
 	 Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
 	 accidental destruction the layout of windows and buffers.
 
 	 #+BEGIN_SRC emacs-lisp
-		 (use-package winner
-			 :config
-			 (winner-mode 1))
+     (use-package winner
+       :ensure nil
+       :config
+       (winner-mode 1))
 	 #+END_SRC
 
 ** Editor
@@ -442,6 +458,7 @@
 
 		#+BEGIN_SRC emacs-lisp
       (use-package mule
+        :ensure nil
         :config
         (set-terminal-coding-system 'utf-8)
         (set-keyboard-coding-system 'utf-8)
@@ -583,10 +600,12 @@
       (evil-mode))
 
     (use-package evil-core
+      :ensure nil
       :config
       (evil-set-initial-state 'ibuffer-mode 'normal))
 
     (use-package evil-commands
+      :ensure nil
       :config
       (general-define-key
        :states 'normal
@@ -611,6 +630,7 @@
 
   #+BEGIN_SRC emacs-lisp
     (use-package ido
+      :ensure nil
       :config
       (ido-mode)
       :custom
@@ -673,6 +693,7 @@
 
   #+BEGIN_SRC emacs-lisp
     (use-package ibuffer
+      :ensure nil
       :config
       ;;; Keybinds
 
@@ -839,6 +860,7 @@
 
   #+BEGIN_SRC emacs-lisp
     (use-package dired-x
+      :ensure nil
       :config
       ;; Disable nag when jumping to another dired-x buffer
       (put 'dired-find-alternate-file 'disable nil)
@@ -1507,6 +1529,7 @@
 
   #+BEGIN_SRC emacs-lisp
     (use-package org-capture
+      :ensure nil
       :config
       ;;; Keybinds
       (general-define-key
@@ -1549,6 +1572,7 @@
 
 	 #+BEGIN_SRC emacs-lisp
      (use-package org-agenda
+       :ensure nil
        :config
        (general-define-key
         :states 'normal
@@ -1579,6 +1603,7 @@
 		|           |                                    | tracked.                                        |
 	 #+BEGIN_SRC emacs-lisp
      (use-package org-clock
+       :ensure nil
        :config
        (general-define-key
         :states 'normal
@@ -1597,6 +1622,7 @@
 
 	 #+BEGIN_SRC emacs-lisp
      (use-package org-archive
+       :ensure nil
        :config
        (general-define-key
         :states 'normal
@@ -1610,7 +1636,8 @@
 		| SPC m c   | org-toggle-checkbox                | Toggles a checkbox between checked and empty.   |
 
 	 #+BEGIN_SRC emacs-lisp
-     (use-package org-archive
+     (use-package org-list
+       :ensure nil
        :config
        (general-define-key
         :states 'normal
@@ -1627,7 +1654,8 @@
 		|           |                                    | sharing my notes.                               |
 
 	 #+BEGIN_SRC emacs-lisp
-     (use-package org-archive
+     (use-package ox
+       :ensure nil
        :config
        (general-define-key
         :states 'normal
@@ -1644,6 +1672,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package org-src
+        :ensure nil
         :config
         (general-define-key
          :states 'normal
