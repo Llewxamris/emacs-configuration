@@ -362,7 +362,9 @@
        (vc-make-backup-files t)
 
        ;; Always include a trailing newline at the end of a file.
-       (require-final-newline t))
+       (require-final-newline t)
+       (delete-trailing-lines nil))
+
    #+END_SRC
 
    It is also very useful to automatically refresh buffers. That is: If the
