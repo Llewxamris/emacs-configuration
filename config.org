@@ -36,18 +36,6 @@
 	#+END_SRC
 
 * Preparation & Package Management
-** Custom
-	 Hide away the ~custom~ configurations by dumping it into the void. I try to
-   avoid using ~custom~ in general. I find figuring out how to do it manually
-   much more +infuriating+ entertaining.
-
-	 #+BEGIN_SRC emacs-lisp
-     (use-package cus-edit
-       :ensure nil
-       :custom
-       (custom-file null-device))
-	 #+END_SRC
-
 ** Remote Package Archives
 	 Define what remote archives to use as package repositories. GNU ELPA is the
 	 default package repository for Emacs. It is a solid repository, but limited
@@ -111,6 +99,16 @@
        :config
        (auto-package-update-maybe))
 
+** Custom
+	 Hide away the ~custom~ configurations by dumping it into the void. I try to
+   avoid using ~custom~ in general. I find figuring out how to do it manually
+   much more +infuriating+ entertaining.
+
+	 #+BEGIN_SRC emacs-lisp
+     (use-package cus-edit
+       :ensure nil
+       :custom
+       (custom-file null-device))
 	 #+END_SRC
 
 ** General
