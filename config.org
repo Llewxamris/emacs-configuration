@@ -1545,6 +1545,19 @@
        "'" 'org-capture-finalize
        "k" 'org-capture-kill)
 
+      (defun max/journal-capture ()
+        "Sets the pointer to the correct Month/Week location in my journal file.
+    If the week or month does not exist, it is automatically inserted."
+        (let ((month (format-time-string "%B"))
+              (week (format-time-string "W%V")))
+          (unless (search-forward (format "* %s" month) nil t)
+            (goto-char (point-max))
+            (insert (format "* %s\n** %s\n" month week)))
+          (goto-char (point-max))
+          (unless (search-backward (format "** %s" week) nil t)
+            (insert (format "** %s\n" week)))
+          (goto-char (org-find-olp (list month week) t)) t))
+
       :custom
       (org-capture-templates
        '(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
@@ -1553,7 +1566,7 @@
           (file "~/.emacs.d/capture-templates/raw-task.txt"))
          ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
           (file "~/.emacs.d/capture-templates/note.txt"))
-         ("j" "Journal Entry" entry (file+olp "~/doc/org/journal.org" "January" "W01")
+         ("j" "Journal Entry" entry (file+function "~/doc/org/journal.org" max/journal-capture)
           (file "~/.emacs.d/capture-templates/journal-entry.txt"))
          ("p" "Org Protocol Capture" entry (file "~/doc/org/agenda/inbox.org")
           (file "~/.emacs.d/capture-templates/protocol.txt")))))
