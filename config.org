@@ -1367,6 +1367,7 @@
 
       :commands (org-mode org-capture org-agenda orgtbl-mode)
       :mode ("\\.org$" . org-mode)
+      :hook (before-save . max/org-update-dblocks)
       :config
       ;; The following variables are set here instead of in the ~:custom~ body
       ;; because the ~:custom~ body does not see variables set in the scope of
@@ -1395,6 +1396,14 @@
       (defun max/org-verbatim-region ()
         (interactive)
         (org-emphasize ?\=))
+
+      (defun max/org-update-dblocks ()
+        "Wrapper around ~org-update-all-dblocks~ that only executes said function if
+    the current buffer is an Org buffer. This is intended to be used alongside
+    hooks for automatic dynamic block updating."
+        (interactive)
+        (when (derived-mode-p 'org-mode)
+          (org-update-all-dblocks)))
 
       ;;; Keybinds
       (general-define-key
