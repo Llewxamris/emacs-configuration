@@ -134,12 +134,13 @@
 					(auto-compile-on-save-mode))
 	 #+END_SRC
 
-** Reload Configuration
+** Reload & Edit Configuration
 	 The following function definition allows me to reload my Emacs configuration
 	 on the fly.
 
    | Keybind   | Command                        | Description                        |
    |-----------+--------------------------------+------------------------------------|
+   | SPC f e E | max/open-emacs-configuration   | Open the config file for Emacs     |
    | SPC f e R | max/reload-emacs-configuration | Reload my Emacs configuration file |
 
 	 #+BEGIN_SRC emacs-lisp
@@ -147,9 +148,16 @@
        (interactive)
        (load-file (concat user-emacs-directory "init.el")))
 
+     (defun max/open-emacs-configuration ()
+       "Open ~config.org~, my literate Emacs configuration file.
+     If the file is already open in another buffer, switch to that buffer."
+       (interactive)
+       (find-file (concat user-emacs-directory "config.org")))
+
      (general-define-key
       :states 'normal
       :prefix "SPC f e"
+      "E" 'max/open-emacs-configuration
       "R" 'max/reload-emacs-configuration)
 	 #+END_SRC
 
