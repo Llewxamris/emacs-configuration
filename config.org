@@ -215,6 +215,11 @@
        ;; Change the "Yes or No" prompt to just be "y or n".
        (defalias 'yes-or-no-p 'y-or-n-p)
 
+       ;; Disable font compacting on GC when on Windows. Trades off removing
+       ;; some lag for increased memory usage.
+       (when (eq system-type 'windows-nt)
+         (setq inhibit-compacting-font-caches t))
+
        ;;; Keybinds
        (general-define-key
         :states 'normal
