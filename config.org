@@ -860,11 +860,18 @@
   |         |            | focused buffer.                                 |
 
   #+BEGIN_SRC emacs-lisp
-    (use-package dired-x
+    (use-package dired
       :ensure nil
+      :custom
+      ;; ~ls~ switches passed to Dired.
+      (dired-listing-switches "-kaBhl --group-directories-first")
+
+      ;; Recursively delete and copy directories.
+      (dired-recursive-deletes t)
+      (dired-recursive-copies t)
       :config
-      ;; Disable nag when jumping to another dired-x buffer
-      (put 'dired-find-alternate-file 'disable nil)
+      ;; Reuse Dired buffers when navigating.
+      (put 'dired-find-alternate-file 'disabled nil)
 
       ;;; Keybinds
       ;; Get to the Dired buffer.
@@ -888,9 +895,7 @@
        "c" 'dired-create-directory
        "n" 'evil-search-next
        "N" 'evil-search-previous
-       "q" 'kill-this-buffer)
-      :custom
-      (dired-listing-switches "-kaBhl --group-directories-first"))
+       "q" 'kill-this-buffer))
   #+END_SRC
 
 * Magit
