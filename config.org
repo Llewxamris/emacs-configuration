@@ -463,9 +463,14 @@
 *** Character Encoding & General Formatting
 		Set the current font to [[https://typeof.net/Iosevka/][Iosevka Term SS04]] with a size of 11.
 
-		#+BEGIN_SRC emacs-lisp
-			(add-to-list 'default-frame-alist '(font . "Iosevka Term SS04-11"))
-		#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package faces
+        :ensure nil
+        :init
+        (if (eq system-type 'gnu/linux)
+            (set-face-attribute 'default nil :font "Iosevka Term SS04-11")
+          (set-face-attribute 'default nil :font "Iosevka Term-11")))
+    #+END_SRC
 
 		Use UTF-8 encoding everywhere. I rarely run Emacs in a terminal, and even then
 		my terminal of choice also supports UTF-8. No reason to not enable.
