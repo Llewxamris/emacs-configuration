@@ -1127,11 +1127,22 @@
 	Combining org-mode with Orgzly and Syncthing has become my perfect
 	organization, productivity, and note taking stack.
 
-	The location of my Org files differs depending on what machine I am on. On my
-	personal machine, the directory is ~/home/max/doc/org/~. It is synced to
+  The location of my Org files differs depending on what machine I am on. On my
+  personal machine, the directory is ~/home/max/doc/org/~. It is synced to
   Nextcloud as a backup solution, and synced to my mobile phone with Syncthing.
-  On my work machine, it is under ~F:\org\~. This drive is a network drive. Not
-	really a backup, but better than only keeping it local.
+  On my work machine, it is under ~C:\Users\maxwell.haley\Org~. This drive is
+  backed up on some schedule, but it is not the most robust backup solution. So,
+  I have a Batch script that copies the contents of my Org directory to my works
+  network drive. Again this is not truly a backup solution, but the network
+  drive is replicated on a much more regular basis. I have Task Scheduler run
+  this script when I log into my machine, every time I lock my machine, and
+  every night at 17:00.
+
+  #+BEGIN_SRC bat
+    @echo off
+    cd /D F:\Org
+    xcopy C:\Users\maxwell.haley\Org\*.* /E /Q /Y
+  #+END_SRC
 
   I keep three sequences for todo keywords. The task sequence, the blocked
   sequence, and the financial sequence. The task sequence is for tasks
@@ -1238,7 +1249,7 @@
           ;; Linux
           (setq org-base-dir "/home/max/doc/org")
         ;; Windows
-        (setq org-base-dir "f:/org"))
+        (setq org-base-dir "C:/Users/maxwell.haley/Org"))
 
       ;; Linum mode on large (>1000 lines) Org files results in masive
       ;; slowdowns when going over a lot of collapsed lines.
