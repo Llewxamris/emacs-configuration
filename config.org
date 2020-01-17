@@ -1473,6 +1473,9 @@
           (file "~/.emacs.d/capture-templates/journal-entry.txt"))
          ("p" "Org Protocol Capture" entry (file "~/doc/org/agenda/inbox.org")
           (file "~/.emacs.d/capture-templates/protocol.txt")))))
+
+    (use-package org-protocol
+      :after org-capture)
 	#+END_SRC
 
 ** Agenda
