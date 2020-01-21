@@ -1,3 +1,6 @@
-* %^{note-title}
-  %U
+  :PROPERTIES:
+  :CREATED: %U
+  :END:
+
+  %x
   %?

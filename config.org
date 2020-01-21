@@ -1477,13 +1477,29 @@
             (insert (format "** %s\n" week)))
           (goto-char (org-find-olp (list month week) t)) t))
 
+      (defun max/note-capture ()
+        "Create a new Org file based on a prompted description. The description is
+    used as the title and first-level heading values, and is converted to snake case
+    for the file name. Drops the pointer at the end of the new file for Org Capture
+    to start off on."
+        (let* ((note-desc
+                (read-string "Enter a brief description of the note: "))
+               (note-file-name
+                (replace-regexp-in-string " " "-" (downcase note-desc))))
+               (find-file (concat "~/doc/org/" note-file-name ".org"))
+               (goto-char (point-min))
+               (insert
+                (format "#+TITLE: %s\n" note-desc)
+                (format "* %s :note:\n" note-desc))
+               (goto-char (point-max))))
+
       :custom
       (org-capture-templates
        '(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
           (file "~/.emacs.d/capture-templates/task.txt"))
          ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
           (file "~/.emacs.d/capture-templates/raw-task.txt"))
-         ("n" "Note" entry (file "~/doc/org/agenda/inbox.org")
+         ("n" "Note" plain (function max/note-capture )
           (file "~/.emacs.d/capture-templates/note.txt"))
          ("j" "Journal Entry" entry (file+function "~/doc/org/journal.org" max/journal-capture)
           (file "~/.emacs.d/capture-templates/journal-entry.txt"))
