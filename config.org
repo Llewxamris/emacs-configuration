@@ -1532,7 +1532,8 @@
         "a" 'org-agenda
         "o" 'org-agenda-list
         "s" 'org-search-view
-        "t" 'org-tags-view)
+        "t" 'org-tags-view
+        "d" 'deft)
 
        :custom
        (org-agenda-span 3 "
@@ -1656,5 +1657,17 @@
        :keymaps 'org-mode-map
        :prefix "SPC m"
        "L" 'org-cliplink))
+   #+END_SRC
+
+** Deft
+   Deft is a mode that allows dynamic filtering of plaint-text files. I use it
+   quickly search through my Org notes. I can enter a fuzzy term like "git" and
+   get back every file that mentions Git.
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package deft
+     :custom
+     (deft-extentions '("org"))
+     (deft-directory "~/doc/org/"))
    #+END_SRC
 
