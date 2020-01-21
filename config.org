@@ -98,6 +98,7 @@
        (auto-package-update-hide-results t)
        :config
        (auto-package-update-maybe))
+       #+END_SRC
 
 ** Custom
 	 Hide away the ~custom~ configurations by dumping it into the void. I try to
