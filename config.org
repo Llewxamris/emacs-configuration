@@ -1173,71 +1173,71 @@
   tag from the inheritance list so all sub-headers do not get the ~PROJECT~
   tag.
 
-   | Keybind   | Command                         | Description                                          |
-   |-----------+---------------------------------+------------------------------------------------------|
-   | SPC m S h | org-demote-subtree              | Demote the entire subtree down one level.            |
-   | SPC m S j | org-move-subtree-down           | Move the subtree below the subtree                   |
-   |           |                                 | immediately after it.                                |
-   | SPC m S k | org-move-subtree-up             | Move the subtree above the subtree                   |
-   |           |                                 | immediately before it.                               |
-   | SPC m S l | org-promote-subtree             | Promote the entire subtree up one level.             |
-   | TAB       | org-cycle                       | Cycle the state of the headline at point (open/close |
-   |           |                                 | headlines).                                          |
-   | $         | org-end-of-line                 | Move cursor to the end of the line.                  |
-   | ^         | org-beginning-of-line           | The opposite of ~$~                                  |
-   | gh        | outline-up-heading              | Move cursor up one heading level.                    |
-   | gj        | org-forward-heading-same-level  | Move cursor down one heading within the same level.  |
-   | gk        | org-backward-heading-same-level | Move cursor up one heading within the same level.    |
-   | gl        | outline-next-visible-heading    | Move cursor down one heading level.                  |
-   | t         | org-todo                        | Change keyword state of heading.                     |
-   | T         | org-insert-todo-heading         | Insert a heading at point with TODO keyword already  |
-   |           |                                 | in place.                                            |
-   | SPC m x b | max/org-bold-region             | Surround entire region with ~*~.                     |
-   | SPC m x c | max/org-code-region             | Surround entire region with ~\~~.                    |
-   | SPC m x i | max/org-italic-region           | Surround entire region with ~/~.                     |
-   | SPC m x s | max/org-strike-through-region   | Surround entire region with ~+~.                     |
-   | SPC m x u | max/org-underline-region        | Surround entire region with ~_~.                     |
-   | SPC m x v | max/org-verbatim-region         | Surround entire region with ~=~.                     |
-	 | SPC m h i | org-insert-heading-after-current | Exactly what it sounds like.                      |
-	 | SPC m h I | org-insert-heading               | Insert heading at current point.                  |
-	 | SPC m h s | org-insert-subheading            | Creates a new heading one level below the current |
-	 |           |                                  | heading.                                          |
-	 | SPC m h l | org-insert-link                  | Insert a org-mode link at point.                 |
-		| SPC m b   | org-tree-to-indirect-buffer        | Opens the current subtree into a buffer where   |
-		|           |                                    | it is the sole subtree. This lets me edit the   |
-		|           |                                    | tree without visible distractions of the        |
-		|           |                                    | surrounding trees. As well, it removes the      |
-		|           |                                    | chance of accidental manipulating an unrelated  |
-		|           |                                    | tree.                                           |
-		| SPC m d   | org-deadline                       | Adds a deadline to the entry.                   |
-		| SPC m D   | org-insert-drawer                  | Inserts a drawer at the cursor with a prompted  |
-		|           |                                    | name. Drawers are good for hiding information.  |
-		| SPC m E   | org-set-effort                     | Creates an /effort/ property in the properties  |
-		|           |                                    | drawer. I set effort in the estimated amount    |
-		|           |                                    | of time it will take to do a task.              |
-		| SPC m n   | org-narrow-to-subtree              | Like ~SPC m b~, but doesn't open a new buffer   |
-		|           |                                    | that isolates the subtree.                      |
-		| SPC m N   | widen                              | Undo ~SPC m n~.                                 |
-		| SPC m o   | org-open-at-point                  | Opens whatever the pointer is on. Used mainly   |
-		|           |                                    | for opening links.                              |
-		| SPC m p   | org-set-property                   | Create a property with a given name and value.  |
-		| SPC m r   | org-refile                         | Refile an entry.                                |
-		| SPC m s   | org-scheduled                      | Sets the scheduled property of an entry.        |
-		| SPC m t   | org-show-todo-tree                 | Show a tree of all todo's in the open buffer.   |
-		| SPC m y   | org-todo-yesterday                 | Change the status of a headline, but apply it   |
-		|           |                                    | as if it happened yesterday. Good if I forgot   |
-		|           |                                    | to complete a habit style task.                 |
-		| SPC m !   | org-time-stamp-inactive            | Creates an inactive timestamp.                  |
-		| SPC m ^   | org-sort                           | Sorts the entire active tree.                   |
-		| SPC m *   | org-toggle-heading                 | Toggled the data under the pointer into an org  |
-		|           |                                    | heading.                                        |
-		| SPC m RET | org-insert-heading-respect-content | Inserts a heading after the current subtree.    |
-		| SPC m :   | org-set-tags                       | Set the tags on a heading at the current point. |
-		| SPC m '   | org-edit-special                   | Used mostly when editing source code blocks     |
-		|           |                                    | inside an org file.                             |
-		| SPC m /   | org-sparse-tree                    | Create a sparse tree based on some filter       |
-		|           |                                    | criteria.                                       |
-		| SPC m .   | org-time-stamp                     | Create a time stamp.                            |
+   | Keybind   | Command                            | Description                                          |
+   |-----------+------------------------------------+------------------------------------------------------|
+   | SPC m S h | org-demote-subtree                 | Demote the entire subtree down one level.            |
+   | SPC m S j | org-move-subtree-down              | Move the subtree below the subtree                   |
+   |           |                                    | immediately after it.                                |
+   | SPC m S k | org-move-subtree-up                | Move the subtree above the subtree                   |
+   |           |                                    | immediately before it.                               |
+   | SPC m S l | org-promote-subtree                | Promote the entire subtree up one level.             |
+   | TAB       | org-cycle                          | Cycle the state of the headline at point (open/close |
+   |           |                                    | headlines).                                          |
+   | $         | org-end-of-line                    | Move cursor to the end of the line.                  |
+   | ^         | org-beginning-of-line              | The opposite of ~$~                                  |
+   | gh        | outline-up-heading                 | Move cursor up one heading level.                    |
+   | gj        | org-forward-heading-same-level     | Move cursor down one heading within the same level.  |
+   | gk        | org-backward-heading-same-level    | Move cursor up one heading within the same level.    |
+   | gl        | outline-next-visible-heading       | Move cursor down one heading level.                  |
+   | t         | org-todo                           | Change keyword state of heading.                     |
+   | T         | org-insert-todo-heading            | Insert a heading at point with TODO keyword already  |
+   |           |                                    | in place.                                            |
+   | SPC m x b | max/org-bold-region                | Surround entire region with ~*~.                     |
+   | SPC m x c | max/org-code-region                | Surround entire region with ~\~~.                    |
+   | SPC m x i | max/org-italic-region              | Surround entire region with ~/~.                     |
+   | SPC m x s | max/org-strike-through-region      | Surround entire region with ~+~.                     |
+   | SPC m x u | max/org-underline-region           | Surround entire region with ~_~.                     |
+   | SPC m x v | max/org-verbatim-region            | Surround entire region with ~=~.                     |
+   | SPC m h i | org-insert-heading-after-current   | Exactly what it sounds like.                         |
+   | SPC m h I | org-insert-heading                 | Insert heading at current point.                     |
+   | SPC m h s | org-insert-subheading              | Creates a new heading one level below the current    |
+   |           |                                    | heading.                                             |
+   | SPC m h l | org-insert-link                    | Insert a org-mode link at point.                     |
+   | SPC m b   | org-tree-to-indirect-buffer        | Opens the current subtree into a buffer where        |
+   |           |                                    | it is the sole subtree. This lets me edit the        |
+   |           |                                    | tree without visible distractions of the             |
+   |           |                                    | surrounding trees. As well, it removes the           |
+   |           |                                    | chance of accidental manipulating an unrelated       |
+   |           |                                    | tree.                                                |
+   | SPC m d   | org-deadline                       | Adds a deadline to the entry.                        |
+   | SPC m D   | org-insert-drawer                  | Inserts a drawer at the cursor with a prompted       |
+   |           |                                    | name. Drawers are good for hiding information.       |
+   | SPC m E   | org-set-effort                     | Creates an /effort/ property in the properties       |
+   |           |                                    | drawer. I set effort in the estimated amount         |
+   |           |                                    | of time it will take to do a task.                   |
+   | SPC m n   | org-narrow-to-subtree              | Like ~SPC m b~, but doesn't open a new buffer        |
+   |           |                                    | that isolates the subtree.                           |
+   | SPC m N   | widen                              | Undo ~SPC m n~.                                      |
+   | SPC m o   | org-open-at-point                  | Opens whatever the pointer is on. Used mainly        |
+   |           |                                    | for opening links.                                   |
+   | SPC m p   | org-set-property                   | Create a property with a given name and value.       |
+   | SPC m r   | org-refile                         | Refile an entry.                                     |
+   | SPC m s   | org-scheduled                      | Sets the scheduled property of an entry.             |
+   | SPC m t   | org-show-todo-tree                 | Show a tree of all todo's in the open buffer.        |
+   | SPC m y   | org-todo-yesterday                 | Change the status of a headline, but apply it        |
+   |           |                                    | as if it happened yesterday. Good if I forgot        |
+   |           |                                    | to complete a habit style task.                      |
+   | SPC m !   | org-time-stamp-inactive            | Creates an inactive timestamp.                       |
+   | SPC m ^   | org-sort                           | Sorts the entire active tree.                        |
+   | SPC m *   | org-toggle-heading                 | Toggled the data under the pointer into an org       |
+   |           |                                    | heading.                                             |
+   | SPC m RET | org-insert-heading-respect-content | Inserts a heading after the current subtree.         |
+   | SPC m :   | org-set-tags                       | Set the tags on a heading at the current point.      |
+   | SPC m '   | org-edit-special                   | Used mostly when editing source code blocks          |
+   |           |                                    | inside an org file.                                  |
+   | SPC m /   | org-sparse-tree                    | Create a sparse tree based on some filter            |
+   |           |                                    | criteria.                                            |
+   | SPC m .   | org-time-stamp                     | Create a time stamp.                                 |
 
   #+BEGIN_SRC emacs-lisp
     (use-package org
