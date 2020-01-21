@@ -660,12 +660,12 @@
       :ensure nil
       :config
       (ido-mode)
+      (ido-everywhere)
       (general-define-key
        :states 'normal
        :prefix "SPC b"
        "s" 'ido-switch-buffer)
       :custom
-      (ido-everywhere t "Enables ido for all buffer/file reading.")
       (ido-enable-flex-matching t "If no prefix matches are found, look for the \
                                     sequence of characters anywhere in an entry."))
   #+END_SRC
