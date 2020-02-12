@@ -1637,7 +1637,6 @@
          "k" 'org-edit-src-abort))
 		#+END_SRC
 
---
 ** Cliplink
    [[https://github.com/rexim/org-cliplink][org-cliplink]] grabs a URL from the clipboard, fetches the title of the web page,
    then inserts a link element with the URL as the link and the title as the
