@@ -1271,6 +1271,18 @@
       (setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
       (setq org-archive-location (concat (car org-agenda-files) "/archive.org::* Archives"))
 
+
+      (font-lock-add-keywords 'org-mode
+                              '(("^ *\\([-]\\) "
+                                 (0 (prog1 () (compose-region
+                                               (match-beginning 1)
+                                               (match-end 1) "•"))))))
+      (font-lock-add-keywords 'org-mode
+                              '(("^ *\\([+]\\) "
+                                 (0 (prog1 () (compose-region
+                                               (match-beginning 1)
+                                               (match-end 1) "◦"))))))
+
       ;; Functions to quickly emphasize a region.
       (defun max/org-bold-region ()
         (interactive)
@@ -1386,14 +1398,19 @@
       (org-refile-targets '((org-agenda-files . (:maxlevel . 3))) "
     The refile targets are based off my agenda files, and only goes down three
     levels.")
-      (org-fontify-done-headline t))
+      (org-fontify-done-headline t)
+      (org-startup-indented t "Enable indent mode on all Org files.")
+      (org-pretty-entities t "Draw entities as UTF symbols.")
+      (org-ellipses " ⤸" "Use fancy symbol to represent headers with additional content."))
 	#+END_SRC
 
 	Org-bullets changes out the asterisks for UTF-8 symbols.
 
 	#+BEGIN_SRC emacs-lisp
     (use-package org-bullets
-      :hook (org-mode . org-bullets-mode))
+      :hook (org-mode . org-bullets-mode)
+      :custom
+      (org-bullets-bullet-list '("✦")))
   #+END_SRC
 
   Evil-org supplements missing keybinds until I get off my ass and define them.
