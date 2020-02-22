@@ -495,10 +495,21 @@
 				(global-pretty-mode t))
 		#+END_SRC
 
-		Always include a trailing newline at the end of a file. As well, disable
-		sentences ending with a double space. I don't think I've ever seen someone
-		do this in real life, and to be frank I don't think I want to meet the people
-		that do.
+    On top of ~pretty-mode~, I also use ~prettify-symbols-mode~ to replace some
+    Org Mode text.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package prog-mode
+    :ensure nil
+    :custom
+    (prettify-symbols-alist '(("#+BEGIN_SRC" . "⚞")
+                              ("#+END_SRC" . "⚟"))))
+#+END_SRC
+
+    Always include a trailing newline at the end of a file. As well, disable
+    sentences ending with a double space. I don't think I've ever seen someone
+    do this in real life, and to be frank I don't think I want to meet the people
+    that do.
 
 		#+BEGIN_SRC emacs-lisp
 			(setq sentence-end-double-space nil)
@@ -1258,6 +1269,9 @@
 
       ;; Automatically wrap lines at the 80th column.
       (add-hook 'org-mode-hook (lambda() (set-fill-column 80) (auto-fill-mode)))
+
+      ;; Start prettify mode
+      (add-hook 'org-mode-hook #'prettify-symbols-mode)
 
       :commands (org-mode org-capture org-agenda orgtbl-mode)
       :mode ("\\.org$" . org-mode)
