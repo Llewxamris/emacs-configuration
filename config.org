@@ -228,13 +228,19 @@ of them may be very useful once you are more familiar with Emacs.
            (add-to-list 'default-frame-alist '(font . "Iosevka Term SS04-12"))
                         (add-to-list 'default-frame-alist '(font . "Iosevka Term-12")))
 
-       ;;; Keybinds
-       (general-define-key
-        :states 'normal
-        :prefix "SPC w"
-        "d" 'delete-window
-        "s h" 'split-window-vertically
-        "s v" 'split-window-horizontally)
+    ;;; Keybinds
+    (general-define-key
+     :states 'normal
+     :prefix "SPC w"
+     "=" 'balance-windows
+     "c" 'delete-other-windows
+     "d" 'delete-window
+     "H" 'evil-window-move-far-left
+     "J" 'evil-window-move-very-bottom
+     "K" 'evil-window-move-very-top
+     "L" 'evil-window-move-far-right
+     "s h" 'split-window-vertically
+     "s v" 'split-window-horizontally)
 
        (general-define-key
         :states 'normal
