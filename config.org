@@ -313,17 +313,18 @@ is I'm having problems with.
 |           |                   | variable.                                  |
 
 #+BEGIN_SRC emacs-lisp
-     (use-package help-fns
-       :ensure nil
-       :config
-       (general-define-key
-        :states 'normal
-        :prefix "SPC h d"
-        "f" 'describe-function
-        "k" 'describe-key
-        "m" 'describe-mode
-        "s" 'describe-symbol
-        "v" 'describe-variable))
+  (use-package help-fns
+    :ensure nil
+    :config
+    (general-define-key
+     :states 'normal
+     :prefix "SPC h d"
+     "f" 'describe-function
+     "F" 'describe-face
+     "k" 'describe-key
+     "m" 'describe-mode
+     "s" 'describe-symbol
+     "v" 'describe-variable))
 #+END_SRC
 
 ** Files
