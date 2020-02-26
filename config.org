@@ -575,17 +575,24 @@
 		#+END_SRC
 
 *** Relative Line Numbering
-		I really like Vim's relative line number feature. I find it makes taking
-		advantage of motions easier since it removes any sort of mental math. I
-		use the [[https://github.com/coldnew/linum-relative][linum-relative]] package for this.
+Vim's /relative line numbers/ was an invaluable feature that made using Vim's
+input style simple. It makes taking advantage of multi-line motions or edits
+very simple for someone like me who is terrible at on the fly mental math.
 
-		#+BEGIN_SRC emacs-lisp
-			(use-package linum-relative
-				:init
-				;; ~display-line-numbers-mode~ is the faster backend on Emacs 26
-				(setq linum-relative-backend 'diplay-line-numbers-mode)
-				:config
-				(linum-relative-global-mode 1))
+ I previously used the [[https://github.com/coldnew/linum-relative][linum-relative]] package for relative line numbering. Now,
+ I use the ~display-line-numbers~ package that comes with Emacs 26+. Linum had
+ major performance problems when working on large files, including this one. I
+ actually disabled ~linum-mode~ in all Org files because it became such a
+ problem. These performance issues went away after switching to
+ ~display-line-numbers~.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package display-line-numbers
+        :ensure nil
+        :config
+        (global-display-line-numbers-mode)
+        :custom
+        (display-line-numbers-type 'relative))
 		#+END_SRC
 
 *** Smooth Scrolling
@@ -1259,10 +1266,6 @@
           (setq org-base-dir "/home/max/doc/org")
         ;; Windows
         (setq org-base-dir "C:/Users/maxwell.haley/Org"))
-
-      ;; Linum mode on large (>1000 lines) Org files results in masive
-      ;; slowdowns when going over a lot of collapsed lines.
-      (add-hook 'org-mode-hook (lambda() (linum-relative-mode -1)))
 
       ;; Automatically wrap lines at the 80th column.
       (add-hook 'org-mode-hook (lambda() (set-fill-column 80) (auto-fill-mode)))
