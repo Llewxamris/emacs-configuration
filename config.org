@@ -178,55 +178,55 @@ of them may be very useful once you are more familiar with Emacs.
 |           |                           | side-by-side windows.                           |
 
 #+BEGIN_SRC emacs-lisp
-     (use-package emacs
-       :ensure nil
-       :custom
-       ;;  Disable the startup screen & message.
-       (inhibit-startup-screen t)
+  (use-package emacs
+    :ensure nil
+    :custom
+    ;;  Disable the startup screen & message.
+    (inhibit-startup-screen t)
 
-       ;; Disable the bell that makes me feel shame every time it lets me know I fumbled a
-       ;; keystroke. Worse, its almost like hearing the bell guarantees the next
-       ;; few strokes will also be fumbled resulting in more bells. Disable this
-       ;; existential horror please.
-       (ring-bell-function 'ignore); *ding-ding* SHAME. *ding-ding* SHAME.
+    ;; Disable the bell that makes me feel shame every time it lets me know I fumbled a
+    ;; keystroke. Worse, its almost like hearing the bell guarantees the next
+    ;; few strokes will also be fumbled resulting in more bells. Disable this
+    ;; existential horror please.
+    (ring-bell-function 'ignore); *ding-ding* SHAME. *ding-ding* SHAME.
 
-       ;;	Show keystrokes after 0.1 seconds. Any longer and the panic sets in.
-       (echo-keystrokes 0.01)
+    ;;	Show keystrokes after 0.1 seconds. Any longer and the panic sets in.
+    (echo-keystrokes 0.01)
 
-       ;; Do not show a dialog box when mouse commands result in a question
-       ;; being asked. I actively avoid using the mouse, and accidently
-       ;; triggering a popup is very frustrating.
-       (use-dialog-box t)
+    ;; Do not show a dialog box when mouse commands result in a question
+    ;; being asked. I actively avoid using the mouse, and accidently
+    ;; triggering a popup is very frustrating.
+    (use-dialog-box t)
 
-       ;; Use spaces instead of tabs. And when tabs are seen, limit them to two
-       ;; characters.
-       (indent-tabs-mode nil)
-       (tab-width 2)
+    ;; Use spaces instead of tabs. And when tabs are seen, limit them to two
+    ;; characters.
+    (indent-tabs-mode nil)
+    (tab-width 2)
 
-       ;; Use UTF-8 encoding, because this is ${CURRENT_YEAR}.
-       (locale-coding-system 'utf-8)
+    ;; Use UTF-8 encoding, because this is ${CURRENT_YEAR}.
+    (locale-coding-system 'utf-8)
 
-       ;; Always load the newest version of a file.
-       (load-prefer-newer t)
-       :config
-       ;; Force syntax highlighting for all supported major modes.
-       (global-font-lock-mode t)
+    ;; Always load the newest version of a file.
+    (load-prefer-newer t)
+    :config
+    ;; Force syntax highlighting for all supported major modes.
+    (global-font-lock-mode t)
 
-       ;; Change the "Yes or No" prompt to just be "y or n".
-       (defalias 'yes-or-no-p 'y-or-n-p)
+    ;; Change the "Yes or No" prompt to just be "y or n".
+    (defalias 'yes-or-no-p 'y-or-n-p)
 
-       ;; Disable font compacting on GC when on Windows. Trades off removing
-       ;; some lag for increased memory usage.
-       (when (eq system-type 'windows-nt)
-         (setq inhibit-compacting-font-caches t))
+    ;; Disable font compacting on GC when on Windows. Trades off removing
+    ;; some lag for increased memory usage.
+    (when (eq system-type 'windows-nt)
+      (setq inhibit-compacting-font-caches t))
 
-       ;; Set the font. According to HLISSNER (of Doom Emacs fame), adding
-       ;; the font to the default frame list results in better start times.
-       ;; I agree, and have also noticed that on Windows, I have to reload
-       ;; the config for the font to actually apply.
-       (if (eq system-type 'gnu/linux)
-           (add-to-list 'default-frame-alist '(font . "Iosevka Term SS04-12"))
-                        (add-to-list 'default-frame-alist '(font . "Iosevka Term-12")))
+    ;; Set the font. According to HLISSNER (of Doom Emacs fame), adding
+    ;; the font to the default frame list results in better start times.
+    ;; I agree, and have also noticed that on Windows, I have to reload
+    ;; the config for the font to actually apply.
+    (if (eq system-type 'gnu/linux)
+        (add-to-list 'default-frame-alist '(font . "Iosevka Term SS04-12"))
+                     (add-to-list 'default-frame-alist '(font . "Iosevka Term-12")))
 
     ;;; Keybinds
     (general-define-key
@@ -242,10 +242,10 @@ of them may be very useful once you are more familiar with Emacs.
      "s h" 'split-window-vertically
      "s v" 'split-window-horizontally)
 
-       (general-define-key
-        :states 'normal
-        :prefix "SPC e"
-        "N" 'widen))
+    (general-define-key
+     :states 'normal
+     :prefix "SPC e"
+     "N" 'widen))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
