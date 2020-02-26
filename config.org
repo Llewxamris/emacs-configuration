@@ -8,42 +8,42 @@
 #  LocalWords:  flyspell lang lsp flycheck imenu ibuffer
 
 * Forward
-  My living monolith of a Emacs configuration file. Bred through trial, error, and
-  peeking at the configurations of people far more wise than I. Here's a list
-	of some of those configurations I've lifted. Can't let me get away red handed.
+My living monolith of a Emacs configuration file. Bred through trial, error, and
+peeking at the configurations of people far more wise than I. Here's a list of
+some of those configurations I've lifted. Can't let me get away red handed.
 
-	- [[https://github.com/angrybacon/dotemacs][angrybacon/dotemacs]]
-	- [[https://github.com/valignatev/dotfiles][valignatev/dotfiles]]
-	- [[https://github.com/sachac/.emacs.d][sachac/.emacs.d]]
-	- [[https://github.com/wasamasa/dotemacs][wasamasa/dotemacs]]
+- [[https://github.com/angrybacon/dotemacs][angrybacon/dotemacs]]
+- [[https://github.com/valignatev/dotfiles][valignatev/dotfiles]]
+- [[https://github.com/sachac/.emacs.d][sachac/.emacs.d]]
+- [[https://github.com/wasamasa/dotemacs][wasamasa/dotemacs]]
 
-	The entire configuration file is written out in Emacs Org Mode. The goal is to
-	describe and justify my decisions in a way that both:
+The entire configuration file is written out in Emacs Org Mode. The goal is to
+describe and justify my decisions in a way that both:
 
-	1. Anyone interested in building their own configuration can browse through my
-	own and make informed decisions on what they want to co-opt
-	2. I can figure out /"What the f--- was I thinking."/ in the next few months
+1. Anyone interested in building their own configuration can browse through my
+own and make informed decisions on what they want to co-opt
+2. I can figure out /"What the f--- was I thinking."/ in the next few months
 
-	I also tried to use some humour to make reading through this YAML file on
-	steroids enjoyable. I apologize in advance.
+I also tried to use some humour to make reading through this YAML file on
+steroids enjoyable. I apologize in advance.
 
-  To start of this configuration, lets define my name and email address before
-	kicking off the package initialization.
+To start of this configuration, lets define my name and email address before
+kicking off the package initialization.
 
-	#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
     (setq user-full-name "Maxwell R. Haley")
     (setq user-mail-address "maxwell.r.haley@gmail.com")
-	#+END_SRC
+  #+END_SRC
 
 * Preparation & Package Management
 ** Remote Package Archives
-	 Define what remote archives to use as package repositories. GNU ELPA is the
-	 default package repository for Emacs. It is a solid repository, but limited
-	 in content. MELPA has a much larger selection of modern and up-to-date packages.
+Define what remote archives to use as package repositories. GNU ELPA is the
+default package repository for Emacs. It is a solid repository, but limited in
+content. MELPA has a much larger selection of modern and up-to-date packages.
 
-	 Org is the Org mode repository.
+Org is the Org mode repository.
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (require 'package)
      (setq package-archives '(("melpa" . "https://melpa.milkbox.net/packages/")
                               ("org" . "https://orgmode.org/elpa/")
@@ -55,30 +55,29 @@
 
      (eval-and-compile
        (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
-   #+END_SRC
+#+END_SRC
 
 ** Use Package
-   Check the packages directory for manually installed packages.
+Check the packages directory for manually installed packages.
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (eval-and-compile
        (defvar package-dir (expand-file-name "packages" user-emacs-directory)
          "The packages directory")
        (add-to-list 'load-path package-dir))
-   #+END_SRC
+#+END_SRC
 
-	 /Ensure/ ~use-package~ is always installed alongside this configuration. I /ensure/
-	 to always /ensure/ my packages are available, and then /ensure/ I have the
-	 newest packages available.
+/Ensure/ ~use-package~ is always installed alongside this configuration. I
+/ensure/ to always /ensure/ my packages are available, and then /ensure/ I have
+the newest packages available.
 
-   Any built-in Emacs packages, or packages that are actually apart of a
-   separate package, are not ensured by adding ~:ensure nil~ to their
-   declaration.
+Any built-in Emacs packages, or packages that are actually apart of a separate
+package, are not ensured by adding ~:ensure nil~ to their declaration.
 
-	 Also included is ~auto-package-update~. It automatically updates packages three
-	 days after the previous upgrade was ran.
+Also included is ~auto-package-update~. It automatically updates packages three
+days after the previous upgrade was ran.
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (unless (package-installed-p 'use-package)
        (package-refresh-contents)
        (package-install 'use-package))
@@ -98,53 +97,53 @@
        (auto-package-update-hide-results t)
        :config
        (auto-package-update-maybe))
-       #+END_SRC
+#+END_SRC
 
 ** Custom
-	 Hide away the ~custom~ configurations by dumping it into the void. I try to
-   avoid using ~custom~ in general. I find figuring out how to do it manually
-   much more +infuriating+ entertaining.
+Hide away the ~custom~ configurations by dumping it into the void. I try to
+avoid using ~custom~ in general. I find figuring out how to do it manually much
+more +infuriating+ entertaining.
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package cus-edit
        :ensure nil
        :custom
        (custom-file null-device))
-	 #+END_SRC
+#+END_SRC
 
 ** General
-	 I prefer defining keys using the [[https://github.com/noctuid/general.el][General]] syntactic sugar style. It interops
-	 extremely well with Evil, and makes it absurdly easy to use mnemonic style
-	 motions.
+I prefer defining keys using the [[https://github.com/noctuid/general.el][General]] syntactic sugar style. It interops
+extremely well with Evil, and makes it absurdly easy to use mnemonic style
+motions.
 
-		#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package general)
-		#+END_SRC
+#+END_SRC
 
 ** Automatically Byte Compile Emacs Lisp Libraries
-	 Byte compiling Emacs Lisp files allows them to load and execute faster. I've
-	 never tested the speed difference of compiled vs. not-compiled, but I assume
-	 the performance increase over time is negated by the amount of time spent
-	 setting up my Emacs configuration.
+Byte compiling Emacs Lisp files allows them to load and execute faster. I've
+never tested the speed difference of compiled vs. not-compiled, but I assume the
+performance increase over time is negated by the amount of time spent setting up
+my Emacs configuration.
 
-	 #+BEGIN_SRC emacs-lisp
-			(use-package auto-compile
-				:config
-					;; Auto-compile on both loading and saving.
-					(auto-compile-on-load-mode)
-					(auto-compile-on-save-mode))
-	 #+END_SRC
+#+BEGIN_SRC emacs-lisp
+      (use-package auto-compile
+        :config
+          ;; Auto-compile on both loading and saving.
+          (auto-compile-on-load-mode)
+          (auto-compile-on-save-mode))
+#+END_SRC
 
 ** Reload & Edit Configuration
-	 The following function definition allows me to reload my Emacs configuration
-	 on the fly.
+The following function definition allows me to reload my Emacs configuration on
+the fly.
 
-   | Keybind   | Command                        | Description                        |
-   |-----------+--------------------------------+------------------------------------|
-   | SPC f e E | max/open-emacs-configuration   | Open the config file for Emacs     |
-   | SPC f e R | max/reload-emacs-configuration | Reload my Emacs configuration file |
+| Keybind   | Command                        | Description                        |
+|-----------+--------------------------------+------------------------------------|
+| SPC f e E | max/open-emacs-configuration   | Open the config file for Emacs     |
+| SPC f e R | max/reload-emacs-configuration | Reload my Emacs configuration file |
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (defun max/reload-emacs-configuration ()
        (interactive)
        (load-file (concat user-emacs-directory "init.el")))
@@ -160,25 +159,25 @@
       :prefix "SPC f e"
       "E" 'max/open-emacs-configuration
       "R" 'max/reload-emacs-configuration)
-	 #+END_SRC
+#+END_SRC
 
 * Emacs General
 ** Essentials
-	Emacs comes with a large set of defaults designed to make adoption simple for
-	new users. Once you get a hang of Emacs, some of these defaults can feel like
-	they get in the way or are unnecessary. There are also some settings that are
-	not set by default to avoid confusing new users. And like the set defaults,
-	some of them may be very useful once you are more familiar with Emacs.
+Emacs comes with a large set of defaults designed to make adoption simple for
+new users. Once you get a hang of Emacs, some of these defaults can feel like
+they get in the way or are unnecessary. There are also some settings that are
+not set by default to avoid confusing new users. And like the set defaults, some
+of them may be very useful once you are more familiar with Emacs.
 
-  | Keybind   | Command                   | Description                                     |
-  |-----------+---------------------------+-------------------------------------------------|
-  | SPC w d   | delete-window             | Delete (close) the currently focused window.    |
-  | SPC w s h | split-window-vertically   | Split the window, resulting in two vertically  |
-  |           |                           | side-by-side windows.                           |
-  | SPC w s v | split-window-horizontally | Split the window, resulting in two horizontally |
-  |           |                           | side-by-side windows.                           |
+| Keybind   | Command                   | Description                                     |
+|-----------+---------------------------+-------------------------------------------------|
+| SPC w d   | delete-window             | Delete (close) the currently focused window.    |
+| SPC w s h | split-window-vertically   | Split the window, resulting in two vertically  |
+|           |                           | side-by-side windows.                           |
+| SPC w s v | split-window-horizontally | Split the window, resulting in two horizontally |
+|           |                           | side-by-side windows.                           |
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package emacs
        :ensure nil
        :custom
@@ -241,9 +240,9 @@
         :states 'normal
         :prefix "SPC e"
         "N" 'widen))
-	 #+END_SRC
+#+END_SRC
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package simple
        :ensure nil
        :config
@@ -271,49 +270,49 @@
        ;; Adds some curly arrows to help show which lines are being effected by
        ;; visual line wrapping.
        (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)))
-	 #+END_SRC
+#+END_SRC
 
-	 Similarly, I like having which-key around to pat me on the back and tell
-	 me I'm doing okay when I start a motion and forget where to go next.
+Similarly, I like having which-key around to pat me on the back and tell me I'm
+doing okay when I start a motion and forget where to go next.
 
-	 #+BEGIN_SRC emacs-lisp
-		 (use-package which-key
-			 :hook (after-init . which-key-mode))
-	 #+END_SRC
+#+BEGIN_SRC emacs-lisp
+     (use-package which-key
+       :hook (after-init . which-key-mode))
+#+END_SRC
 
-	 Automatically decompress archives when reading, and then compress again when
-	 writing.
+Automatically decompress archives when reading, and then compress again when
+writing.
 
-	 #+BEGIN_SRC emacs-lisp
-		 (auto-compression-mode t)
-	 #+END_SRC
+#+BEGIN_SRC emacs-lisp
+     (auto-compression-mode t)
+#+END_SRC
 
-   Enable the Garbage Collector Magic Hack. This will kick in the built in GC
-   whenever the system is idle,
+Enable the Garbage Collector Magic Hack. This will kick in the built in GC
+whenever the system is idle,
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package gcmh
        :ensure t
        :init
        (gcmh-mode 1))
-	 #+END_SRC
+#+END_SRC
 
-   Describing things is one of the best ways to understand how Emacs works.
-   Whenever I need to trouble shoot, the first thing I do is describe whatever
-   it is I'm having problems with.
+Describing things is one of the best ways to understand how Emacs works.
+Whenever I need to trouble shoot, the first thing I do is describe whatever it
+is I'm having problems with.
 
-   | Keybind   | Command           | Description                                |
-   |-----------+-------------------+--------------------------------------------|
-   | SPC h d f | describe-function | Look up the definition of a function.      |
-   | SPC h d k | describe-key      | Look up the function invoked by the        |
-   |           |                   |  given key.                               |
-   | SPC h d m | describe-mode     | Displays the documentation for the current |
-   |           |                   | major and minor modes.                     |
-   | SPC h d s | describe-symbol   | Look up the definition of a symbol.        |
-   | SPC h d v | describe-variable | Look up the definition and value of a      |
-   |           |                   | variable.                                  |
+| Keybind   | Command           | Description                                |
+|-----------+-------------------+--------------------------------------------|
+| SPC h d f | describe-function | Look up the definition of a function.      |
+| SPC h d k | describe-key      | Look up the function invoked by the        |
+|           |                   |  given key.                               |
+| SPC h d m | describe-mode     | Displays the documentation for the current |
+|           |                   | major and minor modes.                     |
+| SPC h d s | describe-symbol   | Look up the definition of a symbol.        |
+| SPC h d v | describe-variable | Look up the definition and value of a      |
+|           |                   | variable.                                  |
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package help-fns
        :ensure nil
        :config
@@ -325,22 +324,22 @@
         "m" 'describe-mode
         "s" 'describe-symbol
         "v" 'describe-variable))
-	 #+END_SRC
+#+END_SRC
 
 ** Files
-   Of course, the core purpose of a file editor is to edit files. And when we
-   have edited a file, that file needs to be saved. Emacs has plenty of built in
-   saving functionality, as well as the ability to make plenty of backups in
-   case you forgot to save.
+Of course, the core purpose of a file editor is to edit files. And when we have
+edited a file, that file needs to be saved. Emacs has plenty of built in saving
+functionality, as well as the ability to make plenty of backups in case you
+forgot to save.
 
-		| Keybind | Command                    | Description                                   |
-		|---------+----------------------------+-----------------------------------------------|
-		| SPC q q | save-buffers-kill-terminal | Prompt to save all buffers, then close Emacs. |
-		| SPC f r | save-buffer                | Save the currently focused buffer.            |
-		| SPC f w | find-file                  | Navigate to a file via a tab-complete         |
-		|         |                            | path editor.                                  |
+| Keybind | Command                    | Description                                   |
+|---------+----------------------------+-----------------------------------------------|
+| SPC q q | save-buffers-kill-terminal | Prompt to save all buffers, then close Emacs. |
+| SPC f r | save-buffer                | Save the currently focused buffer.            |
+| SPC f w | find-file                  | Navigate to a file via a tab-complete         |
+|         |                            | path editor.                                  |
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package files
        :ensure nil
        :hook
@@ -384,14 +383,14 @@
        (require-final-newline t)
        (delete-trailing-lines nil))
 
-   #+END_SRC
+#+END_SRC
 
-   It is also very useful to automatically refresh buffers. That is: If the
-   content of a buffer changes (such as a file changing on disk), then redraw
-   the buffer. I also set it to refresh non-file buffers (such as Dired
-   buffers), and to suppress the nag.
+It is also very useful to automatically refresh buffers. That is: If the content
+of a buffer changes (such as a file changing on disk), then redraw the buffer. I
+also set it to refresh non-file buffers (such as Dired buffers), and to suppress
+the nag.
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package autorevert
        :ensure nil
        :config
@@ -399,12 +398,12 @@
        :custom
        (global-auto-revert-non-file-buffers t)
        (auto-revert-verbose nil))
-	 #+END_SRC
+#+END_SRC
 
-	 I also want to backup all of the commands I've used, so I can re-invoke them
-   in later sessions. Command history is essential for any command based environment.
+I also want to backup all of the commands I've used, so I can re-invoke them in
+later sessions. Command history is essential for any command based environment.
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package savehist
        :ensure nil
        :init
@@ -416,26 +415,26 @@
                regexp-search-ring))
        :config
        (savehist-mode))
-	 #+END_SRC
+#+END_SRC
 
-   Tramp let's me use Emacs to edit remote files. For example, changing a Docker
-   compose file from the comfort of my local machine. I default to editing over
-   SSH instead of using SCP. [[https://www.emacswiki.org/emacs/TrampMode#toc12][I also need to override the shell prompt pattern to
-   prevent Tramp from hanging.]]
+Tramp let's me use Emacs to edit remote files. For example, changing a Docker
+compose file from the comfort of my local machine. I default to editing over SSH
+instead of using SCP. [[https://www.emacswiki.org/emacs/TrampMode#toc12][I also need to override the shell prompt pattern to
+prevent Tramp from hanging.]]
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package tramp
        :ensure nil
        :custom
        (tramp-default-method "ssh" "SSH is faster than SCP.")
        (tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*"
                                    "Not having this pattern set causes Tramp to hang on connection."))
-	 #+END_SRC
+#+END_SRC
 
 ** Graphical User Interface
-	 Seeing three bars on a slot machine is good. Seeing three bars on Emacs is bad.
+Seeing three bars on a slot machine is good. Seeing three bars on Emacs is bad.
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package menu-bar
        :ensure nil
        :config
@@ -456,24 +455,24 @@
        :defer t
        :custom
        (tooltip-mode -1))
-	 #+END_SRC
+#+END_SRC
 
-	 Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
-	 accidental destruction the layout of windows and buffers.
+Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
+accidental destruction the layout of windows and buffers.
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package winner
        :ensure nil
        :config
        (winner-mode 1))
-	 #+END_SRC
+#+END_SRC
 
 ** Editor
 *** Character Encoding & General Formatting
-		Use UTF-8 encoding everywhere. I rarely run Emacs in a terminal, and even then
-		my terminal of choice also supports UTF-8. No reason to not enable.
+Use UTF-8 encoding everywhere. I rarely run Emacs in a terminal, and even then
+my terminal of choice also supports UTF-8. No reason to not enable.
 
-		#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package mule
         :ensure nil
         :config
@@ -481,19 +480,19 @@
         (set-keyboard-coding-system 'utf-8)
         (set-selection-coding-system 'utf-8)
         (prefer-coding-system 'utf-8))
-		#+END_SRC
+#+END_SRC
 
-		To congratulate myself for taking a stand against non-UTF-8 encoding, I will
-		reward myself with some pretty symbols.
+To congratulate myself for taking a stand against non-UTF-8 encoding, I will
+reward myself with some pretty symbols.
 
-		#+BEGIN_SRC emacs-lisp
-			(use-package pretty-mode
-				:config
-				(global-pretty-mode t))
-		#+END_SRC
+#+BEGIN_SRC emacs-lisp
+      (use-package pretty-mode
+        :config
+        (global-pretty-mode t))
+#+END_SRC
 
-    On top of ~pretty-mode~, I also use ~prettify-symbols-mode~ to replace some
-    Org Mode text.
+On top of ~pretty-mode~, I also use ~prettify-symbols-mode~ to replace some Org
+Mode text.
 
 #+BEGIN_SRC emacs-lisp
   (use-package prog-mode
@@ -503,133 +502,131 @@
                               ("#+END_SRC" . "⚟"))))
 #+END_SRC
 
-    Always include a trailing newline at the end of a file. As well, disable
-    sentences ending with a double space. I don't think I've ever seen someone
-    do this in real life, and to be frank I don't think I want to meet the people
-    that do.
+Always include a trailing newline at the end of a file. As well, disable
+sentences ending with a double space. I don't think I've ever seen someone do
+this in real life, and to be frank I don't think I want to meet the people that
+do.
 
-		#+BEGIN_SRC emacs-lisp
-			(setq sentence-end-double-space nil)
-		#+END_SRC
+#+BEGIN_SRC emacs-lisp
+      (setq sentence-end-double-space nil)
+#+END_SRC
 
 *** Colour Theme
-		I've recently switched over to the [[https://github.com/fniessen/emacs-leuven-theme][Leuven]] theme. I've started switching
-		over to light-themes for my systems in general. I keep my brightness
-		relatively low, so dark-themes end up having poor contrast. Leuven
-		was built with Org-mode in mind, and gives Org files a more cohesive
-		feeling.
+I've recently switched over to the [[https://github.com/fniessen/emacs-leuven-theme][Leuven]] theme. I've started switching over to
+light-themes for my systems in general. I keep my brightness relatively low, so
+dark-themes end up having poor contrast. Leuven was built with Org-mode in mind,
+and gives Org files a more cohesive feeling.
 
-		#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package leuven-theme
         :ensure t
         :config
         ;; Load the theme unless running without an interactive terminal.
         (unless noninteractive
           (load-theme 'leuven t)))
-		#+END_SRC
+#+END_SRC
 
 *** Highlighting & Pair Matching
-    Highlight the row the cursor is currently on.
+Highlight the row the cursor is currently on.
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package hl-line
         :config
         (global-hl-line-mode))
-    #+END_SRC
+#+END_SRC
 
-    When the cursor is over a parenthesis, highlight all of the content between
-    that parenthesis and it's matching opening/closing parenthesis. This is
-    mostly useful when working with Lisp, but I have found it helpful in other
-    situations as well. So I set it globally.
+When the cursor is over a parenthesis, highlight all of the content between that
+parenthesis and it's matching opening/closing parenthesis. This is mostly useful
+when working with Lisp, but I have found it helpful in other situations as well.
+So I set it globally.
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package paren
         :config
         (show-paren-mode)
         :custom
         (show-paren-style 'expression)
         (show-paren-delay 0))
-    #+END_SRC
+#+END_SRC
 
-    Automatically insert a closing symbol if an opening symbol is entered
-    (paren., bracket, brace, etc.). The closing symbol is after the point
-    of the cursor, so I can keep typing without having to adjust to the
-    newly entered text.
+Automatically insert a closing symbol if an opening symbol is entered (paren.,
+bracket, brace, etc.). The closing symbol is after the point of the cursor, so I
+can keep typing without having to adjust to the newly entered text.
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package elec-pair
         :config
         (electric-pair-mode))
-    #+END_SRC
+#+END_SRC
 
 *** Doom Modeline
-		A """minimalist""" modeline. It's minimalist, so that justifies satisfying
-		my need for fancy colours and icons everywhere I look so I can keep my ADD
-		rattled brain distracted while the rest of me tries to do real work.
+A """minimalist""" modeline. It's minimalist, so that justifies satisfying my
+need for fancy colours and icons everywhere I look so I can keep my ADD rattled
+brain distracted while the rest of me tries to do real work.
 
-		#+BEGIN_SRC emacs-lisp
-			(use-package doom-modeline
-				:hook (after-init . doom-modeline-mode))
+#+BEGIN_SRC emacs-lisp
+      (use-package doom-modeline
+        :hook (after-init . doom-modeline-mode))
 
-			(use-package all-the-icons)
-		#+END_SRC
+      (use-package all-the-icons)
+#+END_SRC
 
 *** Relative Line Numbering
 Vim's /relative line numbers/ was an invaluable feature that made using Vim's
 input style simple. It makes taking advantage of multi-line motions or edits
 very simple for someone like me who is terrible at on the fly mental math.
 
- I previously used the [[https://github.com/coldnew/linum-relative][linum-relative]] package for relative line numbering. Now,
- I use the ~display-line-numbers~ package that comes with Emacs 26+. Linum had
- major performance problems when working on large files, including this one. I
- actually disabled ~linum-mode~ in all Org files because it became such a
- problem. These performance issues went away after switching to
- ~display-line-numbers~.
+I previously used the [[https://github.com/coldnew/linum-relative][linum-relative]] package for relative line numbering. Now, I
+use the ~display-line-numbers~ package that comes with Emacs 26+. Linum had
+major performance problems when working on large files, including this one. I
+actually disabled ~linum-mode~ in all Org files because it became such a
+problem. These performance issues went away after switching to
+~display-line-numbers~.
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package display-line-numbers
         :ensure nil
         :config
         (global-display-line-numbers-mode)
         :custom
         (display-line-numbers-type 'relative))
-		#+END_SRC
+#+END_SRC
 
 *** Smooth Scrolling
-		Leaves just a bit of room at the bottom and top of the window when
-		scrolling. Something about it just feels so right. Uses the
-		[[https://github.com/aspiers/smooth-scrolling][smooth-scrolling package]] .
+Leaves just a bit of room at the bottom and top of the window when scrolling.
+Something about it just feels so right. Uses the [[https://github.com/aspiers/smooth-scrolling][smooth-scrolling package]].
 
-		#+BEGIN_SRC emacs-lisp
-			(use-package smooth-scrolling
-				:config
-				(smooth-scrolling-mode 1))
-		#+END_SRC
+#+BEGIN_SRC emacs-lisp
+      (use-package smooth-scrolling
+        :config
+        (smooth-scrolling-mode 1))
+#+END_SRC
 
 * Evil Mode
-	Vim has the superior input style. There. I said it. Modal-based bindings flow so much
-  better for me, both in thinking and in executing. Using Emacs native modifier bindings
-  feels incredibly restrictive in comparison. My left hand needs to positioned to always
-  be able to hold down Control, Alt, or Meta. Making my pinky the main work-horse of
-  my typing, to me, feels like a terrible mistake. On the other hand, modal style editing
-	lets me use my fingers equally. Even when I need to use some sort of modifier key (mostly
-  the space bar), it ends up being my thumb doing the work. My thumb can withstand the
-  brute force of slamming it down in frustration during a heated moment. My pinky is
-  barely even an appendage.
+Vim has the superior input style. There. I said it. Modal-based bindings flow so
+much better for me, both in thinking and in executing. Using Emacs native
+modifier bindings feels incredibly restrictive in comparison. My left hand needs
+to positioned to always be able to hold down Control, Alt, or Meta. Making my
+pinky the main work-horse of my typing, to me, feels like a terrible mistake. On
+the other hand, modal style editing lets me use my fingers equally. Even when I
+need to use some sort of modifier key (mostly the space bar), it ends up being
+my thumb doing the work. My thumb can withstand the brute force of slamming it
+down in frustration during a heated moment. My pinky is barely even an
+appendage.
 
-	Evil mode gives me Vim-like keybindings without having to invest in any sort of
-  remapping. I, of course, still add my own mappings and re-mappings. Not because Vim
-  lacks anything, but entirely due to personal preference. Without Evil, I don't think
-  I could see myself ever using Emacs seriously.
+Evil mode gives me Vim-like keybindings without having to invest in any sort of
+remapping. I, of course, still add my own mappings and re-mappings. Not because
+Vim lacks anything, but entirely due to personal preference. Without Evil, I
+don't think I could see myself ever using Emacs seriously.
 
-  | Keybind   | Command                   | Description                                     |
-  |-----------+---------------------------+-------------------------------------------------|
-  | SPC w h   | evil-window-left          | Focus the window to the left.                   |
-  | SPC w j   | evil-window-bottom        | Focus the window below.                         |
-  | SPC w k   | evil-window-up            | Focus the window above.                         |
-  | SPC w l   | evil-window-right         | Focus the window to the right.                  |
+| Keybind   | Command                   | Description                                     |
+|-----------+---------------------------+-------------------------------------------------|
+| SPC w h   | evil-window-left          | Focus the window to the left.                   |
+| SPC w j   | evil-window-bottom        | Focus the window below.                         |
+| SPC w k   | evil-window-up            | Focus the window above.                         |
+| SPC w l   | evil-window-right         | Focus the window to the right.                  |
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 
     (use-package evil
       :custom
@@ -664,14 +661,14 @@ very simple for someone like me who is terrible at on the fly mental math.
       :after evil
       :config
       (evil-collection-init))
-  #+END_SRC
+#+END_SRC
 
 * ido
- [[https://www.emacswiki.org/emacs/InteractivelyDoThings][Ido]] (Interactively Do Things) is a built-in minor mode that provides
- "interactive" text entry. This mostly means the minibuffer will filter away all
- entries that could not match your input without having to hit ~TAB~ each time.
+[[https://www.emacswiki.org/emacs/InteractivelyDoThings][Ido]] (Interactively Do Things) is a built-in minor mode that provides
+"interactive" text entry. This mostly means the minibuffer will filter away all
+entries that could not match your input without having to hit ~TAB~ each time.
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package ido
       :ensure nil
       :config
@@ -684,15 +681,15 @@ very simple for someone like me who is terrible at on the fly mental math.
       :custom
       (ido-enable-flex-matching t "If no prefix matches are found, look for the \
                                     sequence of characters anywhere in an entry."))
-  #+END_SRC
+#+END_SRC
 
-  I do not like the default in-line display used by ido. [[https://github.com/creichert/ido-vertical-mode.el][Ido-vertical-mode]] reads
-  better to me, displaying all entries in a single column.
+I do not like the default in-line display used by ido. [[https://github.com/creichert/ido-vertical-mode.el][Ido-vertical-mode]] reads
+better to me, displaying all entries in a single column.
 
-  I would prefer something grid-like, such as [[https://github.com/larkery/ido-grid-mode.el][ido-grid-mode]], but I have found it
-  slows down Emacs too much.
+I would prefer something grid-like, such as [[https://github.com/larkery/ido-grid-mode.el][ido-grid-mode]], but I have found it
+slows down Emacs too much.
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package ido-vertical-mode
        :ensure t
        :after ido
@@ -701,17 +698,17 @@ very simple for someone like me who is terrible at on the fly mental math.
        :custom
        (ido-vertical-define-keys 'C-n-and-C-p-only "Use C-n/C-p to move selection."))
 
-  #+END_SRC
+#+END_SRC
 
-  Ido-everywhere unfortunately does not apply everywhere. To get Ido completion
-  nearly everywhere, I use the [[https://github.com/DarwinAwardWinner/ido-completing-read-plus][ido-completing-read+]] package. Assisting is the
-  [[https://github.com/DarwinAwardWinner/crm-custom][crm-custom]] package that allows Ido completion in functions that can take in
-  multiple inputs.
+Ido-everywhere unfortunately does not apply everywhere. To get Ido completion
+nearly everywhere, I use the [[https://github.com/DarwinAwardWinner/ido-completing-read-plus][ido-completing-read+]] package. Assisting is the
+[[https://github.com/DarwinAwardWinner/crm-custom][crm-custom]] package that allows Ido completion in functions that can take in
+multiple inputs.
 
-  To supplement anything else that doesn't get Ido completion, I enable the
-  built-in ~icomplete~ mode.
+To supplement anything else that doesn't get Ido completion, I enable the
+built-in ~icomplete~ mode.
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package ido-completing-read+
       :ensure t
       :after ido
@@ -728,17 +725,17 @@ very simple for someone like me who is terrible at on the fly mental math.
       :after ido-completing-read+
       :config
       (icomplete-mode))
-  #+END_SRC
+#+END_SRC
 
 * iBuffer
-	iBuffer is a great tool for managing the many buffers created in day-to-day
-	Emacs use.
+iBuffer is a great tool for managing the many buffers created in day-to-day
+Emacs use.
 
-  | Keybind | Command | Description               |
-  |---------+---------+---------------------------|
-  | SPC b b | ibuffer | Open the iBuffer...buffer |
+| Keybind | Command | Description               |
+|---------+---------+---------------------------|
+| SPC b b | ibuffer | Open the iBuffer...buffer |
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package ibuffer
       :ensure nil
       :config
@@ -748,40 +745,39 @@ very simple for someone like me who is terrible at on the fly mental math.
        :states 'normal
        :prefix "SPC b"
        "b" 'ibuffer))
-	#+END_SRC
+#+END_SRC
 
 * Dired-X
-  Dired-X is the extended version of the Emacs file manager Dired. I'll be
-  honest, I do not use Dired-X very often. If I need to read a file, I'd
-  rather use the ~fine-file~ command and navigate my file system using
-  a path. For all file system level operations, I would much rather
-  switch to my shell. My Dired-X usage is mostly if I need to open a file
-  and I've forgotten the name and need a list of files/directories. And
-  even then, it's only if I feel pressed for time, or if a coworker is
-  over my shoulder.
+Dired-X is the extended version of the Emacs file manager Dired. I'll be honest,
+I do not use Dired-X very often. If I need to read a file, I'd rather use the
+~fine-file~ command and navigate my file system using a path. For all file
+system level operations, I would much rather switch to my shell. My Dired-X
+usage is mostly if I need to open a file and I've forgotten the name and need a
+list of files/directories. And even then, it's only if I feel pressed for time,
+or if a coworker is over my shoulder.
 
-  The keybinds are only for vim-like navigation. Nothing special exists
-  outside of those.
+The keybinds are only for vim-like navigation. Nothing special exists outside of
+those.
 
-  I customise how the file system is displayed. Dired takes in standard ~ls~
-  flags, which is really nice.
+I customise how the file system is displayed. Dired takes in standard ~ls~
+flags, which is really nice.
 
-  | Switch                    | Description                                         |
-  |---------------------------+-----------------------------------------------------|
-  | -k                        | Default to 1024-byte blocks for disk usage.         |
-  | -a                        | Do not ignore entries starting with ~.~.            |
-  | -B                        | Do not list implied entries ending with =~=.        |
-  | -h                        | Use human readable file sizes (1G instead of 1024). |
-  | -l                        | Use a long listing format.                          |
-  | --group-directories-first | Show directories at the top of the listing.         |
+| Switch                    | Description                                         |
+|---------------------------+-----------------------------------------------------|
+| -k                        | Default to 1024-byte blocks for disk usage.         |
+| -a                        | Do not ignore entries starting with ~.~.            |
+| -B                        | Do not list implied entries ending with =~=.        |
+| -h                        | Use human readable file sizes (1G instead of 1024). |
+| -l                        | Use a long listing format.                          |
+| --group-directories-first | Show directories at the top of the listing.         |
 
-  | Keybind | Command    | Description                                     |
-  |---------+------------+-------------------------------------------------|
-  | SPC b d | dired      | Prompt for a path, and open Dired at that path. |
-  | SPC b D | dired-jump | Opens Dired in the directory of the currently   |
-  |         |            | focused buffer.                                 |
+| Keybind | Command    | Description                                     |
+|---------+------------+-------------------------------------------------|
+| SPC b d | dired      | Prompt for a path, and open Dired at that path. |
+| SPC b D | dired-jump | Opens Dired in the directory of the currently   |
+|         |            | focused buffer.                                 |
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package dired
       :ensure nil
       :custom
@@ -806,18 +802,18 @@ very simple for someone like me who is terrible at on the fly mental math.
     (use-package all-the-icons-dired
       :requires all-the-icons
       :hook (dired-mode . all-the-icons-dired-mode))
-  #+END_SRC
+#+END_SRC
 
 * Magit
-	Magit is a Git porcelain for Emacs. Just like with Dired-X, I normally
-	default to the shell and use the Git CLI. However, I've heard such
-	good things about Magit that I figure I should give it a proper shot.
+Magit is a Git porcelain for Emacs. Just like with Dired-X, I normally default
+to the shell and use the Git CLI. However, I've heard such good things about
+Magit that I figure I should give it a proper shot.
 
-  | Keybind | Command | Description                   |
-  |---------+---------+-------------------------------|
-  | SPC g s | magit   | Open the Magit status buffer. |
+| Keybind | Command | Description                   |
+|---------+---------+-------------------------------|
+| SPC g s | magit   | Open the Magit status buffer. |
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package magit
       ;; Don't load Magit on my work (Windows) machine.
       :if (eq system-type 'gnu/linux)
@@ -830,37 +826,36 @@ very simple for someone like me who is terrible at on the fly mental math.
 
       :custom
       (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
-	#+END_SRC
+#+END_SRC
 
-  I am using the black magic [[https://github.com/emacs-evil/evil-magit][~evil-magit~]] package for Magit's keybinds. The
-  defaults seem sane enough, so I am going to stick with them until I feel like
-  it needs some configuration.
+I am using the black magic [[https://github.com/emacs-evil/evil-magit][~evil-magit~]] package for Magit's keybinds. The
+defaults seem sane enough, so I am going to stick with them until I feel like it
+needs some configuration.
 
-	#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package evil-magit
       :ensure t
       :requires magit)
-	#+END_SRC
+#+END_SRC
 
 * Spellchecking
-  I use Emacs for writing documents on a regular basis. Usually this means
-  an ~org~ or Markdown file, but this could also be LaTeX files. I also
-  this also could be comments within source code. Lastly, I like to draft emails
-  within Emacs. This means I need spellchecking on the fly within Emacs to keep
-  my documents professional. Flyspell is /the/ package for spell checking in
-  Emacs. I use the popup menu from ~flyspell-correct~ to go through correction
-  options. I also use ~auto-dictionary~ to automatically switch between
-  dictionaries. I need this occasionally to go between English and French
-  documents.
+I use Emacs for writing documents on a regular basis. Usually this means an
+~org~ or Markdown file, but this could also be LaTeX files. I also this also
+could be comments within source code. Lastly, I like to draft emails within
+Emacs. This means I need spellchecking on the fly within Emacs to keep my
+documents professional. Flyspell is /the/ package for spell checking in Emacs. I
+use the popup menu from ~flyspell-correct~ to go through correction options. I
+also use ~auto-dictionary~ to automatically switch between dictionaries. I need
+this occasionally to go between English and French documents.
 
-    | Keybind | Command                   | Description                                             |
-    |---------+---------------------------+---------------------------------------------------------|
-    | SPC s b | flyspell-buffer           | Manually invoke flyspell and check the entire buffer.   |
-    | SPC s c | flyspell-correct-at-point | Correct the spelling of the work underneath the cursor. |
-    | SPC s n | flyspell-goto-next-error  | Move the cursor to the next Flyspell error.             |
-    | SPC t s | flyspell-mode             | Toggle flyspell in the current buffer.                  |
+| Keybind | Command                   | Description                                             |
+|---------+---------------------------+---------------------------------------------------------|
+| SPC s b | flyspell-buffer           | Manually invoke flyspell and check the entire buffer.   |
+| SPC s c | flyspell-correct-at-point | Correct the spelling of the work underneath the cursor. |
+| SPC s n | flyspell-goto-next-error  | Move the cursor to the next Flyspell error.             |
+| SPC t s | flyspell-mode             | Toggle flyspell in the current buffer.                  |
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package flyspell
       :hook
       ;; Auto-start flyspell within Markdown, Org-mode, and TeX files
@@ -883,28 +878,27 @@ very simple for someone like me who is terrible at on the fly mental math.
 
     (use-package auto-dictionary
       :hook (flyspell-mode . auto-dictionary-mode))
-  #+END_SRC
+#+END_SRC
 
 * Programming
-	A little known fact. Occasionally, I use Emacs to program. Outrageous
-	I know, but it's true. For any language I use, I try to leverage a
-	Language Server if available. Using a lang server simplifies the setup,
-	and allows me to share one server configuration across several editors.
-	As long as the functionality is in the server, I can guarantee it will
-	be available in every editor I use. If no lang. server is available, or
-	if there is some functionality not available in the lang. server, I will
-  fall back to some sort of ~lang-mode~ package. Using both is also a valid
-	option, as long as they do not conflict or result in displaying some chunks
-	of information twice.
+A little known fact. Occasionally, I use Emacs to program. Outrageous I know,
+but it's true. For any language I use, I try to leverage a Language Server if
+available. Using a lang server simplifies the setup, and allows me to share one
+server configuration across several editors. As long as the functionality is in
+the server, I can guarantee it will be available in every editor I use. If no
+lang. server is available, or if there is some functionality not available in
+the lang. server, I will fall back to some sort of ~lang-mode~ package. Using
+both is also a valid option, as long as they do not conflict or result in
+displaying some chunks of information twice.
 
-  | Keybind | Command                 | Description                                       |
-  |---------+-------------------------+---------------------------------------------------|
-  | SPC e b | lsp-format-buffer       | Format the entire buffer.                         |
-  | SPC e o | lsp-organize-imports    | If possible, organize all imports in the buffer.  |
-  | SPC e r | lsp-rename              | Rename the item at point across the project.      |
-  | SPC e a | lsp-execute-code-action | Execute a code action based on the current point. |
+| Keybind | Command                 | Description                                       |
+|---------+-------------------------+---------------------------------------------------|
+| SPC e b | lsp-format-buffer       | Format the entire buffer.                         |
+| SPC e o | lsp-organize-imports    | If possible, organize all imports in the buffer.  |
+| SPC e r | lsp-rename              | Rename the item at point across the project.      |
+| SPC e a | lsp-execute-code-action | Execute a code action based on the current point. |
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package lsp-mode
       :hook (prog-mode . lsp)
       :config
@@ -915,16 +909,16 @@ very simple for someone like me who is terrible at on the fly mental math.
        "o" 'lsp-organize-imports
        "r" 'lsp-rename
        "a" 'lsp-execute-code-action))
-	#+END_SRC
+#+END_SRC
 
-	Flycheck is used for some linting by ~lsp-mode~.
+Flycheck is used for some linting by ~lsp-mode~.
 
-  | Keybind   | Command                      | Description                                       |
-  |-----------+------------------------------+---------------------------------------------------|
-  | SPC e n   | flycheck-next-error          | Go to the next error.                             |
-  | SPC e p   | flycheck-previous-error      | Go to the previous error.                         |
+| Keybind   | Command                      | Description                                       |
+|-----------+------------------------------+---------------------------------------------------|
+| SPC e n   | flycheck-next-error          | Go to the next error.                             |
+| SPC e p   | flycheck-previous-error      | Go to the previous error.                         |
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package flycheck
       :config
       ;; Flycheck by default
@@ -940,11 +934,11 @@ very simple for someone like me who is terrible at on the fly mental math.
        "n" 'flycheck-next-error
        "p" 'flycheck-previous-error))
 
-	#+END_SRC
+#+END_SRC
 
-	Company is the completion framework I leverage with ~lsp-mode~.
+Company is the completion framework I leverage with ~lsp-mode~.
 
-	#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package company
       :config
       (global-company-mode))
@@ -967,42 +961,42 @@ very simple for someone like me who is terrible at on the fly mental math.
       ;; Allow recompletion in the case there are other completion trigger
       ;; characters.
       (company-lsp-enable-recompletion t))
-	#+END_SRC
+#+END_SRC
 
-	~lsp-ui~ gives much higher-level interactions with ~lsp-mode~:
+~lsp-ui~ gives much higher-level interactions with ~lsp-mode~:
 
-	- Doc :: Fetch documentation and display it in a popup buffer.
-	- Flycheck :: LSP interactions via Flycheck, like outputting the full list
-							 and navigating between info/warnings/errors.
-	- iMenu :: LSP interaction via ~imenu~.
-	- Peek :: Enable peeking & jumping to definitions.
-	- Sideline :: Display LSP actions and Flycheck output on the right-hand side
-							 of the buffer.
+- Doc :: Fetch documentation and display it in a popup buffer.
+- Flycheck :: LSP interactions via Flycheck, like outputting the full list and
+              navigating between info/warnings/errors.
+- iMenu :: LSP interaction via ~imenu~.
+- Peek :: Enable peeking & jumping to definitions.
+- Sideline :: Display LSP actions and Flycheck output on the right-hand side of
+              the buffer.
 
-	I deliberately disable the Doc functionality, as I find it intrusive. It also
-	sometimes renders with an incorrect size. Instead, I have a key binding to
-	enable/disable the Doc. The same goes for the ~imenu~ buffer.
+I deliberately disable the Doc functionality, as I find it intrusive. It also
+sometimes renders with an incorrect size. Instead, I have a key binding to
+enable/disable the Doc. The same goes for the ~imenu~ buffer.
 
-	I change the face for the peek references to match the Leuven ~org-block~
-	colours.
+I change the face for the peek references to match the Leuven ~org-block~
+colours.
 
-	The Sideline is a feature that I used to also disable, but after tweaking it
-	a bit and removing the symbol information I find it very handy. The few tweaks
-	I make are changing the face to match the ~ol1~ face from Leuven theme, and
-	adding a prefix to the code actions panel. The only issue I still have with it
-	is the Flycheck diagnostic information for /info/ showing up as a hideously
-	bright green.
+The Sideline is a feature that I used to also disable, but after tweaking it a
+bit and removing the symbol information I find it very handy. The few tweaks I
+make are changing the face to match the ~ol1~ face from Leuven theme, and adding
+a prefix to the code actions panel. The only issue I still have with it is the
+Flycheck diagnostic information for /info/ showing up as a hideously bright
+green.
 
-  | Keybind   | Command                      | Description                                      |
-  |-----------+------------------------------+--------------------------------------------------|
-  | SPC e l   | lsp-ui-flycheck-list         | Open the flycheck buffer.                        |
-  | SPC e f d | lsp-ui-peek-find-definitions | Peek find the definition of the item at point.   |
-  | SPC e f r | lsp-ui-peek-find-references  | Peek find all references to the item at point.   |
-  | SPC e u   | toggle-lsp-ui-doc            | Show the doc window if the window is not already |
-  |           |                              | visible.                                         |
-  | SPC b m   | toggle-lsp-ui-imenu          | Show the imenu buffer if not already visible.    |
+| Keybind   | Command                      | Description                                      |
+|-----------+------------------------------+--------------------------------------------------|
+| SPC e l   | lsp-ui-flycheck-list         | Open the flycheck buffer.                        |
+| SPC e f d | lsp-ui-peek-find-definitions | Peek find the definition of the item at point.   |
+| SPC e f r | lsp-ui-peek-find-references  | Peek find all references to the item at point.   |
+| SPC e u   | toggle-lsp-ui-doc            | Show the doc window if the window is not already |
+|           |                              | visible.                                         |
+| SPC b m   | toggle-lsp-ui-imenu          | Show the imenu buffer if not already visible.    |
 
-  #+BEGIN_SRC emacs-lisp
+              #+BEGIN_SRC emacs-lisp
     (use-package lsp-ui
       :after lsp
       :hook (lsp . lsp-ui-mode)
@@ -1074,24 +1068,24 @@ very simple for someone like me who is terrible at on the fly mental math.
                           :underline "#A7A6AA"
                           :foreground "#555555"
                           :background "#E2E1D5")))))
-	#+END_SRC
+              #+END_SRC
 
 ** Programming & Markup Languages
-   The following are specific configurations for individual programming
-   and markup languages.
+The following are specific configurations for individual programming and markup
+languages.
 
 *** Docker
-    ~~~
-    npm install --global dockerfile-language-server-nodejs
-    ~~~
+~~~
+npm install --global dockerfile-language-server-nodejs
+~~~
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package dockerfile-mode
         :mode (("Dockerfile\\'" . dockerfile-mode)))
-    #+END_SRC
+#+END_SRC
 
 *** Emacs Lisp
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package elisp-slime-nav
         :hook (emacs-lisp-mode . elisp-slime-nav-mode)
         :config
@@ -1100,162 +1094,161 @@ very simple for someone like me who is terrible at on the fly mental math.
          :prefix "SPC m"
          "e" 'pp-eval-last-sexp))
 
-    #+END_SRC
+#+END_SRC
 
 *** Golang
-    ~~~
-    go get gopls
-    ~~~
+~~~
+go get gopls
+~~~
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package go-mode
         :hook (before-save . gofmt-before-save)
         :custom
         ;; Run goimports before saving a file
         (gofmt-command "goimports"))
-    #+END_SRC
+#+END_SRC
 
 *** Markdown
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package markdown-mode
         :commands (markdown-mode gfm-mode)
         ;; Use GitHub markdown on README.md files, and regular Markdown on others
         :mode (("README\\.md'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)))
-    #+END_SRC
+#+END_SRC
 
 *** Typescript
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package typescript-mode)
       (use-package json-mode)
-    #+END_SRC
+#+END_SRC
 
 * Org-mode
-	Org-mode was the killer feature that got me to try out Emacs to begin with,
-	and honestly it's probably the main reason I keep using Emacs.
+Org-mode was the killer feature that got me to try out Emacs to begin with, and
+honestly it's probably the main reason I keep using Emacs.
 
-	I have tried many solutions to low tech or plain text note taking and
-	productivity tools, but until org-mode I was constantly disappointed.
-	Todo.txt, Markdown, XML with custom schemas, and Bullet Journals.
-	Bullet Journals was the closest to a perfect solution, but my natural
-  tendency to forget my journal at home lead to me dropping it as well.
+I have tried many solutions to low tech or plain text note taking and
+productivity tools, but until org-mode I was constantly disappointed. Todo.txt,
+Markdown, XML with custom schemas, and Bullet Journals. Bullet Journals was the
+closest to a perfect solution, but my natural tendency to forget my journal at
+home lead to me dropping it as well.
 
-	Combining org-mode with Orgzly and Syncthing has become my perfect
-	organization, productivity, and note taking stack.
+Combining org-mode with Orgzly and Syncthing has become my perfect organization,
+productivity, and note taking stack.
 
-  The location of my Org files differs depending on what machine I am on. On my
-  personal machine, the directory is ~/home/max/doc/org/~. It is synced to
-  Nextcloud as a backup solution, and synced to my mobile phone with Syncthing.
-  On my work machine, it is under ~C:\Users\maxwell.haley\Org~. This drive is
-  backed up on some schedule, but it is not the most robust backup solution. So,
-  I have a Batch script that copies the contents of my Org directory to my works
-  network drive. Again this is not truly a backup solution, but the network
-  drive is replicated on a much more regular basis. I have Task Scheduler run
-  this script when I log into my machine, every time I lock my machine, and
-  every night at 17:00.
+The location of my Org files differs depending on what machine I am on. On my
+personal machine, the directory is ~/home/max/doc/org/~. It is synced to
+Nextcloud as a backup solution, and synced to my mobile phone with Syncthing. On
+my work machine, it is under ~C:\Users\maxwell.haley\Org~. This drive is backed
+up on some schedule, but it is not the most robust backup solution. So, I have a
+Batch script that copies the contents of my Org directory to my works network
+drive. Again this is not truly a backup solution, but the network drive is
+replicated on a much more regular basis. I have Task Scheduler run this script
+when I log into my machine, every time I lock my machine, and every night at
+17:00.
 
-  #+BEGIN_SRC bat
+#+BEGIN_SRC bat
     @echo off
     cd /D F:\Org
     xcopy C:\Users\maxwell.haley\Org\*.* /E /Q /Y
-  #+END_SRC
+#+END_SRC
 
-  I keep three sequences for todo keywords. The task sequence, the blocked
-  sequence, and the financial sequence. The task sequence is for tasks
-  that are ongoing and not impeded. The blocked sequence are for tasks that I
-  cannot actively work on. The financial sequence is for not forgetting to
-  pay my phone bill again.
+I keep three sequences for todo keywords. The task sequence, the blocked
+sequence, and the financial sequence. The task sequence is for tasks that are
+ongoing and not impeded. The blocked sequence are for tasks that I cannot
+actively work on. The financial sequence is for not forgetting to pay my phone
+bill again.
 
-  The ~RAW~ state is for tasks that have been captured, but haven't yet been
-  fleshed out. Maybe the task is just an idea, or it needs more information
-  before it's actionable.
+The ~RAW~ state is for tasks that have been captured, but haven't yet been
+fleshed out. Maybe the task is just an idea, or it needs more information before
+it's actionable.
 
-  The ~WAITING~, ~HOLD~, ~CANCELLED~, and ~OVERDUE~ state leave a timestamp
-  and a require a comment whenever it is switched too. I use to document why
-  a task has reached this (usually negative) state.
+The ~WAITING~, ~HOLD~, ~CANCELLED~, and ~OVERDUE~ state leave a timestamp and a
+require a comment whenever it is switched too. I use to document why a task has
+reached this (usually negative) state.
 
-  I use tags to help prioritise my work. I use the Eisenhower matrix to
-  prioritise my work. Each task is prioritised as either important or not
-  important, and urgent or not urgent. Priority is assigned then from where
-  on the matrix the task falls:
+I use tags to help prioritise my work. I use the Eisenhower matrix to prioritise
+my work. Each task is prioritised as either important or not important, and
+urgent or not urgent. Priority is assigned then from where on the matrix the
+task falls:
 
-  1. Important & Urgent (Do ASAP)
-  2. Important & Not Urgent (Schedule)
-  3. Not Important & Urgent (Delegate if possible)
-  4. Not Important & Not Urgent (Do it later)
+1. Important & Urgent (Do ASAP)
+2. Important & Not Urgent (Schedule)
+3. Not Important & Urgent (Delegate if possible)
+4. Not Important & Not Urgent (Do it later)
 
-  I use the ~PROJECT~ tag to indicate that all sub-headers are part of the same
-  overarching task defined in the tagged header. I make sure to exclude this
-  tag from the inheritance list so all sub-headers do not get the ~PROJECT~
-  tag.
+I use the ~PROJECT~ tag to indicate that all sub-headers are part of the same
+overarching task defined in the tagged header. I make sure to exclude this tag
+from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
 
-   | Keybind   | Command                            | Description                                          |
-   |-----------+------------------------------------+------------------------------------------------------|
-   | SPC m S h | org-demote-subtree                 | Demote the entire subtree down one level.            |
-   | SPC m S j | org-move-subtree-down              | Move the subtree below the subtree                   |
-   |           |                                    | immediately after it.                                |
-   | SPC m S k | org-move-subtree-up                | Move the subtree above the subtree                   |
-   |           |                                    | immediately before it.                               |
-   | SPC m S l | org-promote-subtree                | Promote the entire subtree up one level.             |
-   | TAB       | org-cycle                          | Cycle the state of the headline at point (open/close |
-   |           |                                    | headlines).                                          |
-   | $         | org-end-of-line                    | Move cursor to the end of the line.                  |
-   | ^         | org-beginning-of-line              | The opposite of ~$~                                  |
-   | gh        | outline-up-heading                 | Move cursor up one heading level.                    |
-   | gj        | org-forward-heading-same-level     | Move cursor down one heading within the same level.  |
-   | gk        | org-backward-heading-same-level    | Move cursor up one heading within the same level.    |
-   | gl        | outline-next-visible-heading       | Move cursor down one heading level.                  |
-   | t         | org-todo                           | Change keyword state of heading.                     |
-   | T         | org-insert-todo-heading            | Insert a heading at point with TODO keyword already  |
-   |           |                                    | in place.                                            |
-   | SPC m x b | max/org-bold-region                | Surround entire region with ~*~.                     |
-   | SPC m x c | max/org-code-region                | Surround entire region with ~\~~.                    |
-   | SPC m x i | max/org-italic-region              | Surround entire region with ~/~.                     |
-   | SPC m x s | max/org-strike-through-region      | Surround entire region with ~+~.                     |
-   | SPC m x u | max/org-underline-region           | Surround entire region with ~_~.                     |
-   | SPC m x v | max/org-verbatim-region            | Surround entire region with ~=~.                     |
-   | SPC m h i | org-insert-heading-after-current   | Exactly what it sounds like.                         |
-   | SPC m h I | org-insert-heading                 | Insert heading at current point.                     |
-   | SPC m h s | org-insert-subheading              | Creates a new heading one level below the current    |
-   |           |                                    | heading.                                             |
-   | SPC m h l | org-insert-link                    | Insert a org-mode link at point.                     |
-   | SPC m b   | org-tree-to-indirect-buffer        | Opens the current subtree into a buffer where        |
-   |           |                                    | it is the sole subtree. This lets me edit the        |
-   |           |                                    | tree without visible distractions of the             |
-   |           |                                    | surrounding trees. As well, it removes the           |
-   |           |                                    | chance of accidental manipulating an unrelated       |
-   |           |                                    | tree.                                                |
-   | SPC m d   | org-deadline                       | Adds a deadline to the entry.                        |
-   | SPC m D   | org-insert-drawer                  | Inserts a drawer at the cursor with a prompted       |
-   |           |                                    | name. Drawers are good for hiding information.       |
-   | SPC m E   | org-set-effort                     | Creates an /effort/ property in the properties       |
-   |           |                                    | drawer. I set effort in the estimated amount         |
-   |           |                                    | of time it will take to do a task.                   |
-   | SPC m n   | org-narrow-to-subtree              | Like ~SPC m b~, but doesn't open a new buffer        |
-   |           |                                    | that isolates the subtree.                           |
-   | SPC m N   | widen                              | Undo ~SPC m n~.                                      |
-   | SPC m o   | org-open-at-point                  | Opens whatever the pointer is on. Used mainly        |
-   |           |                                    | for opening links.                                   |
-   | SPC m p   | org-set-property                   | Create a property with a given name and value.       |
-   | SPC m r   | org-refile                         | Refile an entry.                                     |
-   | SPC m s   | org-scheduled                      | Sets the scheduled property of an entry.             |
-   | SPC m t   | org-show-todo-tree                 | Show a tree of all todo's in the open buffer.        |
-   | SPC m y   | org-todo-yesterday                 | Change the status of a headline, but apply it        |
-   |           |                                    | as if it happened yesterday. Good if I forgot        |
-   |           |                                    | to complete a habit style task.                      |
-   | SPC m !   | org-time-stamp-inactive            | Creates an inactive timestamp.                       |
-   | SPC m ^   | org-sort                           | Sorts the entire active tree.                        |
-   | SPC m *   | org-toggle-heading                 | Toggled the data under the pointer into an org       |
-   |           |                                    | heading.                                             |
-   | SPC m RET | org-insert-heading-respect-content | Inserts a heading after the current subtree.         |
-   | SPC m :   | org-set-tags                       | Set the tags on a heading at the current point.      |
-   | SPC m '   | org-edit-special                   | Used mostly when editing source code blocks          |
-   |           |                                    | inside an org file.                                  |
-   | SPC m /   | org-sparse-tree                    | Create a sparse tree based on some filter            |
-   |           |                                    | criteria.                                            |
-   | SPC m .   | org-time-stamp                     | Create a time stamp.                                 |
+| Keybind   | Command                            | Description                                          |
+|-----------+------------------------------------+------------------------------------------------------|
+| SPC m S h | org-demote-subtree                 | Demote the entire subtree down one level.            |
+| SPC m S j | org-move-subtree-down              | Move the subtree below the subtree                   |
+|           |                                    | immediately after it.                                |
+| SPC m S k | org-move-subtree-up                | Move the subtree above the subtree                   |
+|           |                                    | immediately before it.                               |
+| SPC m S l | org-promote-subtree                | Promote the entire subtree up one level.             |
+| TAB       | org-cycle                          | Cycle the state of the headline at point (open/close |
+|           |                                    | headlines).                                          |
+| $         | org-end-of-line                    | Move cursor to the end of the line.                  |
+| ^         | org-beginning-of-line              | The opposite of ~$~                                  |
+| gh        | outline-up-heading                 | Move cursor up one heading level.                    |
+| gj        | org-forward-heading-same-level     | Move cursor down one heading within the same level.  |
+| gk        | org-backward-heading-same-level    | Move cursor up one heading within the same level.    |
+| gl        | outline-next-visible-heading       | Move cursor down one heading level.                  |
+| t         | org-todo                           | Change keyword state of heading.                     |
+| T         | org-insert-todo-heading            | Insert a heading at point with TODO keyword already  |
+|           |                                    | in place.                                            |
+| SPC m x b | max/org-bold-region                | Surround entire region with ~*~.                     |
+| SPC m x c | max/org-code-region                | Surround entire region with ~\~~.                    |
+| SPC m x i | max/org-italic-region              | Surround entire region with ~/~.                     |
+| SPC m x s | max/org-strike-through-region      | Surround entire region with ~+~.                     |
+| SPC m x u | max/org-underline-region           | Surround entire region with ~_~.                     |
+| SPC m x v | max/org-verbatim-region            | Surround entire region with ~=~.                     |
+| SPC m h i | org-insert-heading-after-current   | Exactly what it sounds like.                         |
+| SPC m h I | org-insert-heading                 | Insert heading at current point.                     |
+| SPC m h s | org-insert-subheading              | Creates a new heading one level below the current    |
+|           |                                    | heading.                                             |
+| SPC m h l | org-insert-link                    | Insert a org-mode link at point.                     |
+| SPC m b   | org-tree-to-indirect-buffer        | Opens the current subtree into a buffer where        |
+|           |                                    | it is the sole subtree. This lets me edit the        |
+|           |                                    | tree without visible distractions of the             |
+|           |                                    | surrounding trees. As well, it removes the           |
+|           |                                    | chance of accidental manipulating an unrelated       |
+|           |                                    | tree.                                                |
+| SPC m d   | org-deadline                       | Adds a deadline to the entry.                        |
+| SPC m D   | org-insert-drawer                  | Inserts a drawer at the cursor with a prompted       |
+|           |                                    | name. Drawers are good for hiding information.       |
+| SPC m E   | org-set-effort                     | Creates an /effort/ property in the properties       |
+|           |                                    | drawer. I set effort in the estimated amount         |
+|           |                                    | of time it will take to do a task.                   |
+| SPC m n   | org-narrow-to-subtree              | Like ~SPC m b~, but doesn't open a new buffer        |
+|           |                                    | that isolates the subtree.                           |
+| SPC m N   | widen                              | Undo ~SPC m n~.                                      |
+| SPC m o   | org-open-at-point                  | Opens whatever the pointer is on. Used mainly        |
+|           |                                    | for opening links.                                   |
+| SPC m p   | org-set-property                   | Create a property with a given name and value.       |
+| SPC m r   | org-refile                         | Refile an entry.                                     |
+| SPC m s   | org-scheduled                      | Sets the scheduled property of an entry.             |
+| SPC m t   | org-show-todo-tree                 | Show a tree of all todo's in the open buffer.        |
+| SPC m y   | org-todo-yesterday                 | Change the status of a headline, but apply it        |
+|           |                                    | as if it happened yesterday. Good if I forgot        |
+|           |                                    | to complete a habit style task.                      |
+| SPC m !   | org-time-stamp-inactive            | Creates an inactive timestamp.                       |
+| SPC m ^   | org-sort                           | Sorts the entire active tree.                        |
+| SPC m *   | org-toggle-heading                 | Toggled the data under the pointer into an org       |
+|           |                                    | heading.                                             |
+| SPC m RET | org-insert-heading-respect-content | Inserts a heading after the current subtree.         |
+| SPC m :   | org-set-tags                       | Set the tags on a heading at the current point.      |
+| SPC m '   | org-edit-special                   | Used mostly when editing source code blocks          |
+|           |                                    | inside an org file.                                  |
+| SPC m /   | org-sparse-tree                    | Create a sparse tree based on some filter            |
+|           |                                    | criteria.                                            |
+| SPC m .   | org-time-stamp                     | Create a time stamp.                                 |
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (use-package org
       :ensure t
       :init
@@ -1416,70 +1409,70 @@ very simple for someone like me who is terrible at on the fly mental math.
       (org-startup-indented t "Enable indent mode on all Org files.")
       (org-pretty-entities t "Draw entities as UTF symbols.")
       (org-ellipses " ⤸" "Use fancy symbol to represent headers with additional content."))
-	#+END_SRC
+   #+END_SRC
 
-	Org-bullets changes out the asterisks for UTF-8 symbols.
+   Org-bullets changes out the asterisks for UTF-8 symbols.
 
-	#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (use-package org-bullets
       :hook (org-mode . org-bullets-mode)
       :custom
       (org-bullets-bullet-list '("✦")))
-  #+END_SRC
+   #+END_SRC
 
-  Evil-org supplements missing keybinds until I get off my ass and define them.
+   Evil-org supplements missing keybinds until I get off my ass and define them.
 
    #+BEGIN_SRC emacs-lisp
-	   (use-package evil-org
-		   :after org
-		   :config
-		   (progn
-			   (add-hook 'org-mode-hook 'evil-org-mode)
-			   (add-hook 'evil-org-mode-hook
-								   (lambda ()
-									   (evil-org-set-key-theme)))
-			   (require 'evil-org-agenda)
-			   (evil-org-agenda-set-keys)))
+     (use-package evil-org
+       :after org
+       :config
+       (progn
+         (add-hook 'org-mode-hook 'evil-org-mode)
+         (add-hook 'evil-org-mode-hook
+                   (lambda ()
+                     (evil-org-set-key-theme)))
+         (require 'evil-org-agenda)
+         (evil-org-agenda-set-keys)))
    #+END_SRC
 
 ** Capture
-	 Org-capture is a fantastic feature I wish I used more often. Most of the time
-	 when capturing would be useful I'm away from my laptop. I use Orgzly's quick
-	 note feature to accomplish a similar result, but the options for /how/ to
-	 capture the information is far more limited than org-capture proper.
+Org-capture is a fantastic feature I wish I used more often. Most of the time
+when capturing would be useful I'm away from my laptop. I use Orgzly's quick
+note feature to accomplish a similar result, but the options for /how/ to
+capture the information is far more limited than org-capture proper.
 
-	 That being said, setting up capture templates for my work machine would
-	 probably be a blessing. I'm on that thing 7.5 hours a day.
+That being said, setting up capture templates for my work machine would probably
+be a blessing. I'm on that thing 7.5 hours a day.
 
-	 All templates are defined externally in ~*.txt~ files to keep this
-	 configuration file clean. The goal of each template is to capture the minimum
-   amount of information required for the item to be actionable (excluding the
-   ~RAW~ capture). These are my templates:
+All templates are defined externally in ~*.txt~ files to keep this configuration
+file clean. The goal of each template is to capture the minimum amount of
+information required for the item to be actionable (excluding the ~RAW~
+capture). These are my templates:
 
-   - Task :: An actionable todo item with a proper name, estimate, some sort of
-            date, context tag, and priority tags. They are placed into the
-            general task bucket in my main org file
-   - Raw task :: An idea, task, or note that requires refinement. Could be a
-                passing idea, a reminder, a quote, etc. Raw tasks are to never
-                leave the my inbox.
-   - Note :: A name, timestamp, content. Just a note.
-   - Org Protocol Capture :: Used when capturing a web page via ~org-protocol~
-        in Firefox. When used, it grabs the title of the web page, the full URL,
-        and any text that was highlighted when the capture was initiated. This
-        is the bookmarklet code:
+- Task :: An actionable todo item with a proper name, estimate, some sort of
+          date, context tag, and priority tags. They are placed into the general
+          task bucket in my main org file
+- Raw task :: An idea, task, or note that requires refinement. Could be a
+              passing idea, a reminder, a quote, etc. Raw tasks are to never
+              leave the my inbox.
+- Note :: A name, timestamp, content. Just a note.
+- Org Protocol Capture :: Used when capturing a web page via ~org-protocol~ in
+     Firefox. When used, it grabs the title of the web page, the full URL, and
+     any text that was highlighted when the capture was initiated. This is the
+     bookmarklet code:
 
-   #+BEGIN_SRC javascript
+     #+BEGIN_SRC javascript
    javascript:location.href='org-protocol://capture?template=p&url='+encodeURIComponent(location.href)
        + '&title='+encodeURIComponent(document.title)
        + '&body='+encodeURIComponent(window.getSelection())
-   #+END_SRC
+     #+END_SRC
 
-        | Keybind | Command              | Description                       |
-        |---------+----------------------+-----------------------------------|
-        | SPC m " | org-capture-finalize | Save and file the capture buffer  |
-        | SPC m a | org-capture-kill     | Abandon the capture buffer        |
+     | Keybind | Command              | Description                       |
+     |---------+----------------------+-----------------------------------|
+     | SPC m " | org-capture-finalize | Save and file the capture buffer  |
+     | SPC m a | org-capture-kill     | Abandon the capture buffer        |
 
-  #+BEGIN_SRC emacs-lisp
+     #+BEGIN_SRC emacs-lisp
     (use-package org-capture
       :ensure nil
       :config
@@ -1541,21 +1534,21 @@ very simple for someone like me who is terrible at on the fly mental math.
     (use-package org-protocol
       :ensure nil
       :after org-capture)
-	#+END_SRC
+     #+END_SRC
 
 ** Agenda
-    | Keybind | Command         | Description                                     |
-    |---------+-----------------+-------------------------------------------------|
-    | SPC o a | org-agenda      | Opens the agenda command view. This lets me     |
-    |         |                 | interactively decide how I want to use the      |
-    |         |                 | org-mode agenda.                                |
-    | SPC o o | org-agenda-list | Opens the agenda list view. Shows me my agenda  |
-    |         |                 | For today and the next two days                 |
-    | SPC o s | org-search-view | Opens the search view for org-mode. Lets me     |
-    |         |                 | construct a complex search query.               |
-    | SPC o t | org-tags-view   | Opens a view to filter org-mode items by tag.   |
+| Keybind | Command         | Description                                     |
+|---------+-----------------+-------------------------------------------------|
+| SPC o a | org-agenda      | Opens the agenda command view. This lets me     |
+|         |                 | interactively decide how I want to use the      |
+|         |                 | org-mode agenda.                                |
+| SPC o o | org-agenda-list | Opens the agenda list view. Shows me my agenda  |
+|         |                 | For today and the next two days                 |
+| SPC o s | org-search-view | Opens the search view for org-mode. Lets me     |
+|         |                 | construct a complex search query.               |
+| SPC o t | org-tags-view   | Opens a view to filter org-mode items by tag.   |
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package org-agenda
        :ensure nil
        :config
@@ -1577,17 +1570,17 @@ very simple for someone like me who is terrible at on the fly mental math.
          Pushes off the tags if I'm viewing the agenda in a vertical split on the
          laptop. I'd rather see the content of the heading rather than the tags
          associated in most contexts."))
-	 #+END_SRC
+#+END_SRC
 
 ** Clock
-		| Keybind   | Command                            | Description                                     |
-		|-----------+------------------------------------+-------------------------------------------------|
-		| SPC m i   | org-clock-in                       | Begin tracking the amount of time spent on a    |
-		|           |                                    | task.                                           |
-		| SPC m O   | org-clock-out                      | Stop tracking time against a specific task.     |
-		| SPC m Q   | org-clock-cancel                   | Stop the current clock and undo all time        |
-		|           |                                    | tracked.                                        |
-	 #+BEGIN_SRC emacs-lisp
+| Keybind   | Command                            | Description                                     |
+|-----------+------------------------------------+-------------------------------------------------|
+| SPC m i   | org-clock-in                       | Begin tracking the amount of time spent on a    |
+|           |                                    | task.                                           |
+| SPC m O   | org-clock-out                      | Stop tracking time against a specific task.     |
+| SPC m Q   | org-clock-cancel                   | Stop the current clock and undo all time        |
+|           |                                    | tracked.                                        |
+#+BEGIN_SRC emacs-lisp
      (use-package org-clock
        :ensure nil
        :config
@@ -1597,16 +1590,16 @@ very simple for someone like me who is terrible at on the fly mental math.
         "i" 'org-clock-in
         "O" 'org-clock-out
         "Q" 'org-clock-cancel))
-	 #+END_SRC
+#+END_SRC
 
 ** Archive
-		| Keybind   | Command                            | Description                                     |
-		|-----------+------------------------------------+-------------------------------------------------|
-		| spc m a   | org-archive-subtree                | takes the current subtree and moves it to an    |
-		|           |                                    | archive files. I do this periodically to hide   |
-		|           |                                    | done state entries without deleting them.       |
+| Keybind   | Command                            | Description                                     |
+|-----------+------------------------------------+-------------------------------------------------|
+| spc m a   | org-archive-subtree                | takes the current subtree and moves it to an    |
+|           |                                    | archive files. I do this periodically to hide   |
+|           |                                    | done state entries without deleting them.       |
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package org-archive
        :ensure nil
        :config
@@ -1615,13 +1608,13 @@ very simple for someone like me who is terrible at on the fly mental math.
         :keymaps 'org-mode-map
         :prefix "SPC m"
         "a" 'org-archive-subtree))
-	 #+END_SRC
+#+END_SRC
 
 ** Lists
-		| Keybind   | Command                            | Description                                     |
-		| SPC m c   | org-toggle-checkbox                | Toggles a checkbox between checked and empty.   |
+| Keybind   | Command                            | Description                                     |
+| SPC m c   | org-toggle-checkbox                | Toggles a checkbox between checked and empty.   |
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package org-list
        :ensure nil
        :config
@@ -1630,16 +1623,16 @@ very simple for someone like me who is terrible at on the fly mental math.
         :keymaps 'org-mode-map
         :prefix "SPC m"
         "c" 'org-toggle-checkbox))
-	 #+END_SRC
+#+END_SRC
 
 ** Export
-		| Keybind   | Command                            | Description                                     |
-		|-----------+------------------------------------+-------------------------------------------------|
-		| SPC m e   | org-export-dispatch                | Opens the interactive export buffer. This is    |
-		|           |                                    | used by me to export org files to PDF when      |
-		|           |                                    | sharing my notes.                               |
+| Keybind   | Command                            | Description                                     |
+|-----------+------------------------------------+-------------------------------------------------|
+| SPC m e   | org-export-dispatch                | Opens the interactive export buffer. This is    |
+|           |                                    | used by me to export org files to PDF when      |
+|           |                                    | sharing my notes.                               |
 
-	 #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package ox
        :ensure nil
        :config
@@ -1648,15 +1641,15 @@ very simple for someone like me who is terrible at on the fly mental math.
         :keymaps 'org-mode-map
         :prefix "SPC m"
         "e" 'org-export-dispatch))
-	 #+END_SRC
+#+END_SRC
 
 ** Source
-   | Keybind | Command              | Description                       |
-   |---------+----------------------+-----------------------------------|
-   | SPC m ' | org-edit-src-exit    | Save and exit the org edit buffer |
-   | SPC m k | org-edit-src-abort   | Abandon the changes in the buffer |
+| Keybind | Command              | Description                       |
+|---------+----------------------+-----------------------------------|
+| SPC m ' | org-edit-src-exit    | Save and exit the org edit buffer |
+| SPC m k | org-edit-src-abort   | Abandon the changes in the buffer |
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
       (use-package org-src
         :ensure nil
         :config
@@ -1666,20 +1659,20 @@ very simple for someone like me who is terrible at on the fly mental math.
          :prefix "SPC m"
          "'" 'org-edit-src-exit
          "k" 'org-edit-src-abort))
-		#+END_SRC
+#+END_SRC
 
 ** Cliplink
-   [[https://github.com/rexim/org-cliplink][org-cliplink]] grabs a URL from the clipboard, fetches the title of the web page,
-   then inserts a link element with the URL as the link and the title as the
-   description. I use this over ~org-protocol~ when I only want to use the web
-   page as a reference point and not as an entry.
+[[https://github.com/rexim/org-cliplink][org-cliplink]] grabs a URL from the clipboard, fetches the title of the web page,
+then inserts a link element with the URL as the link and the title as the
+description. I use this over ~org-protocol~ when I only want to use the web page
+as a reference point and not as an entry.
 
-   | Keybind   | Command      | Description                       |
-   |-----------+--------------+-----------------------------------|
-   | SPC m L h | org-cliplink | Create a link based on the URL in |
-   |           |              | the clipboard.                    |
+| Keybind   | Command      | Description                       |
+|-----------+--------------+-----------------------------------|
+| SPC m L h | org-cliplink | Create a link based on the URL in |
+|           |              | the clipboard.                    |
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (use-package org-cliplink
       :ensure t
       :after org
@@ -1689,17 +1682,16 @@ very simple for someone like me who is terrible at on the fly mental math.
        :keymaps 'org-mode-map
        :prefix "SPC m"
        "L" 'org-cliplink))
-   #+END_SRC
+#+END_SRC
 
 ** Deft
-   Deft is a mode that allows dynamic filtering of plaint-text files. I use it
-   quickly search through my Org notes. I can enter a fuzzy term like "git" and
-   get back every file that mentions Git.
+Deft is a mode that allows dynamic filtering of plaint-text files. I use it
+quickly search through my Org notes. I can enter a fuzzy term like "git" and get
+back every file that mentions Git.
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
    (use-package deft
      :custom
      (deft-extentions '("org"))
      (deft-directory "~/doc/org/"))
-   #+END_SRC
-
+#+END_SRC
