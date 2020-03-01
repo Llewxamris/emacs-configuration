@@ -5,7 +5,7 @@
 #  LocalWords:  Leuven Flycheck modeline keybinds Cliplink ido minibuffer GC ui
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC SCP UTF CLI
 #  LocalWords:  emacs modeline paren pinky dired magit Magit's LaTeX Flyspell
-#  LocalWords:  flyspell lang lsp flycheck imenu ibuffer
+#  LocalWords:  flyspell lang lsp flycheck imenu ibuffer Avy
 
 * Forward
 My living monolith of a Emacs configuration file. Bred through trial, error, and
@@ -180,34 +180,6 @@ of them may be very useful once you are more familiar with Emacs.
 #+BEGIN_SRC emacs-lisp
   (use-package emacs
     :ensure nil
-    :custom
-    ;;  Disable the startup screen & message.
-    (inhibit-startup-screen t)
-
-    ;; Disable the bell that makes me feel shame every time it lets me know I fumbled a
-    ;; keystroke. Worse, its almost like hearing the bell guarantees the next
-    ;; few strokes will also be fumbled resulting in more bells. Disable this
-    ;; existential horror please.
-    (ring-bell-function 'ignore); *ding-ding* SHAME. *ding-ding* SHAME.
-
-    ;;	Show keystrokes after 0.1 seconds. Any longer and the panic sets in.
-    (echo-keystrokes 0.01)
-
-    ;; Do not show a dialog box when mouse commands result in a question
-    ;; being asked. I actively avoid using the mouse, and accidently
-    ;; triggering a popup is very frustrating.
-    (use-dialog-box t)
-
-    ;; Use spaces instead of tabs. And when tabs are seen, limit them to two
-    ;; characters.
-    (indent-tabs-mode nil)
-    (tab-width 2)
-
-    ;; Use UTF-8 encoding, because this is ${CURRENT_YEAR}.
-    (locale-coding-system 'utf-8)
-
-    ;; Always load the newest version of a file.
-    (load-prefer-newer t)
     :config
     ;; Force syntax highlighting for all supported major modes.
     (global-font-lock-mode t)
@@ -228,54 +200,123 @@ of them may be very useful once you are more familiar with Emacs.
         (add-to-list 'default-frame-alist '(font . "Iosevka Term SS04-12"))
                      (add-to-list 'default-frame-alist '(font . "Iosevka Term-12")))
 
-    ;;; Keybinds
-    (general-define-key
-     :states 'normal
+    :custom
+    ;; Disable the startup screen & message.
+    (inhibit-startup-screen t )
+
+    ;; Disable the bell that makes me feel shame every time it lets me
+    ;; know I fumbled a keystroke. Worse, its almost like hearing the
+    ;; bell guarantees the next few strokes will also be fumbled
+    ;; resulting in more bells. Disable this existential horror please.
+    (ring-bell-function 'ignore) ;*ding-ding* SHAME. *ding-ding* SHAME.
+
+    ;;	Show keystrokes after 0.1 seconds. Any longer and the panic sets in.
+    (echo-keystrokes 0.01)
+
+    ;; Do not show a dialog box when mouse commands result in a question
+    ;; being asked. I actively avoid using the mouse, and accidently
+    ;; triggering a popup is very frustrating.
+    (use-dialog-box t)
+
+    ;; Use spaces instead of tabs. And when tabs are seen, limit them to two
+    ;; characters.
+    (indent-tabs-mode nil)
+    (tab-width 2)
+
+    ;; Use UTF-8 encoding, because this is ${CURRENT_YEAR}.
+    (locale-coding-system 'utf-8)
+
+    ;; Always load the newest version of a file.
+    (load-prefer-newer t)
+
+    :general
+    ;; Window manipulation keybindings
+    (:states 'normal
      :prefix "SPC w"
-     "=" 'balance-windows
-     "c" 'delete-other-windows
-     "d" 'delete-window
-     "H" 'evil-window-move-far-left
-     "J" 'evil-window-move-very-bottom
-     "K" 'evil-window-move-very-top
-     "L" 'evil-window-move-far-right
+     ""    '(:ignore t :which-key "window manipulation prefix")
+     "["   'evil-window-decrease-height
+     "]"   'evil-window-increase-height
+     "{"   'evil-window-decrease-width
+     "}"   'evil-window-increase-width
+     "="   'balance-windows
+     "c"   'delete-other-windows
+     "d"   'delete-window
+     "f"   'make-frame
+     "H"   'evil-window-move-far-left
+     "i"   '(:ignore t :which-key "")
+     "J"   'evil-window-move-very-bottom
+     "K"   'evil-window-move-very-top
+     "L"   'evil-window-move-far-right
+     "s"   '(:ignore t :which-key "window splitting prefix")
      "s h" 'split-window-vertically
      "s v" 'split-window-horizontally)
 
-    (general-define-key
-     :states 'normal
+    ;; Global state/buffer state keybindings
+    (:states 'normal
      :prefix "SPC e"
+     ""  '(nil :which-key "global state manipulation prefix")
      "N" 'widen))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-     (use-package simple
-       :ensure nil
-       :config
-       ;; Show column numbers on the modeline.
-       (column-number-mode)
+  (use-package simple
+    :ensure nil
+    :config
+    ;; Show column numbers on the modeline.
+    (column-number-mode)
 
-       ;; Show the size of the current buffer in the modeline.
-       (size-indication-mode)
+    ;; Show the size of the current buffer in the modeline.
+    (size-indication-mode)
 
-       ;; Visually wrap lines when the characters are too close to the fringe.
-     (global-visual-line-mode 1)
-       :custom
-       ;; If the cursor is on the end of a line, stay on the end of the line when
-       ;; moving to the next or previous line.
-       (track-eol t)
+    ;; Visually wrap lines when the characters are too close to the fringe.
+    (global-visual-line-mode 1)
+    :custom
+    ;; If the cursor is on the end of a line, stay on the end of the line when
+    ;; moving to the next or previous line.
+    (track-eol t)
 
-       ;; Always show the current line number and column number
-       ;; in the buffer. When both enabled, they appear like this:
-       ;; ~~~
-       ;; (line, col)
-       ;; ~~~
-       (line-number-mode t)
-       (column-number-mode t)
+    ;; Always show the current line number and column number
+    ;; in the buffer. When both enabled, they appear like this:
+    ;; ~~~
+    ;; (line, col)
+    ;; ~~~
+    (line-number-mode t)
+    (column-number-mode t)
 
-       ;; Adds some curly arrows to help show which lines are being effected by
-       ;; visual line wrapping.
-       (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)))
+    ;; Adds some curly arrows to help show which lines are being effected by
+    ;; visual line wrapping.
+    (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+
+    :general
+    ;; Line modification and jump keybind
+    (:states 'normal
+     :prefix "SPC"
+     "j n" 'split-line)
+
+    ;; Text manipulation/analysis keybindings
+    (:states '(visual normal)
+     :prefix "SPC x"
+     ""    '(:ignore t :which-key "text manipulation/analysis prefix")
+     "c"   'count-words-region
+     "d"   '(:ignore t :which-key "text deletion prefix")
+     "d w" 'delete-trailing-whitespace
+     "u"   'downcase-region
+     "U"   'upcase-region)
+
+    ;; Text insertion keybindings
+    (:states 'normal
+     :prefix "SPC i"
+     ""  '(:ignore t :which-key "text inserttion keybindings")
+     "u" 'insert-char))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package align
+    :ensure nil
+    :general
+    ;; Text alignment keybind
+    (:states 'visual
+     "SPC x a" 'align-regexp))
 #+END_SRC
 
 Similarly, I like having which-key around to pat me on the back and tell me I'm
@@ -321,16 +362,29 @@ is I'm having problems with.
 #+BEGIN_SRC emacs-lisp
   (use-package help-fns
     :ensure nil
-    :config
-    (general-define-key
-     :states 'normal
-     :prefix "SPC h d"
-     "f" 'describe-function
-     "F" 'describe-face
-     "k" 'describe-key
-     "m" 'describe-mode
-     "s" 'describe-symbol
-     "v" 'describe-variable))
+    :general
+
+    ;; Help & documentation keybindings
+     (:states 'normal
+     :prefix "SPC h"
+     ""    '(nil :which-key "help prefix")
+     "d"   '(nil :which-key "describe thing prefix")
+     "d f" 'describe-function
+     "d F" 'describe-face
+     "d k" 'describe-key
+     "d m" 'describe-mode
+     "d s" 'describe-symbol
+     "d v" 'describe-variable
+     "m"   'man
+     "i"   'info)
+
+    ;; Help mode navigation keybindings
+    (:states 'normal
+     :keymap 'help-map
+     :prefix "g"
+     ""  '(:ignore t :which-key "go in help doc prefix")
+     "b" 'help-go-back
+     "f" 'help-go-forward))
 #+END_SRC
 
 ** Files
@@ -347,48 +401,50 @@ forgot to save.
 |         |                            | path editor.                                  |
 
 #+BEGIN_SRC emacs-lisp
-     (use-package files
-       :ensure nil
-       :hook
-       ;; Always delete trailing whitespace when saving a file.
-       (before-save . delete-trailing-whitespace)
+  (use-package files
+    :ensure nil
+    :hook
+    ;; Always delete trailing whitespace when saving a file.
+    (before-save . delete-trailing-whitespace)
 
-       ;; Automatically save buffers when losing focus, or when a frame is deleted.
-       (focus-out-hook . save-some-buffers)
-       (delete-frame-functions . save-some-buffers)
+    ;; Automatically save buffers when losing focus, or when a frame is deleted.
+    (focus-out-hook . save-some-buffers)
+    (delete-frame-functions . save-some-buffers)
 
-       :config
-       ;;; Keybinds
-       ;; Quit Emacs.
-       (general-define-key
-        :states 'normal
-        :prefix "SPC q"
-        "q" 'save-buffers-kill-terminal)
+    :custom
+    ;; Emacs auto-backups files, which is great. But, it dumps them in the current
+    ;; directory, which is terrible. Instead, dump them into ~.emacs.d/~.
+    (backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
-       ;; Read/write file.
-       (general-define-key
-        :states 'normal
-        :prefix "SPC f"
-        "w" 'save-buffer
-        "r" 'find-file)
+    ;; I don't want to have my hard drive littered with backups, so I set Emacs to
+    ;; only keep up to three backup versions. I also don't want to have a nag every
+    ;; time it wants to delete a backup. I also include version controlled files,
+    ;; just in case.
+    (version-control t)
+    (kept-old-versions 2)
+    (delete-old-versions t)
+    (vc-make-backup-files t)
 
-       :custom
-       ;; Emacs auto-backups files, which is great. But, it dumps them in the current
-       ;; directory, which is terrible. Instead, dump them into ~.emacs.d/~.
-       (backup-directory-alist '(("." . "~/.emacs.d/backups")))
+    ;; Always include a trailing newline at the end of a file.
+    (require-final-newline t)
+    (delete-trailing-lines nil)
 
-       ;; I don't want to have my hard drive littered with backups, so I set Emacs to
-       ;; only keep up to three backup versions. I also don't want to have a nag every
-       ;; time it wants to delete a backup. I also include version controlled files,
-       ;; just in case.
-       (version-control t)
-       (kept-old-versions 2)
-       (delete-old-versions t)
-       (vc-make-backup-files t)
+    :general
+    ;; Quiting Emacs keybindings
+    (:states 'normal
+     :prefix "SPC q"
+     ""  '(:ignore t :which-key "quiting emacs prefix")
+     "q" 'save-buffers-kill-terminal)
 
-       ;; Always include a trailing newline at the end of a file.
-       (require-final-newline t)
-       (delete-trailing-lines nil))
+    ;; File manipulation keybindings
+    (:states 'normal
+     :prefix "SPC f"
+     ""  '(:ignore t :which-key "file manipulation prefix")
+     "c" 'copy-file
+     "D" 'delete-file
+     "w" 'save-buffer
+     "r" 'find-file
+     "R" 'rename-file))
 
 #+END_SRC
 
@@ -411,17 +467,20 @@ I also want to backup all of the commands I've used, so I can re-invoke them in
 later sessions. Command history is essential for any command based environment.
 
 #+BEGIN_SRC emacs-lisp
-     (use-package savehist
-       :ensure nil
-       :init
-       (setq savehist-file "~/.emacs.d/savehist")
-       (setq savehist-save-minibuffer-history +1)
-       (setq savehist-additional-variables
-             '(kill-ring
-               search-ring
-               regexp-search-ring))
-       :config
-       (savehist-mode))
+  (use-package savehist
+    :ensure nil
+    :config
+    (savehist-mode)
+    :custom
+    ;; Save all minibuffer histories
+    (savehist-save-minibuffer-history t)
+    ;; Set the file location for storing minibuffer history
+    (savehist-file "~/.emacs.d/savehist")
+    ;; Include the kill-ring, search-ring, and regexp-search-ring to the
+    ;; history file.
+    (savehist-additional-variables '(kill-ring
+                                     search-ring
+                                     regexp-search-ring)))
 #+END_SRC
 
 Tramp let's me use Emacs to edit remote files. For example, changing a Docker
@@ -515,7 +574,11 @@ this in real life, and to be frank I don't think I want to meet the people that
 do.
 
 #+BEGIN_SRC emacs-lisp
-      (setq sentence-end-double-space nil)
+  (use-package paragraphs
+    :ensure nil
+    :custom
+    ;; Do not end sentences in a double space.
+    (sentence-end-double-space nil))
 #+END_SRC
 
 *** Colour Theme
@@ -526,7 +589,6 @@ and gives Org files a more cohesive feeling.
 
 #+BEGIN_SRC emacs-lisp
       (use-package leuven-theme
-        :ensure t
         :config
         ;; Load the theme unless running without an interactive terminal.
         (unless noninteractive
@@ -548,12 +610,26 @@ when working with Lisp, but I have found it helpful in other situations as well.
 So I set it globally.
 
 #+BEGIN_SRC emacs-lisp
-      (use-package paren
-        :config
-        (show-paren-mode)
-        :custom
-        (show-paren-style 'expression)
-        (show-paren-delay 0))
+  (use-package paren
+    :config
+    (show-paren-mode)
+
+    (defun max/toggle-show-paren-style ()
+      "Toggle between the \"expression\" and \"parenthesis\" `show-paren-mode' style."
+      (interactive)
+      (cond ((eq show-paren-style 'expression)
+             (setq show-paren-style 'parenthesis))
+            ((eq show-paren-style 'parenthesis)
+             (setq show-paren-style 'expression))))
+    :custom
+    ;; By default, highlight the entire expression between the two parens.
+    (show-paren-style 'expression)
+    ;; No delay between putting the cursor on a paren, and highlighting.
+    (show-paren-delay 0)
+    :general
+    (:states 'normal
+             :prefix "SPC t"
+             "p" 'max/toggle-show-paren-style))
 #+END_SRC
 
 Automatically insert a closing symbol if an opening symbol is entered (paren.,
@@ -609,6 +685,15 @@ Something about it just feels so right. Uses the [[https://github.com/aspiers/sm
         (smooth-scrolling-mode 1))
 #+END_SRC
 
+*** Expand Region
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+    :general
+    (:states '(normal visual)
+     :prefix "SPC v"
+     "" 'er/expand-region))
+#+END_SRC
+
 * Evil Mode
 Vim has the superior input style. There. I said it. Modal-based bindings flow so
 much better for me, both in thinking and in executing. Using Emacs native
@@ -634,40 +719,73 @@ don't think I could see myself ever using Emacs seriously.
 | SPC w l   | evil-window-right         | Focus the window to the right.                  |
 
 #+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :custom
+    (evil-want-keybinding nil)
+    :config
+    (evil-mode))
 
-    (use-package evil
-      :custom
-      (evil-want-keybinding nil)
-      :config
-      (evil-mode))
+  (use-package evil-core
+    :ensure nil
+    :config
+    (evil-set-initial-state 'ibuffer-mode 'normal))
 
-    (use-package evil-core
-      :ensure nil
-      :config
-      (evil-set-initial-state 'ibuffer-mode 'normal))
+  (use-package evil-commands
+    :ensure nil
+    :general
+    (:states 'normal
+     :prefix "SPC w"
+     "h" 'evil-window-left
+     "j" 'evil-window-down
+     "k" 'evil-window-up
+     "l" 'evil-window-right))
 
-    (use-package evil-commands
-      :ensure nil
-      :config
-      (general-define-key
-       :states 'normal
-       :prefix "SPC w"
-       "h" 'evil-window-left
-       "j" 'evil-window-down
-       "k" 'evil-window-up
-       "l" 'evil-window-right))
+  (use-package evil-commentary
+    :ensure t
+    :config
+      ;; Enable by default
+      (evil-commentary-mode))
 
-    (use-package evil-commentary
-      :ensure t
-      :config
-        ;; Enable by default
-        (evil-commentary-mode))
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init)
+    :custom
+    ;; If ~use-tng~ is not set to null, then ~company-lsp~ does not
+    ;; autocomplete correctly.
+    (evil-collection-company-use-tng nil))
+#+END_SRC
 
+* Avy
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :general
+    ;; Jump based navigation keybindings
+    (:keymaps 'normal
+     :prefix "SPC j"
+     "" '(:ignore t :which-key "jump prefix")
+     "j" 'avy-goto-char
+     "l" 'avy-goto-line
+     "w" 'avy-goto-word-0))
+#+END_SRC
 
-    (use-package evil-collection
-      :after evil
-      :config
-      (evil-collection-init))
+* Ace
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-link
+    :config
+    (general-define-key
+     :keymaps 'help-map
+     "o" 'ace-link-help))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :config
+    (ace-window-display-mode)
+
+    (general-define-key
+     :states 'normal
+     "SPC w W" 'ace-window))
 #+END_SRC
 
 * ido
@@ -676,18 +794,26 @@ don't think I could see myself ever using Emacs seriously.
 entries that could not match your input without having to hit ~TAB~ each time.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package ido
-      :ensure nil
-      :config
-      (ido-mode)
-      (ido-everywhere)
-      (general-define-key
-       :states 'normal
-       :prefix "SPC b"
-       "s" 'ido-switch-buffer)
-      :custom
-      (ido-enable-flex-matching t "If no prefix matches are found, look for the \
-                                    sequence of characters anywhere in an entry."))
+  (use-package ido
+    :ensure nil
+    :config
+    (ido-mode)
+    (ido-everywhere)
+
+    :custom
+    (ido-enable-flex-matching t "If no prefix matches are found, look for the \
+                                  sequence of characters anywhere in an entry.")
+
+    :general
+    ;; Buffer manipulation keybindings
+    (:states 'normal
+     :prefix "SPC b"
+     "" '(:ignore t :which-key "buffer manipulation prefix")
+     "b" 'ido-switch-buffer
+     "d" 'ido-kill-buffer
+     "D" 'kill-this-buffer
+     "m" 'kill-some-buffers
+     "R" 'revert-buffer))
 #+END_SRC
 
 I do not like the default in-line display used by ido. [[https://github.com/creichert/ido-vertical-mode.el][Ido-vertical-mode]] reads
@@ -697,14 +823,12 @@ I would prefer something grid-like, such as [[https://github.com/larkery/ido-gri
 slows down Emacs too much.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package ido-vertical-mode
-       :ensure t
-       :after ido
-       :config
-       (ido-vertical-mode)
-       :custom
-       (ido-vertical-define-keys 'C-n-and-C-p-only "Use C-n/C-p to move selection."))
-
+  (use-package ido-vertical-mode
+     :after ido
+     :config
+     (ido-vertical-mode)
+     :custom
+     (ido-vertical-define-keys 'C-n-and-C-p-only "Use C-n/C-p to move selection."))
 #+END_SRC
 
 Ido-everywhere unfortunately does not apply everywhere. To get Ido completion
@@ -743,15 +867,13 @@ Emacs use.
 | SPC b b | ibuffer | Open the iBuffer...buffer |
 
 #+BEGIN_SRC emacs-lisp
-    (use-package ibuffer
-      :ensure nil
-      :config
-      ;;; Keybinds
-
-      (general-define-key
-       :states 'normal
-       :prefix "SPC b"
-       "b" 'ibuffer))
+  (use-package ibuffer
+    :ensure nil
+    :general
+    ;; iBuffer opening keybind
+    (:states 'normal
+     :prefix "SPC b"
+     "B" 'ibuffer))
 #+END_SRC
 
 * Dired-X
@@ -785,30 +907,35 @@ flags, which is really nice.
 |         |            | focused buffer.                                 |
 
 #+BEGIN_SRC emacs-lisp
-    (use-package dired
-      :ensure nil
-      :custom
-      ;; ~ls~ switches passed to Dired.
-      (dired-listing-switches "-kaBhl --group-directories-first")
+  (use-package dired
+    :ensure nil
+    :custom
+    ;; ~ls~ switches passed to Dired.
+    (dired-listing-switches "-kaBhl --group-directories-first")
 
-      ;; Recursively delete and copy directories.
-      (dired-recursive-deletes t)
-      (dired-recursive-copies t)
-      :config
-      ;; Reuse Dired buffers when navigating.
-      (put 'dired-find-alternate-file 'disabled nil)
+    ;; Recursively delete and copy directories.
+    (dired-recursive-deletes t)
+    (dired-recursive-copies t)
+    :config
+    ;; Reuse Dired buffers when navigating.
+    (put 'dired-find-alternate-file 'disabled nil)
 
-      ;;; Keybinds
-      ;; Get to the Dired buffer.
-      (general-define-key
-       :states 'normal
-       :prefix "SPC b"
-       "d" 'dired
-       "D" 'dired-jump))
+    :general
+    ;; Dired buffer opening keybindings
+    (:states 'normal
+     :prefix "SPC b"
+     "d" 'dired
+     "D" 'dired-jump)
 
-    (use-package all-the-icons-dired
-      :requires all-the-icons
-      :hook (dired-mode . all-the-icons-dired-mode))
+    ;; Jump to dired keybindings
+    (:states 'normal
+     :prefix "SPC j"
+     "d" 'dired-jump
+     "D" 'dired-jump-other-window))
+
+  (use-package all-the-icons-dired
+    :requires all-the-icons
+    :hook (dired-mode . all-the-icons-dired-mode))
 #+END_SRC
 
 * Magit
@@ -821,18 +948,18 @@ Magit that I figure I should give it a proper shot.
 | SPC g s | magit   | Open the Magit status buffer. |
 
 #+BEGIN_SRC emacs-lisp
-    (use-package magit
-      ;; Don't load Magit on my work (Windows) machine.
-      :if (eq system-type 'gnu/linux)
-      :ensure t
-      :config
-      (general-define-key
-       :states 'normal
-       :prefix "SPC g"
-       "s" 'magit)
+  (use-package magit
+    ;; Don't load Magit on my work (Windows) machine.
+    :if (eq system-type 'gnu/linux)
+    :custom
+    (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion.")
 
-      :custom
-      (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
+    :general
+    ;; Magit keybind
+    (:states 'normal
+     :prefix "SPC g"
+     ""  '(:ignore t :which-key "magit prefix")
+     "s" 'magit))
 #+END_SRC
 
 I am using the black magic [[https://github.com/emacs-evil/evil-magit][~evil-magit~]] package for Magit's keybinds. The
@@ -863,34 +990,29 @@ this occasionally to go between English and French documents.
 | SPC t s | flyspell-mode             | Toggle flyspell in the current buffer.                  |
 
 #+BEGIN_SRC emacs-lisp
-    (use-package flyspell
-      :hook
-      ;; Auto-start flyspell within Markdown, Org-mode, and TeX files
-      ((markdown-mode org-mode latex-mode git-commit-mode) . flyspell-mode)
+  (use-package flyspell
+    :hook
+    ;; Auto-start flyspell within Markdown, Org-mode, TeX, and Git Commit modes
+    ((markdown-mode org-mode latex-mode git-commit-mode) . flyspell-mode)
 
-      :config
-      (general-define-key
-       :states 'normal
-       :prefix "SPC s"
-       "b" 'flyspell-buffer
-       "c" 'flyspell-correct-at-point
-       "n" 'flyspell-goto-next-error)
+    :general
+    (:states 'normal
+     :prefix "SPC s"
+     ""  '(:ignore t :which-key "flyspell prefix")
+     "b" 'flyspell-buffer
+     "c" 'flyspell-correct-at-point
+     "n" 'flyspell-goto-next-error
+     "s" 'flyspell-mode))
 
-      (general-define-key
-       :states 'normal
-       :prefix "SPC t"
-       "s" 'flyspell-mode))
+  (use-package flyspell-correct-popup)
 
-    (use-package flyspell-correct-popup)
-
-    (use-package auto-dictionary
-      :hook (flyspell-mode . auto-dictionary-mode))
+  (use-package auto-dictionary
+    :hook (flyspell-mode . auto-dictionary-mode))
 #+END_SRC
 
 * Programming
 A little known fact. Occasionally, I use Emacs to program. Outrageous I know,
-but it's true. For any language I use, I try to leverage a Language Server if
-available. Using a lang server simplifies the setup, and allows me to share one
+but it's true. For any language I use, I try to leverage a Language Server if available. Using a lang server simplifies the setup, and allows me to share one
 server configuration across several editors. As long as the functionality is in
 the server, I can guarantee it will be available in every editor I use. If no
 lang. server is available, or if there is some functionality not available in
@@ -906,16 +1028,17 @@ displaying some chunks of information twice.
 | SPC e a | lsp-execute-code-action | Execute a code action based on the current point. |
 
 #+BEGIN_SRC emacs-lisp
-    (use-package lsp-mode
-      :hook (prog-mode . lsp)
-      :config
-      (general-define-key
-       :states 'normal
-       :prefix "SPC e"
-       "b" 'lsp-format-buffer
-       "o" 'lsp-organize-imports
-       "r" 'lsp-rename
-       "a" 'lsp-execute-code-action))
+  (use-package lsp-mode
+    :hook (prog-mode . lsp)
+    :commands lsp
+    :config
+    (general-define-key
+     :states 'normal
+     :prefix "SPC e"
+     "b" 'lsp-format-buffer
+     "o" 'lsp-organize-imports
+     "r" 'lsp-rename
+     "a" 'lsp-execute-code-action))
 #+END_SRC
 
 Flycheck is used for some linting by ~lsp-mode~.
@@ -926,48 +1049,55 @@ Flycheck is used for some linting by ~lsp-mode~.
 | SPC e p   | flycheck-previous-error      | Go to the previous error.                         |
 
 #+BEGIN_SRC emacs-lisp
-    (use-package flycheck
-      :config
-      ;; Flycheck by default
-      (global-flycheck-mode)
-      :custom
-      ;; Disable flycheck on checkdoc
-      (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  (use-package flycheck
+    :config
+    ;; Flycheck by default
+    (global-flycheck-mode)
+    :custom
+    ;; Disable flycheck on checkdoc
+    (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
-      ;;; Keybinds
-      (general-define-key
-       :states 'normal
-       :prefix "SPC e"
-       "n" 'flycheck-next-error
-       "p" 'flycheck-previous-error))
-
+    ;;; Keybinds
+    (general-define-key
+     :states 'normal
+     :prefix "SPC e"
+     "c" 'flycheck-clear-errors
+     "h" 'flycheck-describe-checker
+     "l" 'lsp-ui-flycheck-list
+     "n" 'flycheck-next-error
+     "p" 'flycheck-previous-error))
 #+END_SRC
 
 Company is the completion framework I leverage with ~lsp-mode~.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package company
-      :config
-      (global-company-mode))
+  (use-package company
+    :config
 
-    (use-package company-lsp
-      :config
-      ;; Add company-lsp as a backend to company-mode
-      (push 'company-lsp company-backends)
-      :custom
-      ;; Cache completions if the cached results are incomplete
-      (company-lsp-cache-candidates 'auto)
+    (global-company-mode)
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
 
-      ;; Fetch completion results asynchronously. No need to lock up just to
-      ;; fetch results from the language server.
-      (company-lsp-async t)
+  (use-package company-lsp
+    :after (lsp company)
+    :config
+    ;; Add company-lsp as a backend to company-mode
+    (push 'company-lsp company-backends)
+    :custom
+    ;; Cache completions if the cached results are incomplete
+    (company-lsp-cache-candidates 'auto)
 
-      ;; Enable snippet expansion from the language sever.
-      (company-lsp-enable-snippet t)
+    ;; Fetch completion results asynchronously. No need to lock up just to
+    ;; fetch results from the language server.
+    (company-lsp-async t)
 
-      ;; Allow recompletion in the case there are other completion trigger
-      ;; characters.
-      (company-lsp-enable-recompletion t))
+    ;; Enable snippet expansion from the language sever.
+    (company-lsp-enable-snippet nil)
+
+    ;; Allow recompletion in the case there are other completion trigger
+    ;; characters.
+    (company-lsp-enable-recompletion t))
 #+END_SRC
 
 ~lsp-ui~ gives much higher-level interactions with ~lsp-mode~:
@@ -1003,79 +1133,70 @@ green.
 |           |                              | visible.                                         |
 | SPC b m   | toggle-lsp-ui-imenu          | Show the imenu buffer if not already visible.    |
 
-              #+BEGIN_SRC emacs-lisp
-    (use-package lsp-ui
-      :after lsp
-      :hook (lsp . lsp-ui-mode)
-      :config
-      (defun max/toggle-lsp-ui-doc ()
-        "Toggle the UI Doc"
-        (interactive)
-        (if (lsp-ui-doc--visible-p)
-            (lsp-ui-doc-hide)
-          (lsp-ui-doc-show)))
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-ui
+    :after lsp
+    :hook (lsp . lsp-ui-mode)
+    :config
+    (defun max/toggle-lsp-ui-doc ()
+      "Toggle the UI Doc"
+      (interactive)
+      (if (lsp-ui-doc--visible-p)
+          (lsp-ui-doc-hide)
+        (lsp-ui-doc-show)))
 
-      (defun max/toggle-lsp-ui-imenu ()
-        "Toggle the ~lsp-ui~ ~imenu~ buffer."
-        (interactive)
-        (if (get-buffer "*lsp-ui-imenu*")
-            (kill-buffer "*lsp-ui-imenu*")
-          (lsp-ui-imenu)))
+    (defun max/toggle-lsp-ui-imenu ()
+      "Toggle the ~lsp-ui~ ~imenu~ buffer."
+      (interactive)
+      (if (get-buffer "*lsp-ui-imenu*")
+          (kill-buffer "*lsp-ui-imenu*")
+        (lsp-ui-imenu)))
 
-      ;;; Keybinds
-      (general-define-key
-       :states 'normal
-       :prefix "SPC e"
-       "f d" 'lsp-ui-peek-find-definitions
-       "f r" 'lsp-ui-peek-find-references
-       "l" 'lsp-ui-flycheck-list
-       "u" 'max/toggle-lsp-ui-doc)
+  ;;; Keybinds
+    (general-define-key
+     :states 'normal
+     :prefix "SPC e"
+     "f d" 'lsp-ui-peek-find-definitions
+     "f r" 'lsp-ui-peek-find-references
+     "l" 'lsp-ui-flycheck-list
+     "u" 'max/toggle-lsp-ui-doc)
 
-      (general-define-key
-       :states 'normal
-       :prefix "SPC b"
-       "m" 'max/toggle-lsp-ui-imenu)
+    (general-define-key
+     :states 'normal
+     :prefix "SPC b"
+     "m" 'max/toggle-lsp-ui-imenu)
 
-      ;; Fix 'q' not quiting the Flycheck list buffer
-      ;; (general-define-key
-      ;;  :states 'normal
-      ;;  :keymap 'lsp-ui-flycheck-list-mode-map
-      ;;  "q" 'lsp-ui-flycheck-list--quit)
+    :custom
+    (lsp-ui-sideline-enable t)
+    (lsp-ui-sideline-ignore-duplicate t)
+    (lsp-ui-flycheck-enable t)
+    (lsp-ui-doc-enable nil) ; Disable the Docs by default
 
-      :custom
-      (lsp-ui-sideline-enable t)
-      (lsp-ui-sideline-ignore-duplicate t)
-      (lsp-ui-sideline-code-actions-prefix " ℹ ")
-      (lsp-ui-flycheck-enable t)
-      (lsp-ui-doc-enable nil) ; Disable the Docs by default
+    :custom-face
+    (lsp-ui-sideline-code-action ((t (
+                                      :foreground "#3C3C3C"
+                                      :background "#F0F0F0"))))
 
-      :custom-face
-      (lsp-ui-sideline-code-action ((t (
-                          :weight bold
-                          :overline "#A7A7A7"
-                          :foreground "#3C3C3C"
-                          :background "#F0F0F0"))))
-
-      (lsp-ui-peek-peek ((t (:background "#FFFFE0"))))
-      (lsp-ui-peek-list ((t (:background "#FFFFE0"))))
-      (lsp-ui-peek-filename ((t (
-                            :foreground "#4183C4"
-                            :background nil))))
-      (lsp-ui-peek-highlight ((t (
-                             :background "#F6FECD"
-                             :slant italic))))
-      (lsp-ui-peek-selection ((t (
-                             :foreground "#333333"
-                             :background "#F6FECD"))))
-      (lsp-ui-peek-header ((t (
-                          :underline "#A7A6AA"
-                          :foreground "#555555"
-                          :background "#E2E1D5"))))
-      (lsp-ui-peek-footer ((t (
-                          :underline "#A7A6AA"
-                          :foreground "#555555"
-                          :background "#E2E1D5")))))
-              #+END_SRC
+    (lsp-ui-peek-peek ((t (:background "#FFFFE0"))))
+    (lsp-ui-peek-list ((t (:background "#FFFFE0"))))
+    (lsp-ui-peek-filename ((t (
+                               :foreground "#4183C4"
+                               :background nil))))
+    (lsp-ui-peek-highlight ((t (
+                                :background "#F6FECD"
+                                :slant italic))))
+    (lsp-ui-peek-selection ((t (
+                                :foreground "#333333"
+                                :background "#F6FECD"))))
+    (lsp-ui-peek-header ((t (
+                             :underline "#A7A6AA"
+                             :foreground "#555555"
+                             :background "#E2E1D5"))))
+    (lsp-ui-peek-footer ((t (
+                             :underline "#A7A6AA"
+                             :foreground "#555555"
+                             :background "#E2E1D5")))))
+#+END_SRC
 
 ** Programming & Markup Languages
 The following are specific configurations for individual programming and markup
@@ -1093,14 +1214,21 @@ npm install --global dockerfile-language-server-nodejs
 
 *** Emacs Lisp
 #+BEGIN_SRC emacs-lisp
-      (use-package elisp-slime-nav
-        :hook (emacs-lisp-mode . elisp-slime-nav-mode)
-        :config
-        (general-define-key
-         :states 'normal
-         :prefix "SPC m"
-         "e" 'pp-eval-last-sexp))
+  (use-package elisp-mode
+    :ensure nil
+    :commands emacs-lisp-mode
+    :general
+    (:states 'normal
+     :keymaps 'emacs-lisp-mode-map
+     :prefix "SPC"
+     "m e" 'eval-last-sexp
+     "j f" 'find-function
+     "j F" 'find-function-other-window
+     "j v" 'find-variable
+     "j V" 'find-variable-other-window))
 
+  (use-package elisp-slime-nav
+    :hook (emacs-lisp-mode . elisp-slime-nav-mode))
 #+END_SRC
 
 *** Golang
@@ -1114,6 +1242,17 @@ go get gopls
         :custom
         ;; Run goimports before saving a file
         (gofmt-command "goimports"))
+#+END_SRC
+
+*** Java
+#+BEGIN_SRC emacs-lisp
+  (use-package java-mode
+    :ensure nil
+    :commands java-mode)
+
+  (use-package lsp-java
+    :ensure t
+    :after (java-mode lsp))
 #+END_SRC
 
 *** Markdown
@@ -1702,3 +1841,4 @@ back every file that mentions Git.
      (deft-extentions '("org"))
      (deft-directory "~/doc/org/"))
 #+END_SRC
+
