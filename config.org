@@ -1729,15 +1729,16 @@ capture). These are my templates:
 | SPC m Q   | org-clock-cancel                   | Stop the current clock and undo all time        |
 |           |                                    | tracked.                                        |
 #+BEGIN_SRC emacs-lisp
-     (use-package org-clock
-       :ensure nil
-       :config
-       (general-define-key
-        :states 'normal
-        :prefix "SPC m"
-        "i" 'org-clock-in
-        "O" 'org-clock-out
-        "Q" 'org-clock-cancel))
+  (use-package org-clock
+    :ensure nil
+    :config
+    (general-define-key
+     :states 'normal
+     :keymaps 'org-mode-map
+     :prefix "SPC m"
+     "i" 'org-clock-in
+     "O" 'org-clock-out
+     "Q" 'org-clock-cancel))
 #+END_SRC
 
 ** Archive
