@@ -430,11 +430,13 @@ forgot to save.
     (delete-trailing-lines nil)
 
     :general
-    ;; Quiting Emacs keybindings
+    ;; Quit Emacs keybindings
     (:states 'normal
      :prefix "SPC q"
      ""  '(:ignore t :which-key "quiting emacs prefix")
-     "q" 'save-buffers-kill-terminal)
+     "q" 'save-buffers-kill-terminal
+     "Q" '(server-mode :which-key "kill emacs server")
+     "r" '(server-start :which-key "restart emacs server"))
 
     ;; File manipulation keybindings
     (:states 'normal
