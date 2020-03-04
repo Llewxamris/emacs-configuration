@@ -1592,18 +1592,29 @@ capture the information is far more limited than org-capture proper.
 That being said, setting up capture templates for my work machine would probably
 be a blessing. I'm on that thing 7.5 hours a day.
 
-All templates are defined externally in ~*.txt~ files to keep this configuration
-file clean. The goal of each template is to capture the minimum amount of
-information required for the item to be actionable (excluding the ~RAW~
-capture). These are my templates:
+I use [[https://github.com/progfolio/doct][DOCT]] to define my templates. DOCT is a declarative model for creating Org
+Capture templates. It fits very well into my mental models, as well as with the
+theme of declarative configuration I use within this file. The only downside is
+that a core Org Mode functionality is now tied to an external package.
 
-- Task :: An actionable todo item with a proper name, estimate, some sort of
-          date, context tag, and priority tags. They are placed into the general
-          task bucket in my main org file
+#+BEGIN_SRC emacs-lisp
+  (use-package doct
+    :commands doct)
+#+END_SRC
+
+All template contents are defined externally in ~*.txt~ files to keep this
+configuration file clean. The goal of each template is to capture the minimum
+amount of information required for the item to be actionable (excluding the
+~RAW~ capture). These are my templates:
+
+- Task :: An actionable todo item with a proper name,
+          estimate, some sort of date, context tag, and
+          priority tags. They are placed into the
+          general task bucket in my main org file
 - Raw task :: An idea, task, or note that requires refinement. Could be a
               passing idea, a reminder, a quote, etc. Raw tasks are to never
-              leave the my inbox.
-- Note :: A name, timestamp, content. Just a note.
+              leave the my inbox
+- Note :: A name, timestamp, content. Just a note
 - Org Protocol Capture :: Used when capturing a web page via ~org-protocol~ in
      Firefox. When used, it grabs the title of the web page, the full URL, and
      any text that was highlighted when the capture was initiated. This is the
@@ -1615,74 +1626,95 @@ capture). These are my templates:
        + '&body='+encodeURIComponent(window.getSelection())
      #+END_SRC
 
-     | Keybind | Command              | Description                       |
-     |---------+----------------------+-----------------------------------|
-     | SPC m " | org-capture-finalize | Save and file the capture buffer  |
-     | SPC m a | org-capture-kill     | Abandon the capture buffer        |
-
      #+BEGIN_SRC emacs-lisp
-    (use-package org-capture
-      :ensure nil
-      :config
-      ;;; Keybinds
-      (general-define-key
-       :states 'normal
-       :prefix "SPC o"
-       "c" 'org-capture)
-
-      (general-define-key
-       :states 'visual
-       :keymaps 'org-capture-mode-map
-       :prefix "SPC m"
-       "'" 'org-capture-finalize
-       "k" 'org-capture-kill)
-
-      (defun max/journal-capture ()
-        "Sets the pointer to the correct Month/Week location in my journal file.
-    If the week or month does not exist, it is automatically inserted."
-        (let ((month (format-time-string "%B"))
-              (week (format-time-string "W%V")))
-          (unless (search-forward (format "* %s" month) nil t)
-            (goto-char (point-max))
-            (insert (format "* %s\n** %s\n" month week)))
-          (goto-char (point-max))
-          (unless (search-backward (format "** %s" week) nil t)
-            (insert (format "** %s\n" week)))
-          (goto-char (org-find-olp (list month week) t)) t))
-
-      (defun max/note-capture ()
-        "Create a new Org file based on a prompted description. The description is
-    used as the title and first-level heading values, and is converted to snake case
-    for the file name. Drops the pointer at the end of the new file for Org Capture
-    to start off on."
-        (let* ((note-desc
-                (read-string "Enter a brief description of the note: "))
-               (note-file-name
-                (replace-regexp-in-string " " "-" (downcase note-desc))))
-               (find-file (concat "~/doc/org/" note-file-name ".org"))
-               (goto-char (point-min))
-               (insert
-                (format "#+TITLE: %s\n" note-desc)
-                (format "* %s :note:\n" note-desc))
-               (goto-char (point-max))))
-
-      :custom
-      (org-capture-templates
-       '(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
-          (file "~/.emacs.d/capture-templates/task.txt"))
-         ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
-          (file "~/.emacs.d/capture-templates/raw-task.txt"))
-         ("n" "Note" plain (function max/note-capture )
-          (file "~/.emacs.d/capture-templates/note.txt"))
-         ("j" "Journal Entry" entry (file+function "~/doc/org/journal.org" max/journal-capture)
-          (file "~/.emacs.d/capture-templates/journal-entry.txt"))
-         ("p" "Org Protocol Capture" entry (file "~/doc/org/agenda/inbox.org")
-          (file "~/.emacs.d/capture-templates/protocol.txt")))))
-
-    (use-package org-protocol
-      :ensure nil
-      :after org-capture)
+       (use-package org-protocol
+         :ensure nil
+         :after org-capture)
      #+END_SRC
+
+- Journal entry :: An entry into my personal journal. The function
+                   ~max/journal-capture~ is invoked to handle creating the
+                   correct month/week headers automatically.
+
+| Keybind | Command              | Description                       |
+|---------+----------------------+-----------------------------------|
+| SPC m " | org-capture-finalize | Save and file the capture buffer  |
+| SPC m a | org-capture-kill     | Abandon the capture buffer        |
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-capture
+    :ensure nil
+    :after doct
+    :config
+    (defun max/journal-capture ()
+      "Sets the pointer to the correct Month/Week location in my journal file.
+  If the week or month does not exist, it is automatically inserted."
+      (let ((month (format-time-string "%B"))
+            (week (format-time-string "W%V")))
+        (unless (search-forward (format "* %s" month) nil t)
+          (goto-char (point-max))
+          (insert (format "* %s\n** %s\n" month week)))
+        (goto-char (point-max))
+        (unless (search-backward (format "** %s" week) nil t)
+          (insert (format "** %s\n" week)))
+        (goto-char (org-find-olp (list month week) t)) t))
+
+    (defun max/note-capture ()
+      "Create a new Org file based on a prompted description. The description is
+  used as the title and first-level heading values, and is converted to snake case
+  for the file name. Drops the pointer at the end of the new file for Org Capture
+  to start off on."
+      (let* ((note-desc
+              (read-string "Enter a brief description of the note: "))
+             (note-file-name
+              (replace-regexp-in-string " " "-" (downcase note-desc))))
+        (find-file (concat "~/doc/org/" note-file-name ".org"))
+        (goto-char (point-min))
+        (insert
+         (format "#+TITLE: %s\n" note-desc)
+         (format "* %s :note:\n" note-desc))
+        (goto-char (point-max))))
+
+    (defun max/current-buffer-is-org-capture-p ()
+      (when (string-match-p (regexp-quote "CAPTURE") (current-buffer))
+        t))
+
+    :custom
+    (org-capture-templates
+     (doct '(("Task"
+              :keys "t"
+              :file "~/doc/org/agenda/inbox.org"
+              :template-file "~/.emacs.d/capture-templates/task.txt")
+             ("Raw task"
+              :keys "T"
+              :file "~/doc/org/agenda/inbox.org"
+              :template-file "~/.emacs.d/capture-templates/raw-task.txt")
+             ("Note"
+              :keys "n"
+              :type plain
+              :function max/note-capture
+              :template-file "~/.emacs.d/capture-templates/note.txt")
+             ("Journal entry"
+              :keys "j"
+              :file "~/doc/org/journal.org"
+              :function max/journal-capture)
+             ("Org protocol capture"
+              :keys "p"
+              :file "~/doc/org/agenda/inbox.org"
+              :template-file "~/.emacs.d/capture-templates/protocol.txt"))))
+    :general
+    ;; Global capture keybind
+    (:states 'normal
+             :prefix "SPC o"
+             "c" 'org-capture)
+
+    (:states 'normal
+     :keymaps 'org-mode-map
+     :prefix "SPC m"
+     "0" (general-predicate-dispatch 'org-edit-src-save (max/current-buffer-is-org-capture-p) 'org-capture-finalize)
+     "k" 'org-capture-kill))
+
+#+END_SRC
 
 ** Agenda
 | Keybind | Command         | Description                                     |
