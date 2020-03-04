@@ -1845,3 +1845,13 @@ back every file that mentions Git.
      (deft-directory "~/doc/org/"))
 #+END_SRC
 
+** Confluence Markup Export
+We use Jira/Confluence at work. I prefer writing up my notes in Org mode, but in
+the end they need to be on Confluence. ~ox-jira~ lets me export my Org notes as
+Confluence friendly markup. This includes properly generating source blocks,
+which is just the best.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-jira)
+#+END_SRC
+
