@@ -552,13 +552,16 @@ Use UTF-8 encoding everywhere. I rarely run Emacs in a terminal, and even then
 my terminal of choice also supports UTF-8. No reason to not enable.
 
 #+BEGIN_SRC emacs-lisp
-      (use-package mule
-        :ensure nil
-        :config
-        (set-terminal-coding-system 'utf-8)
-        (set-keyboard-coding-system 'utf-8)
-        (set-selection-coding-system 'utf-8)
-        (prefer-coding-system 'utf-8))
+  (use-package mule
+    :ensure nil
+    :config
+    (set-terminal-coding-system 'utf-8)
+    (set-keyboard-coding-system 'utf-8)
+    (set-selection-coding-system 'utf-8)
+    (prefer-coding-system 'utf-8)
+
+    :custom
+    (sentence-end-double-space nil))
 #+END_SRC
 
 To congratulate myself for taking a stand against non-UTF-8 encoding, I will
@@ -579,19 +582,6 @@ Mode text.
     :custom
     (prettify-symbols-alist '(("#+BEGIN_SRC" . "⚞")
                               ("#+END_SRC" . "⚟"))))
-#+END_SRC
-
-Always include a trailing newline at the end of a file. As well, disable
-sentences ending with a double space. I don't think I've ever seen someone do
-this in real life, and to be frank I don't think I want to meet the people that
-do.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package paragraphs
-    :ensure nil
-    :custom
-    ;; Do not end sentences in a double space.
-    (sentence-end-double-space nil))
 #+END_SRC
 
 *** Colour Theme
