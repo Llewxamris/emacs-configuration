@@ -723,15 +723,14 @@ don't think I could see myself ever using Emacs seriously.
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil
+    :config
+    (evil-set-initial-state 'ibuffer-mode 'normal)
+    (evil-set-initial-state 'magit-mode 'normal)
+    (evil-mode 1)
     :custom
-    (evil-want-keybinding nil)
-    :config
-    (evil-mode))
-
-  (use-package evil-core
-    :ensure nil
-    :config
-    (evil-set-initial-state 'ibuffer-mode 'normal))
+    ;; Do not load evil-keybindings.el. Evil Collection handles setting
+    ;; these bindings where necessary.
+    (evil-want-keybinding nil))
 
   (use-package evil-commands
     :ensure nil
@@ -999,9 +998,11 @@ defaults seem sane enough, so I am going to stick with them until I feel like it
 needs some configuration.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package evil-magit
-      :ensure t
-      :requires magit)
+  (use-package evil-magit
+    :after (magit evil)
+    :custom
+    ;; Default to the Normal state in Magit
+    (evil-magit-state 'normal))
 #+END_SRC
 
 * Spellchecking
