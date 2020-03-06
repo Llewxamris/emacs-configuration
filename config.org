@@ -1075,7 +1075,7 @@ some chunks of information twice.
 
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
-    :hook (prog-mode . lsp)
+    :hook ((prog-mode go-mode) . lsp)
     :commands lsp
     :custom
     (read-process-output-max (* 1024 1024))
@@ -1290,11 +1290,13 @@ go get gopls
 ~~~
 
 #+BEGIN_SRC emacs-lisp
-      (use-package go-mode
-        :hook (before-save . gofmt-before-save)
-        :custom
-        ;; Run goimports before saving a file
-        (gofmt-command "goimports"))
+  (use-package go-mode
+    :config
+    (add-hook 'before-save-hook #'lsp-format-buffer nil t)
+    (add-hook 'before-save-hook #'lsp-organize-imports nil t)
+    :custom
+    ;; Run goimports before saving a file
+    (gofmt-command "goimports"))
 #+END_SRC
 
 *** Java
