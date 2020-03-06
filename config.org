@@ -1443,14 +1443,6 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
      (use-package org
        :ensure t
        :init
-       ;;; Set the base directory depending on what OS I am currently on.
-       (defvar org-base-dir)
-       (if (eq system-type 'gnu/linux)
-           ;; Linux
-           (setq org-base-dir "/home/max/doc/org")
-         ;; Windows
-         (setq org-base-dir "C:/Users/maxwell.haley/Org"))
-
        (defun max/org-update-dblocks ()
          "Wrapper around ~org-update-all-dblocks~ that only executes said function if
      the current buffer is an Org buffer. This is intended to be used alongside
@@ -1477,14 +1469,29 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
        :hook ((before-save . max/org-update-dblocks)
               (org-mode . max/org-mode-hook))
        :config
-       ;; The following variables are set here instead of in the ~:custom~ body
-       ;; because the ~:custom~ body does not see variables set in the scope of
-       ;; the ~:init~ body.
-       (setq org-directory org-base-dir)
-       (setq org-agenda-files (list (concat org-directory "/agenda")))
-       (setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
-       (setq org-archive-location (concat (car org-agenda-files) "/archive.org::* Archives"))
+       ;; I have two machines I use this Emacs configuration on. My personal laptop,
+       ;; running Linux, and my work laptop, running Windows. The directories are
+       ;; different between them, so I handle setting them here.
+       (let* ((max/org-mode-root-directory
+               (cond ((eq system-type 'gnu/linux)
+                      "/home/max/doc/org")
+                     ((or (eq system-type 'windows-nt) (eq system-type 'cygwin))
+                      "C:/Users/maxwell.haley/Org")))
 
+              (max/org-agenda-root-directory (concat
+                                              max/org-mode-root-directory
+                                              "/agenda"))
+              (max/org-inbox-file (concat
+                                   max/org-agenda-root-directory
+                                   "/inbox.org"))
+              (max/org-archive-location (concat
+                                         max/org-agenda-root-directory
+                                         "/archive.org::* Archives")))
+
+         (setq org-directory          max/org-mode-root-directory
+               org-agenda-files       (list max/org-agenda-root-directory)
+               org-default-notes-file max/org-inbox-file
+               org-archive-location   max/org-archive-location))
 
        (font-lock-add-keywords 'org-mode
                                '(("^ *\\([-]\\) "
