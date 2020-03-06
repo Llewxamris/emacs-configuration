@@ -5,7 +5,8 @@
 #  LocalWords:  Leuven Flycheck modeline keybinds Cliplink ido minibuffer GC ui
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC SCP UTF CLI
 #  LocalWords:  emacs modeline paren pinky dired magit Magit's LaTeX Flyspell
-#  LocalWords:  flyspell lang lsp flycheck imenu ibuffer Avy
+#  LocalWords:  flyspell lang lsp flycheck imenu ibuffer Avy linter Yasnippet
+#  LocalWords:  backend
 
 * Forward
 My living monolith of a Emacs configuration file. Bred through trial, error, and
@@ -758,6 +759,35 @@ don't think I could see myself ever using Emacs seriously.
     (evil-collection-company-use-tng nil))
 #+END_SRC
 
+* Completion
+** Company
+[[http://company-mode.github.io/][Company]] is a framework for text insertion completion. For example, automatically
+completing function invocations while typing them out. Or suggesting words while
+editing prose.
+
+ #+BEGIN_SRC emacs-lisp
+  (use-package company
+    :config
+    (global-company-mode)
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
+#+END_SRC
+
+** Yasnippet
+[[http://joaotavora.github.io/yasnippet/][Yasnippet]] is a template system that enables expanding keywords into text or code
+snippets. For example, entering ~emacs-lisp_~ and hitting ~<tab>~ expands into a
+full ~BLOCK_SRC~ element with the language set to ~emacs-lisp~.
+
+ #+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :config
+    (yas-global-mode))
+
+  (use-package yasnippet-snippets
+    :after yasnippet)
+#+END_SRC
+
 * Avy
 #+BEGIN_SRC emacs-lisp
   (use-package avy
@@ -1014,13 +1044,17 @@ this occasionally to go between English and French documents.
 
 * Programming
 A little known fact. Occasionally, I use Emacs to program. Outrageous I know,
-but it's true. For any language I use, I try to leverage a Language Server if available. Using a lang server simplifies the setup, and allows me to share one
-server configuration across several editors. As long as the functionality is in
-the server, I can guarantee it will be available in every editor I use. If no
-lang. server is available, or if there is some functionality not available in
-the lang. server, I will fall back to some sort of ~lang-mode~ package. Using
-both is also a valid option, as long as they do not conflict or result in
-displaying some chunks of information twice.
+but it's true.
+
+** Language Server
+For any language I use, I try to leverage a Language Server if available. Using
+a lang server simplifies the setup, and allows me to share one server
+configuration across several editors. As long as the functionality is in the
+server, I can guarantee it will be available in every editor I use. If no lang.
+server is available, or if there is some functionality not available in the
+lang. server, I will fall back to some sort of ~lang-mode~ package. Using both
+is also a valid option, as long as they do not conflict or result in displaying
+some chunks of information twice.
 
 | Keybind | Command                 | Description                                       |
 |---------+-------------------------+---------------------------------------------------|
@@ -1033,54 +1067,26 @@ displaying some chunks of information twice.
   (use-package lsp-mode
     :hook (prog-mode . lsp)
     :commands lsp
-    :config
-    (general-define-key
-     :states 'normal
-     :prefix "SPC e"
-     "b" 'lsp-format-buffer
+    :custom
+    (read-process-output-max (* 1024 1024))
+    (lsp-idle-delay 0.500)
+    :general
+    ;; LSP keybindings
+    (:states '(normal visual)
+     :prefix "SPC l"
+     "" '(:ignore t :which-key "lsp prefix")
+     "a" 'lsp-execute-code-action
+     "f" 'lsp-format-buffer
      "o" 'lsp-organize-imports
      "r" 'lsp-rename
-     "a" 'lsp-execute-code-action))
+     "R" 'lsp-restart-workspace))
 #+END_SRC
 
-Flycheck is used for some linting by ~lsp-mode~.
-
-| Keybind   | Command                      | Description                                       |
-|-----------+------------------------------+---------------------------------------------------|
-| SPC e n   | flycheck-next-error          | Go to the next error.                             |
-| SPC e p   | flycheck-previous-error      | Go to the previous error.                         |
+*** LSP Company Backend
+Lsp-mode has its own backend for Company, allowing the Company completion
+framework to pull suggestions from the running language server.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :config
-    ;; Flycheck by default
-    (global-flycheck-mode)
-    :custom
-    ;; Disable flycheck on checkdoc
-    (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-
-    ;;; Keybinds
-    (general-define-key
-     :states 'normal
-     :prefix "SPC e"
-     "c" 'flycheck-clear-errors
-     "h" 'flycheck-describe-checker
-     "l" 'lsp-ui-flycheck-list
-     "n" 'flycheck-next-error
-     "p" 'flycheck-previous-error))
-#+END_SRC
-
-Company is the completion framework I leverage with ~lsp-mode~.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :config
-
-    (global-company-mode)
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
-
   (use-package company-lsp
     :after (lsp company)
     :config
@@ -1102,6 +1108,7 @@ Company is the completion framework I leverage with ~lsp-mode~.
     (company-lsp-enable-recompletion t))
 #+END_SRC
 
+*** LSP UI
 ~lsp-ui~ gives much higher-level interactions with ~lsp-mode~:
 
 - Doc :: Fetch documentation and display it in a popup buffer.
@@ -1154,20 +1161,6 @@ green.
           (kill-buffer "*lsp-ui-imenu*")
         (lsp-ui-imenu)))
 
-  ;;; Keybinds
-    (general-define-key
-     :states 'normal
-     :prefix "SPC e"
-     "f d" 'lsp-ui-peek-find-definitions
-     "f r" 'lsp-ui-peek-find-references
-     "l" 'lsp-ui-flycheck-list
-     "u" 'max/toggle-lsp-ui-doc)
-
-    (general-define-key
-     :states 'normal
-     :prefix "SPC b"
-     "m" 'max/toggle-lsp-ui-imenu)
-
     :custom
     (lsp-ui-sideline-enable t)
     (lsp-ui-sideline-ignore-duplicate t)
@@ -1197,7 +1190,55 @@ green.
     (lsp-ui-peek-footer ((t (
                              :underline "#A7A6AA"
                              :foreground "#555555"
-                             :background "#E2E1D5")))))
+                             :background "#E2E1D5"))))
+    :general
+    (:states 'normal
+     :prefix "SPC l"
+     "d"   'lsp-ui-doc-glance
+     "e"   'lsp-ui-flycheck-list
+     "i"   'lsp-ui-imenu
+     "p"   '(:ignore t :which-key "peek prefix")
+     "p d" 'lsp-ui-peek-find-definitions
+     "p r" 'lsp-ui-peek-find-references))
+#+END_SRC
+
+** Flycheck
+[[https://www.flycheck.org/en/latest/][Flycheck]] is a fantastic syntax checker and linter for Emacs. It has support for
+most major programming languages (mostly) out-of-the-box, and ~lsp-mode~ has
+built in support for Flycheck.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :hook (prog-mode . flycheck-mode)
+    :custom
+    ;; Disable flycheck on checkdoc
+    (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+
+    :general
+    (:states 'normal
+     :prefix "SPC e"
+     "c" 'flycheck-clear-errors
+     "h" 'flycheck-describe-checker
+     "l" 'flycheck-list-errors
+     "n" 'flycheck-next-error
+     "p" 'flycheck-previous-error))
+#+END_SRC
+
+** Compilation Buffer
+The compilation buffer is a dumb terminal, which means it does not attempt to
+escape ANSI codes. This result is cluttering the buffer with the ANSI colour
+codes. Emacs can handle these colour codes, but it requires applying a function
+against the entire buffers output.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ansi-color
+    :ensure nil
+    :config
+    (defun max/colorize-compilation-buffer ()
+      (read-only-mode)
+      (ansi-color-apply-on-region compilation-filter-start (point)))
+
+    (add-hook 'compilation-filter-hook 'max/colorize-compilation-buffer))
 #+END_SRC
 
 ** Programming & Markup Languages
