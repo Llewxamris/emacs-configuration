@@ -345,6 +345,16 @@ whenever the system is idle,
        (gcmh-mode 1))
 #+END_SRC
 
+[[https://github.com/purcell/exec-path-from-shell][Exec-path-from-shell]] ensures my shell's environment variables are all available
+within Emacs.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize))
+#+END_SRC
+
+** Help!
 Describing things is one of the best ways to understand how Emacs works.
 Whenever I need to trouble shoot, the first thing I do is describe whatever it
 is I'm having problems with.
