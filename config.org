@@ -6,7 +6,7 @@
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC SCP UTF CLI
 #  LocalWords:  emacs modeline paren pinky dired magit Magit's LaTeX Flyspell
 #  LocalWords:  flyspell lang lsp flycheck imenu ibuffer Avy linter Yasnippet
-#  LocalWords:  backend
+#  LocalWords:  backend Writegood
 
 * Forward
 My living monolith of a Emacs configuration file. Bred through trial, error, and
@@ -1938,4 +1938,30 @@ which is just the best.
 #+BEGIN_SRC emacs-lisp
   (use-package ox-jira)
 #+END_SRC
+
+** Writegood Mode
+I'm not a regular writer, so I often fall into pitfalls. Relying too much on
+[[https://en.wikipedia.org/wiki/Weasel_word][weasel words]], or accidentally writing something in the wrong tense.
+[[https://github.com/bnbeckwith/writegood-mode][Writegood-mode]] is a fantastic library for someone who is not used to the
+challenges of writing. It highlights those weasel words that sneak up on you,
+duplicate words, and it highlights phrases that are in the passive voice.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package writegood-mode
+       :hook (org-mode markdown-mode latex-mode text-mode)
+       :custom-face
+       ;; Inherits the ~flyspell-duplicate~ face from Leuven theme
+       (writegood-duplicates-face ((t (:inherit flyspell-duplicate))))
+
+       ;; Uses the same colour as the foreground of second level outlines in Org mode
+       ;; as defined within Leuven theme.
+       (writegood-passive-voice-face ((t (:underline (:style wave :color "#123555")))))
+
+       :general
+       ;; Toggle Writegood keybind
+       (:states 'normal
+        :prefix "SPC t"
+        "w" 'writegood-mode))
+   #+END_SRC
+
 
