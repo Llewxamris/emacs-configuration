@@ -30,3 +30,5 @@ config.*
 /quelpa/
 /tramp
 /network-security.data
+/.dap-breakpoints
+/projectile-bookmarks.eld
