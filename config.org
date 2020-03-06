@@ -1475,7 +1475,7 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
        :commands (org-mode org-capture org-agenda orgtbl-mode)
        :mode ("\\.org$" . org-mode)
        :hook ((before-save . max/org-update-dblocks)
-              (max/org-mode-hook))
+              (org-mode . max/org-mode-hook))
        :config
        ;; The following variables are set here instead of in the ~:custom~ body
        ;; because the ~:custom~ body does not see variables set in the scope of
