@@ -1440,166 +1440,175 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
 | SPC m .   | org-time-stamp                     | Create a time stamp.                                 |
 
    #+BEGIN_SRC emacs-lisp
-    (use-package org
-      :ensure t
-      :init
-      ;;; Set the base directory depending on what OS I am currently on.
-      (defvar org-base-dir)
-      (if (eq system-type 'gnu/linux)
-          ;; Linux
-          (setq org-base-dir "/home/max/doc/org")
-        ;; Windows
-        (setq org-base-dir "C:/Users/maxwell.haley/Org"))
+     (use-package org
+       :ensure t
+       :init
+       ;;; Set the base directory depending on what OS I am currently on.
+       (defvar org-base-dir)
+       (if (eq system-type 'gnu/linux)
+           ;; Linux
+           (setq org-base-dir "/home/max/doc/org")
+         ;; Windows
+         (setq org-base-dir "C:/Users/maxwell.haley/Org"))
 
-      ;; Automatically wrap lines at the 80th column.
-      (add-hook 'org-mode-hook (lambda() (set-fill-column 80) (auto-fill-mode)))
+       (defun max/org-update-dblocks ()
+         "Wrapper around ~org-update-all-dblocks~ that only executes said function if
+     the current buffer is an Org buffer. This is intended to be used alongside
+     hooks for automatic dynamic block updating."
+         (interactive)
+         (when (derived-mode-p 'org-mode)
+           (org-update-all-dblocks)))
 
-      ;; Start prettify mode
-      (add-hook 'org-mode-hook #'prettify-symbols-mode)
+       (defun max/org-add-company-ispell-backend ()
+         "Adds the iSpell backend for company locally. To use when writting as apposed to programming."
+         (eval-when-compile (defvar company-ispell))
+         (make-local-variable 'company-backends)
+         (push 'company-backends 'company-ispell))
 
-      :commands (org-mode org-capture org-agenda orgtbl-mode)
-      :mode ("\\.org$" . org-mode)
-      :hook (before-save . max/org-update-dblocks)
-      :config
-      ;; The following variables are set here instead of in the ~:custom~ body
-      ;; because the ~:custom~ body does not see variables set in the scope of
-      ;; the ~:init~ body.
-      (setq org-directory org-base-dir)
-      (setq org-agenda-files (list (concat org-directory "/agenda")))
-      (setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
-      (setq org-archive-location (concat (car org-agenda-files) "/archive.org::* Archives"))
+       (defun max/org-mode-hook ()
+         "Wrapper for all functions that need to be hooked to Org mode."
+         (set-fill-column 80)
+         (auto-fill-mode)
+         (prettify-symbols-mode)
+         (max/org-add-company-ispell-backend))
+
+       :commands (org-mode org-capture org-agenda orgtbl-mode)
+       :mode ("\\.org$" . org-mode)
+       :hook ((before-save . max/org-update-dblocks)
+              (max/org-mode-hook))
+       :config
+       ;; The following variables are set here instead of in the ~:custom~ body
+       ;; because the ~:custom~ body does not see variables set in the scope of
+       ;; the ~:init~ body.
+       (setq org-directory org-base-dir)
+       (setq org-agenda-files (list (concat org-directory "/agenda")))
+       (setq org-default-notes-file (concat (car org-agenda-files) "/inbox.org"))
+       (setq org-archive-location (concat (car org-agenda-files) "/archive.org::* Archives"))
 
 
-      (font-lock-add-keywords 'org-mode
-                              '(("^ *\\([-]\\) "
-                                 (0 (prog1 () (compose-region
-                                               (match-beginning 1)
-                                               (match-end 1) "•"))))))
-      (font-lock-add-keywords 'org-mode
-                              '(("^ *\\([+]\\) "
-                                 (0 (prog1 () (compose-region
-                                               (match-beginning 1)
-                                               (match-end 1) "◦"))))))
+       (font-lock-add-keywords 'org-mode
+                               '(("^ *\\([-]\\) "
+                                  (0 (prog1 () (compose-region
+                                                (match-beginning 1)
+                                                (match-end 1) "•"))))))
+       (font-lock-add-keywords 'org-mode
+                               '(("^ *\\([+]\\) "
+                                  (0 (prog1 () (compose-region
+                                                (match-beginning 1)
+                                                (match-end 1) "◦"))))))
 
-      ;; Functions to quickly emphasize a region.
-      (defun max/org-bold-region ()
-        (interactive)
-        (org-emphasize ?\*))
-      (defun max/org-code-region ()
-        (interactive)
-        (org-emphasize ?\~))
-      (defun max/org-italic-region ()
-        (interactive)
-        (org-emphasize ?\/))
-      (defun max/org-strike-through-region ()
-        (interactive)
-        (org-emphasize ?\+))
-      (defun max/org-underline-region ()
-        (interactive)
-        (org-emphasize ?\_))
-      (defun max/org-verbatim-region ()
-        (interactive)
-        (org-emphasize ?\=))
+       ;; Functions to quickly emphasize a region.
+       (defun max/org-bold-region ()
+         (interactive)
+         (org-emphasize ?\*))
+       (defun max/org-code-region ()
+         (interactive)
+         (org-emphasize ?\~))
+       (defun max/org-italic-region ()
+         (interactive)
+         (org-emphasize ?\/))
+       (defun max/org-strike-through-region ()
+         (interactive)
+         (org-emphasize ?\+))
+       (defun max/org-underline-region ()
+         (interactive)
+         (org-emphasize ?\_))
+       (defun max/org-verbatim-region ()
+         (interactive)
+         (org-emphasize ?\=))
 
-      (defun max/org-update-dblocks ()
-        "Wrapper around ~org-update-all-dblocks~ that only executes said function if
-    the current buffer is an Org buffer. This is intended to be used alongside
-    hooks for automatic dynamic block updating."
-        (interactive)
-        (when (derived-mode-p 'org-mode)
-          (org-update-all-dblocks)))
 
-      ;;; Keybinds
-      (general-define-key
-       :states 'normal
-       :keymaps 'org-mode-map
-       :prefix "SPC m"
-       "b" 'org-tree-to-indirect-buffer
-       "d" 'org-deadline
-       "D" 'org-insert-drawer
-       "E" 'org-set-effort
-       "n" 'org-narrow-to-subtree
-       "o" 'org-open-at-point
-       "p" 'org-set-property
-       "r" 'org-refile
-       "s" 'org-schedule
-       "t" 'org-show-todo-tree
-       "y" 'org-todo-yesterday
-       "!" 'org-time-stamp-inactive
-       "^" 'org-sort
-       "*" 'org-toggle-heading
-       "RET" 'org-insert-heading-respect-content
-       ":" 'org-set-tags
-       "'" 'org-edit-special
-       "/" 'org-sparse-tree
-       "." 'org-time-stamp)
+       ;;; Keybinds
+       (general-define-key
+        :states 'normal
+        :keymaps 'org-mode-map
+        :prefix "SPC m"
+        "b" 'org-tree-to-indirect-buffer
+        "d" 'org-deadline
+        "D" 'org-insert-drawer
+        "E" 'org-set-effort
+        "n" 'org-narrow-to-subtree
+        "o" 'org-open-at-point
+        "p" 'org-set-property
+        "r" 'org-refile
+        "s" 'org-schedule
+        "t" 'org-show-todo-tree
+        "y" 'org-todo-yesterday
+        "!" 'org-time-stamp-inactive
+        "^" 'org-sort
+        "*" 'org-toggle-heading
+        "RET" 'org-insert-heading-respect-content
+        ":" 'org-set-tags
+        "'" 'org-edit-special
+        "/" 'org-sparse-tree
+        "." 'org-time-stamp)
 
-      (general-define-key
-       :states 'normal
-       :keymaps 'org-mode-map
-       :prefix "SPC m S"
-       "h" 'org-demote-subtree
-       "j" 'org-move-subtree-down
-       "k" 'org-move-subtree-up
-       "l" 'org-promote-subtree)
+       (general-define-key
+        :states 'normal
+        :keymaps 'org-mode-map
+        :prefix "SPC m S"
+        "h" 'org-demote-subtree
+        "j" 'org-move-subtree-down
+        "k" 'org-move-subtree-up
+        "l" 'org-promote-subtree)
 
-      (general-define-key
-       :states 'normal
-       :keymaps 'org-mode-map
-       "TAB" 'org-cycle
-       "$" 'org-end-of-line
-       "^" 'org-beginning-of-line
-       "gh" 'outline-up-heading
-       "gj" 'org-forward-heading-same-level
-       "gk" 'org-backward-heading-same-level
-       "gl" 'outline-next-visible-heading
-       "t" 'org-todo
-       "T" 'org-insert-todo-heading)
+       (general-define-key
+        :states 'normal
+        :keymaps 'org-mode-map
+        "TAB" 'org-cycle
+        "$" 'org-end-of-line
+        "^" 'org-beginning-of-line
+        "gh" 'outline-up-heading
+        "gj" 'org-forward-heading-same-level
+        "gk" 'org-backward-heading-same-level
+        "gl" 'outline-next-visible-heading
+        "t" 'org-todo
+        "T" 'org-insert-todo-heading)
 
-      (general-define-key
-       :states 'visual
-       :keymaps 'org-mode-map
-       :prefix "SPC m x"
-       "b" 'max/org-bold-region
-       "c" 'max/org-code-region
-       "i" 'max/org-italic-region
-       "s" 'max/org-strike-through-region
-       "u" 'max/org-underline-region
-       "v" 'max/org-verbatim-region)
+       (general-define-key
+        :states 'visual
+        :keymaps 'org-mode-map
+        :prefix "SPC m x"
+        "b" 'max/org-bold-region
+        "c" 'max/org-code-region
+        "i" 'max/org-italic-region
+        "s" 'max/org-strike-through-region
+        "u" 'max/org-underline-region
+        "v" 'max/org-verbatim-region)
 
-      (general-define-key
-       :states 'normal
-       :keymaps 'org-mode-map
-       :prefix "SPC m h"
-       "i" 'org-insert-heading-after-current
-       "I" 'org-insert-heading
-       "s" 'org-insert-subheading
-       "l" 'org-insert-link)
+       (general-define-key
+        :states 'normal
+        :keymaps 'org-mode-map
+        :prefix "SPC m h"
+        "i" 'org-insert-heading-after-current
+        "I" 'org-insert-heading
+        "s" 'org-insert-subheading
+        "l" 'org-insert-link)
 
-      :custom
-      (org-log-done 'time "Inserts a timestamp on task completion.")
-      (org-use-fast-todo-selection t "Enable jumping to specific states.")
-      (org-todo-keywords
-       '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-         (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
-         (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
-      (org-use-tag-inheritance t)
-      (org-tags-exclude-from-inheritance '("PROJECT"))
-      (org-tag-alist '(("important" . ?i)
-                       ("urgent" . ?u)
-                       ("!important" . ?I)
-                       ("!urgent" . ?U)
-                       ("PROJECT" . ?P)))
-      (org-refile-use-outline-path t "
-       Pick refile targets using paths. This works nicely with how I name bucket
-       headlines for storing like tasks/notes.")
-      (org-refile-targets '((org-agenda-files . (:maxlevel . 3))) "
-    The refile targets are based off my agenda files, and only goes down three
-    levels.")
-      (org-fontify-done-headline t)
-      (org-startup-indented t "Enable indent mode on all Org files.")
-      (org-pretty-entities t "Draw entities as UTF symbols.")
-      (org-ellipses " ⤸" "Use fancy symbol to represent headers with additional content."))
+       :custom
+       (org-log-done 'time "Inserts a timestamp on task completion.")
+       (org-use-fast-todo-selection t "Enable jumping to specific states.")
+       (org-todo-keywords
+        '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+          (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
+          (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
+       (org-use-tag-inheritance t)
+       (org-tags-exclude-from-inheritance '("PROJECT"))
+       (org-tag-alist '(("important" . ?i)
+                        ("urgent" . ?u)
+                        ("!important" . ?I)
+                        ("!urgent" . ?U)
+                        ("PROJECT" . ?P)))
+       (org-refile-use-outline-path t "
+        Pick refile targets using paths. This works nicely with how I name bucket
+        headlines for storing like tasks/notes.")
+       (org-refile-targets '((org-agenda-files . (:maxlevel . 3))) "
+     The refile targets are based off my agenda files, and only goes down three
+     levels.")
+       (org-fontify-done-headline t)
+       (org-startup-indented t "Enable indent mode on all Org files.")
+       (org-pretty-entities t "Draw entities as UTF symbols.")
+       (org-ellipses " ⤸" "Use fancy symbol to represent headers with additional content."))
    #+END_SRC
 
    Org-bullets changes out the asterisks for UTF-8 symbols.
