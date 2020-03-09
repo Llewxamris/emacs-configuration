@@ -1707,7 +1707,7 @@ amount of information required for the item to be actionable (excluding the
 #+BEGIN_SRC emacs-lisp
   (use-package org-capture
     :ensure nil
-    :after doct
+    :requires doct
     :config
     (defun max/journal-capture ()
       "Sets the pointer to the correct Month/Week location in my journal file.
@@ -1770,7 +1770,6 @@ amount of information required for the item to be actionable (excluding the
     (:states 'normal
      :prefix "SPC o"
      "c" 'org-capture))
-
 #+END_SRC
 
 ** Agenda
