@@ -651,10 +651,14 @@ need for fancy colours and icons everywhere I look so I can keep my ADD rattled
 brain distracted while the rest of me tries to do real work.
 
 #+BEGIN_SRC emacs-lisp
-      (use-package doom-modeline
-        :hook (after-init . doom-modeline-mode))
+  (use-package doom-modeline
+    :hook (after-init . doom-modeline-mode)
+    :custom
+    ;; Forcefully enable icons in the modeline. This is necessary when running
+    ;; Emacs as a daemon.
+    (doom-modeline-icon t))
 
-      (use-package all-the-icons)
+  (use-package all-the-icons)
 #+END_SRC
 
 *** Relative Line Numbering
