@@ -1457,10 +1457,9 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
            (org-update-all-dblocks)))
 
        (defun max/org-add-company-ispell-backend ()
-         "Adds the iSpell backend for company locally. To use when writting as apposed to programming."
-         (eval-when-compile (defvar company-ispell))
+         "Adds the iSpell backend for company locally. To use when writting as appose to programming."
          (make-local-variable 'company-backends)
-         (push 'company-backends 'company-ispell))
+         (add-to-list 'company-backends 'company-ispell))
 
        (defun max/org-mode-hook ()
          "Wrapper for all functions that need to be hooked to Org mode."
