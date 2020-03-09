@@ -1769,14 +1769,8 @@ amount of information required for the item to be actionable (excluding the
     :general
     ;; Global capture keybind
     (:states 'normal
-             :prefix "SPC o"
-             "c" 'org-capture)
-
-    (:states 'normal
-     :keymaps 'org-mode-map
-     :prefix "SPC m"
-     "0" (general-predicate-dispatch 'org-edit-src-save (max/current-buffer-is-org-capture-p) 'org-capture-finalize)
-     "k" 'org-capture-kill))
+     :prefix "SPC o"
+     "c" 'org-capture))
 
 #+END_SRC
 
