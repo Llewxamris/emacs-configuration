@@ -1790,25 +1790,26 @@ when capturing would be useful I'm away from my laptop. I use Orgzly's quick
 note feature to accomplish a similar result, but the options for /how/ to
 capture the information is far more limited than org-capture proper.
 
-That being said, setting up capture templates for my work machine would probably
-be a blessing. I'm on that thing 7.5 hours a day.
+That said, setting up capture templates for my work machine would probably be a
+blessing. I'm on that thing 7.5 hours a day.
 
 All templates are defined externally in ~*.txt~ files to keep this configuration
 file clean. The goal of each template is to capture the minimum amount of
 information required for the item to be actionable (excluding the ~RAW~
 capture). These are my templates:
 
-- Task :: An actionable todo item with a proper name, estimate, some sort of
-          date, context tag, and priority tags. They are placed into the general
-          task bucket in my main org file
-- Raw task :: An idea, task, or note that requires refinement. Could be a
-              passing idea, a reminder, a quote, etc. Raw tasks are to never
-              leave the my inbox.
-- Note :: A name, timestamp, content. Just a note.
-- Org Protocol Capture :: Used when capturing a web page via ~org-protocol~ in
-     Firefox. When used, it grabs the title of the web page, the full URL, and
-     any text that was highlighted when the capture was initiated. This is the
-     bookmarklet code:
+- Task :: Capture a ready to action entry. I should be able to fill in all the
+          criteria of a task whenever capturing something using this template.
+          If anything is unclear, I should be using a raw task.
+
+- Raw task :: A task that requires further fleshing out, or that I require far
+              more information on. Raw tasks are not to leave my inbox.
+
+- Note :: A name, timestamp, content. Just a note
+
+- Org Protocol :: Used when capturing a web page via ~org-protocol~. Could
+                  become a note, a task, or something else entirely. I invoke
+                  Org protocol using the following bookmark:
 
      #+BEGIN_SRC javascript
    javascript:location.href='org-protocol://capture?template=p&url='+encodeURIComponent(location.href)
@@ -1816,16 +1817,21 @@ capture). These are my templates:
        + '&body='+encodeURIComponent(window.getSelection())
      #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-    (use-package org-protocol
-      :ensure nil
-      :after org-capture)
-#+END_SRC
+     #+BEGIN_SRC emacs-lisp
+       (use-package org-protocol
+         :ensure nil
+         :after org-capture)
+     #+END_SRC
 
-     | Keybind | Command              | Description                       |
-     |---------+----------------------+-----------------------------------|
-     | SPC m " | org-capture-finalize | Save and file the capture buffer  |
-     | SPC m a | org-capture-kill     | Abandon the capture buffer        |
+- Journal entry :: An entry into my personal journal. It invokes the function
+                   ~max/journal-capture~ to handle creating the correct
+                   month/week headers automatically.
+
+| Keybind | Command              | Description                       |
+|---------+----------------------+-----------------------------------|
+| SPC m " | org-capture-finalize | Save and file the capture buffer  |
+| SPC m a | org-capture-kill     | Abandon the capture buffer        |
+
 
      #+BEGIN_SRC emacs-lisp
          (use-package org-capture
