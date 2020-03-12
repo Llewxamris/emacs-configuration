@@ -1261,22 +1261,113 @@ npm install --global dockerfile-language-server-nodejs
 #+END_SRC
 
 *** Emacs Lisp
+Elisp makes the (Emacs) world go round. Making your Elisp editing experience as
+comfortable as possible is a must. Being able to whip around functions and
+evaluate arbitrary code is a fabulous (and dangerous) power to wield.
+
 #+BEGIN_SRC emacs-lisp
   (use-package elisp-mode
     :ensure nil
     :commands emacs-lisp-mode
     :general
+    ;; Elisp eval & jump keybindings
     (:states 'normal
      :keymaps 'emacs-lisp-mode-map
-     :prefix "SPC"
-     "m e" 'eval-last-sexp
+     :prefix "SPC m"
+     "e" '(:ignore t :which-key "elisp eval prefix")
+     "e b" 'eval-buffer
+     "e e" 'eval-last-sexp
+     "e f" 'eval-defun
+     "e r" 'eval-region
+     "j" '(:ignore t :which-key "elisp jump prefix")
      "j f" 'find-function
      "j F" 'find-function-other-window
      "j v" 'find-variable
      "j V" 'find-variable-other-window))
+#+END_SRC
 
-  (use-package elisp-slime-nav
-    :hook (emacs-lisp-mode . elisp-slime-nav-mode))
+IELM is an inferior Emacs Lisp mode that acts as a REPL for Elisp. REPL-driven
+development for Lisp dialects is incredibly popular, and I want to hang with the
+cool kids.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ielm
+    :ensure nil
+    :hook (ielm-mode . turn-on-eldoc-mode)
+    :general
+    (:states 'normal
+     :keymaps 'emacs-lisp-mode-map
+     :prefix "SPC m"
+     "i" 'ielm))
+#+END_SRC
+
+[[https://github.com/abo-abo/lispy][Lispy]] is a fantastic library that makes editing Elisp code so easy, even I can
+do it. It provides interactions that are /"safe"/. That is to say, do not result
+in non-executable Elisp. For example: deleting a line without dropping a
+trailing parenthesis so the code is still valid. Another interaction includes
+barfage and slurpage.
+
+[[https://github.com/noctuid/lispyville][Lispyville]] wraps the Lispy interactions in Evil-friendly keybinds. It also
+allows for some safe Evil operations. For example: using commentary to comment
+out an entire line that ends in a paren will move the paren down a line to avoid
+making the Elisp invalid.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package lispy
+    :hook (emacs-lisp-mode . lispy-mode))
+
+  (use-package lispyville
+    :hook (lispy-mode . lispyville-mode)
+    :after lispy
+    :config
+    (lispyville-set-key-theme  '(operators
+                                 c-w
+                                 prettify
+                                 atom-movement
+                                 additional-movement
+                                 commentary
+                                 slurp/barf-lispy
+                                 additional
+                                 escape))
+    :general
+    ;; Lispyville keybindings
+    (:states 'normal
+     :keymaps 'lispyville-mode-map
+     :prefix "SPC m"
+     "a"   '(:ignore t :which-key "elisp insert at prefix")
+     "a i" 'lispyville-insert-at-beginning-of-list
+     "a a" 'lispyville-insert-at-end-of-list
+     ;; lispyville-beginning-of[-next]-defun binds do not work
+     "h"   'lispyville-beginning-of-defun
+     "H"   'lispyville-beginning-of-next-defun
+     "l"   'lispyville-end-of-defun
+     "o"   'lispyville-open-below-list
+     "O"   'lispyville-open-above-list
+     "w"   '(:ignore t :which-key "elisp wrap prefix")
+     "w (" 'lispyville-wrap-round
+     "w [" 'lispyville-wrap-brackets
+     "w {" 'lispyville-wrap-braces))
+
+#+END_SRC
+
+Edebug is a source-level debugger for Elisp, same as you would find in any
+fancy, 21st century IDE. But instead of needing a headless Eclipse instance, you
+just need Emacs.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package edebug
+    :ensure nil
+    :commands edebug-defun
+    :custom
+    ;; Automatically to evaluate instrumentation required for Edebug.
+    (edebug-all-defs t)
+    ;; Display a trace of function calls in an external buffer.
+    (edebug-trace t)
+    :general
+    (:states 'normal
+     :keymaps 'emacs-lisp-mode-map
+     :prefix "SPC m"
+     "d" 'edebug-defun))
 #+END_SRC
 
 *** Golang
