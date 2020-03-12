@@ -1350,6 +1350,26 @@ making the Elisp invalid.
 
 #+END_SRC
 
+Edebug is a source-level debugger for Elisp, same as you would find in any
+fancy, 21st century IDE. But instead of needing a headless Eclipse instance, you
+just need Emacs.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package edebug
+    :ensure nil
+    :commands edebug-defun
+    :custom
+    ;; Automatically to evaluate instrumentation required for Edebug.
+    (edebug-all-defs t)
+    ;; Display a trace of function calls in an external buffer.
+    (edebug-trace t)
+    :general
+    (:states 'normal
+     :keymaps 'emacs-lisp-mode-map
+     :prefix "SPC m"
+     "d" 'edebug-defun))
+#+END_SRC
+
 *** Golang
 ~~~
 go get gopls
