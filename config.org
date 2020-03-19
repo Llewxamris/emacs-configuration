@@ -1587,6 +1587,7 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
    #+BEGIN_SRC emacs-lisp
      (use-package org
        :ensure t
+       :defines (company-backends)
        :init
        (defun max/org-update-dblocks ()
          "Wrapper around ~org-update-all-dblocks~ that only executes said function if
@@ -1735,8 +1736,11 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
         "s" 'org-insert-subheading
         "l" 'org-insert-link)
 
+       (add-to-list 'org-modules 'org-habit)
+
        :custom
        (org-log-done 'time "Inserts a timestamp on task completion.")
+       (org-log-into-drawer t)
        (org-use-fast-todo-selection t "Enable jumping to specific states.")
        (org-todo-keywords
         '((sequence "TODO(t)" "IN-PROGRESS(i)" "|" "DONE(d)")
@@ -2081,4 +2085,13 @@ duplicate words, and it highlights phrases that are in the passive voice.
         :prefix "SPC t"
         "w" 'writegood-mode))
    #+END_SRC
+
+** Habits
+#+BEGIN_SRC emacs-lisp
+  (use-package org-habit
+    :ensure nil
+    :custom
+    (org-habit-graph-column 66)
+    (org-habit-preceding-days 7))
+#+END_SRC
 
