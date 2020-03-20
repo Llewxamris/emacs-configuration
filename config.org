@@ -1751,7 +1751,6 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
                         ("@work" . ?w)
                         ("@daycare" . ?d)
                         ("PROJECT" . ?P)))
-       (org-tags-exclude-from-inheritance '("PROJECT"))
        (org-refile-use-outline-path t "
         Pick refile targets using paths. This works nicely with how I name bucket
         headlines for storing like tasks/notes.")
@@ -1903,27 +1902,90 @@ capture). These are my templates:
 | SPC o t | org-tags-view   | Opens a view to filter org-mode items by tag.   |
 
 #+BEGIN_SRC emacs-lisp
-     (use-package org-agenda
-       :ensure nil
-       :config
-       (general-define-key
-        :states 'normal
-        :prefix "SPC o"
-        "a" 'org-agenda
-        "o" 'org-agenda-list
-        "s" 'org-search-view
-        "t" 'org-tags-view
-        "d" 'deft)
+  (use-package org-agenda
+    :ensure nil
+    :functions (org-end-of-subtree org-entry-get)
+    :config
+    (general-define-key
+     :states 'normal
+     :prefix "SPC o"
+     "a" 'org-agenda
+     "o" 'org-agenda-list
+     "s" 'org-search-view
+     "t" 'org-tags-view
+     "d" 'deft)
 
-       :custom
-       (org-agenda-span 3 "
-         By default, show today and the next two days when opening the agenda.
-         When planning ahead, three days is usually good enough to see if I'm
-         overworking myself.")
-       (org-agenda-tags-column -100 "
-         Pushes off the tags if I'm viewing the agenda in a vertical split on the
-         laptop. I'd rather see the content of the heading rather than the tags
-         associated in most contexts."))
+    (defun max/org-skip-subtree-if-habit ()
+      "Skip an agenda entry if it has a STYLE property equal to \"habit\".
+
+  From https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html"
+      (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+        (if (string= (org-entry-get nil "STYLE") "habit")
+            subtree-end
+          nil)))
+
+    (defun max/org-skip-subtree-if-not-habit ()
+      "Skip an agenda entry if it has a STYLE property not equal to \"habit\".
+
+  From https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html"
+      (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+        (if (not (string= (org-entry-get nil "STYLE") "habit"))
+            subtree-end
+          nil)))
+
+    :custom
+    (org-agenda-span 3 "
+      By default, show today and the next two days when opening the agenda.
+      When planning ahead, three days is usually good enough to see if I'm
+      overworking myself.")
+    (org-agenda-tags-column -100 "
+      Pushes off the tags if I'm viewing the agenda in a vertical split on the
+      laptop. I'd rather see the content of the heading rather than the tags
+      associated in most contexts.")
+    (org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    (org-agenda-custom-commands '(("r" "Raw tasks"
+                                   ((todo "RAW"
+                                          ((org-agenda-overriding-header
+                                            "Unprocessed tasks:")))))
+                                  ("d" "Daily agenda"
+                                   ((tags "PRIORITY=\"A\""
+                                          ((org-agenda-skip-function
+                                            '(org-agenda-skip-entry-if
+                                              'todo
+                                              'done))
+                                           (org-agenda-files
+                                            '("~/doc/org/agenda/todo.org"))
+                                           (org-agenda-overriding-header
+                                            "High-priority tasks:")))
+                                    (agenda ""
+                                            ((org-agenda-span 1)
+                                             (org-agenda-skip-function
+                                              '(max/org-skip-subtree-if-not-habit))
+                                             (org-agenda-overriding-header
+                                              "Todays habits:")))
+                                    (agenda ""
+                                            ((org-agenda-span 1)
+                                             (org-agenda-skip-function
+                                              '(max/org-skip-subtree-if-habit))
+                                             (org-agenda-overriding-header
+                                              "Todays tasks:")))
+                                    (alltodo ""
+                                             ((org-agenda-files
+                                               '("~/doc/org/agenda/someday.org"))
+                                              (org-agenda-overriding-header
+                                               "Other tasks:")))))
+                                  ("w" "Weekly agenda"
+                                   ((agenda ""
+                                            ((org-agenda-span 7)
+                                             (org-agenda-overriding-header
+                                              "Weekly agenda:")))))
+                                  ("p" "Projects"
+                                   ((tags "+PROJECT"
+                                         ((org-agenda-files
+                                           '("~/doc/org/agenda/projects.org"))
+                                          (org-tags-match-list-sublevels t)
+                                          (org-agenda-overriding-header
+                                           "Projects:"))))))))
 #+END_SRC
 
 ** Clock
