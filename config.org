@@ -6,7 +6,7 @@
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC SCP UTF CLI
 #  LocalWords:  emacs modeline paren pinky dired magit Magit's LaTeX Flyspell
 #  LocalWords:  flyspell lang lsp flycheck imenu ibuffer Avy linter Yasnippet
-#  LocalWords:  backend Writegood
+#  LocalWords:  backend Writegood actioned actioning
 
 * Forward
 My living monolith of a Emacs configuration file. Bred through trial, error, and
@@ -1441,29 +1441,78 @@ when I log into my machine, every time I lock my machine, and every night at
     xcopy C:\Users\maxwell.haley\Org\*.* /E /Q /Y
 #+END_SRC
 
-I keep three sequences for todo keywords. The task sequence, the blocked
-sequence, and the financial sequence. The task sequence is for tasks that are
-ongoing and not impeded. The blocked sequence are for tasks that I cannot
-actively work on. The financial sequence is for not forgetting to pay my phone
-bill again.
+I treat all "to-do" items in Org Mode as tasks. A task is a to-do item that is,
+in theory, ready for action. It must have a clear name, a description (if
+required), an estimate, one or many context tags (as well as any other
+appropriate tags), and a priority.
 
-The ~RAW~ state is for tasks that have been captured, but haven't yet been
-fleshed out. Maybe the task is just an idea, or it needs more information before
-it's actionable.
+Estimates use the format ~HH:MM~, and represent how long I believe the task will
+take. Anything greater than one day should instead be a project, and broken down
+into smaller tasks. Context tags define where I will be able to action the task.
+For example: ~@home~ means this task requires me to be at home in order to
+complete it, ~@work~ means I must be at work, and ~@home:@work~ means I can be
+either at home or at work. Priorities define how important it is I get to this
+task. I follow a system that follows [[https://www.eisenhower.me/eisenhower-matrix/][the Eisenhower Matrix]]. They range from
+priority /A/, to priority /D/.
 
-The ~WAITING~, ~HOLD~, ~CANCELLED~, and ~OVERDUE~ state leave a timestamp and a
-require a comment whenever it is switched too. I use to document why a task has
-reached this (usually negative) state.
+- A :: Task completion is important and urgent. Action as soon as possible
+- B :: Task completion is important, but not urgent. Plan when to action
+- C :: Task is not important, but is urgent. Delegate if possible
+- D :: Task is not important, and not urgent. File appropriately
 
-I use tags to help prioritise my work. I use the Eisenhower matrix to prioritise
-my work. Each task is prioritised as either important or not important, and
-urgent or not urgent. Priority is assigned then from where on the matrix the
-task falls:
+Priority /D/ can mean either /"Someone has asked me to do something, but did not
+give me a deadline or priority. So I am logging the request, but will not action
+it until further discussions,"/ or /"This is a personal project/assignment and I
+can chose to do it at my leisure"/. In any case, it should be clear which of the
+two is applicable.
 
-1. Important & Urgent (Do ASAP)
-2. Important & Not Urgent (Schedule)
-3. Not Important & Urgent (Delegate if possible)
-4. Not Important & Not Urgent (Do it later)
+I keep three states for task to-do keywords:
+
+1. Actionable
+2. Blocked
+3. Raw
+
+The actionable is for tasks that are either ready for me to action, or are
+currently actioned. The keywords are:
+
+- TODO :: A task that is ready for action.
+
+- IN-PROGRESS :: A task that I am actively working on.
+
+- DONE :: A task that I have completed.
+
+The blocked state are for tasks that I cannot actively begin to action or
+continue actioning. The keywords are:
+
+- WAITING :: I am waiting for another person to do something before I can
+             continue this task (e.g., waiting on an email response, waiting for
+             them to complete a task, waiting for more information, etc.)
+
+- HOLD :: The task is now "on hold". Someone (myself included) has decided that
+          while this task should get done, it needs to wait until some time in
+          the future. Either new priorities have come up, the project has
+          stalled, etc.
+
+- DELEGATED :: I have delegated this task to another person, but I still need to
+               oversee that it gets done.
+
+- CANCELLED :: This task is no longer of any concern to me.
+
+The last state has only one keyword: ~RAW~. A raw task mean it has not been
+properly groomed. The task is just an idea that I must flesh out before I should
+think about actioning it. Most newly captured tasks should be raw. Raw tasks
+should never leave my Inbox file.
+
+Another type of Org entry is a financial entry. These act as reminders to pay
+one-time and re-occurring bills. Financial entries must have a deadline. I have
+three states for these entries:
+
+- EXPENSE :: This is an expense that I have yet to pay off.
+
+- OVERDUE :: This is an expense that is past it's deadline, and I should be
+             freaking out about it.
+
+- PAID :: I have paid off this expense, and can sleep happy.
 
 I use the ~PROJECT~ tag to indicate that all sub-headers are part of the same
 overarching task defined in the tagged header. I make sure to exclude this tag
@@ -1538,6 +1587,7 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
    #+BEGIN_SRC emacs-lisp
      (use-package org
        :ensure t
+       :defines (company-backends)
        :init
        (defun max/org-update-dblocks ()
          "Wrapper around ~org-update-all-dblocks~ that only executes said function if
@@ -1619,7 +1669,6 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
          (interactive)
          (org-emphasize ?\=))
 
-
        ;;; Keybinds
        (general-define-key
         :states 'normal
@@ -1687,19 +1736,20 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
         "s" 'org-insert-subheading
         "l" 'org-insert-link)
 
+       (add-to-list 'org-modules 'org-habit)
+
        :custom
        (org-log-done 'time "Inserts a timestamp on task completion.")
+       (org-log-into-drawer t)
        (org-use-fast-todo-selection t "Enable jumping to specific states.")
        (org-todo-keywords
-        '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-          (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")
+        '((sequence "TODO(t)" "IN-PROGRESS(i)" "|" "DONE(d)")
+          (sequence "RAW(-)" "WAITING(w@/!)" "HOLD(h@/!)" "DELEGATED(D)" "|" "CANCELLED(c@/!)")
           (sequence "EXPENSE(e)" "OVERDUE(o@/!)" "|" "PAID(p)")))
        (org-use-tag-inheritance t)
-       (org-tags-exclude-from-inheritance '("PROJECT"))
-       (org-tag-alist '(("important" . ?i)
-                        ("urgent" . ?u)
-                        ("!important" . ?I)
-                        ("!urgent" . ?U)
+       (org-tag-alist '(("@home" . ?h)
+                        ("@work" . ?w)
+                        ("@daycare" . ?d)
                         ("PROJECT" . ?P)))
        (org-refile-use-outline-path t "
         Pick refile targets using paths. This works nicely with how I name bucket
@@ -1743,25 +1793,26 @@ when capturing would be useful I'm away from my laptop. I use Orgzly's quick
 note feature to accomplish a similar result, but the options for /how/ to
 capture the information is far more limited than org-capture proper.
 
-That being said, setting up capture templates for my work machine would probably
-be a blessing. I'm on that thing 7.5 hours a day.
+That said, setting up capture templates for my work machine would probably be a
+blessing. I'm on that thing 7.5 hours a day.
 
 All templates are defined externally in ~*.txt~ files to keep this configuration
 file clean. The goal of each template is to capture the minimum amount of
 information required for the item to be actionable (excluding the ~RAW~
 capture). These are my templates:
 
-- Task :: An actionable todo item with a proper name, estimate, some sort of
-          date, context tag, and priority tags. They are placed into the general
-          task bucket in my main org file
-- Raw task :: An idea, task, or note that requires refinement. Could be a
-              passing idea, a reminder, a quote, etc. Raw tasks are to never
-              leave the my inbox.
-- Note :: A name, timestamp, content. Just a note.
-- Org Protocol Capture :: Used when capturing a web page via ~org-protocol~ in
-     Firefox. When used, it grabs the title of the web page, the full URL, and
-     any text that was highlighted when the capture was initiated. This is the
-     bookmarklet code:
+- Task :: Capture a ready to action entry. I should be able to fill in all the
+          criteria of a task whenever capturing something using this template.
+          If anything is unclear, I should be using a raw task.
+
+- Raw task :: A task that requires further fleshing out, or that I require far
+              more information on. Raw tasks are not to leave my inbox.
+
+- Note :: A name, timestamp, content. Just a note
+
+- Org Protocol :: Used when capturing a web page via ~org-protocol~. Could
+                  become a note, a task, or something else entirely. I invoke
+                  Org protocol using the following bookmark:
 
      #+BEGIN_SRC javascript
    javascript:location.href='org-protocol://capture?template=p&url='+encodeURIComponent(location.href)
@@ -1769,16 +1820,21 @@ capture). These are my templates:
        + '&body='+encodeURIComponent(window.getSelection())
      #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-    (use-package org-protocol
-      :ensure nil
-      :after org-capture)
-#+END_SRC
+     #+BEGIN_SRC emacs-lisp
+       (use-package org-protocol
+         :ensure nil
+         :after org-capture)
+     #+END_SRC
 
-     | Keybind | Command              | Description                       |
-     |---------+----------------------+-----------------------------------|
-     | SPC m " | org-capture-finalize | Save and file the capture buffer  |
-     | SPC m a | org-capture-kill     | Abandon the capture buffer        |
+- Journal entry :: An entry into my personal journal. It invokes the function
+                   ~max/journal-capture~ to handle creating the correct
+                   month/week headers automatically.
+
+| Keybind | Command              | Description                       |
+|---------+----------------------+-----------------------------------|
+| SPC m " | org-capture-finalize | Save and file the capture buffer  |
+| SPC m a | org-capture-kill     | Abandon the capture buffer        |
+
 
      #+BEGIN_SRC emacs-lisp
          (use-package org-capture
@@ -1846,27 +1902,90 @@ capture). These are my templates:
 | SPC o t | org-tags-view   | Opens a view to filter org-mode items by tag.   |
 
 #+BEGIN_SRC emacs-lisp
-     (use-package org-agenda
-       :ensure nil
-       :config
-       (general-define-key
-        :states 'normal
-        :prefix "SPC o"
-        "a" 'org-agenda
-        "o" 'org-agenda-list
-        "s" 'org-search-view
-        "t" 'org-tags-view
-        "d" 'deft)
+  (use-package org-agenda
+    :ensure nil
+    :functions (org-end-of-subtree org-entry-get)
+    :config
+    (general-define-key
+     :states 'normal
+     :prefix "SPC o"
+     "a" 'org-agenda
+     "o" 'org-agenda-list
+     "s" 'org-search-view
+     "t" 'org-tags-view
+     "d" 'deft)
 
-       :custom
-       (org-agenda-span 3 "
-         By default, show today and the next two days when opening the agenda.
-         When planning ahead, three days is usually good enough to see if I'm
-         overworking myself.")
-       (org-agenda-tags-column -100 "
-         Pushes off the tags if I'm viewing the agenda in a vertical split on the
-         laptop. I'd rather see the content of the heading rather than the tags
-         associated in most contexts."))
+    (defun max/org-skip-subtree-if-habit ()
+      "Skip an agenda entry if it has a STYLE property equal to \"habit\".
+
+  From https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html"
+      (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+        (if (string= (org-entry-get nil "STYLE") "habit")
+            subtree-end
+          nil)))
+
+    (defun max/org-skip-subtree-if-not-habit ()
+      "Skip an agenda entry if it has a STYLE property not equal to \"habit\".
+
+  From https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html"
+      (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+        (if (not (string= (org-entry-get nil "STYLE") "habit"))
+            subtree-end
+          nil)))
+
+    :custom
+    (org-agenda-span 3 "
+      By default, show today and the next two days when opening the agenda.
+      When planning ahead, three days is usually good enough to see if I'm
+      overworking myself.")
+    (org-agenda-tags-column -100 "
+      Pushes off the tags if I'm viewing the agenda in a vertical split on the
+      laptop. I'd rather see the content of the heading rather than the tags
+      associated in most contexts.")
+    (org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    (org-agenda-custom-commands '(("r" "Raw tasks"
+                                   ((todo "RAW"
+                                          ((org-agenda-overriding-header
+                                            "Unprocessed tasks:")))))
+                                  ("d" "Daily agenda"
+                                   ((tags "PRIORITY=\"A\""
+                                          ((org-agenda-skip-function
+                                            '(org-agenda-skip-entry-if
+                                              'todo
+                                              'done))
+                                           (org-agenda-files
+                                            '("~/doc/org/agenda/todo.org"))
+                                           (org-agenda-overriding-header
+                                            "High-priority tasks:")))
+                                    (agenda ""
+                                            ((org-agenda-span 1)
+                                             (org-agenda-skip-function
+                                              '(max/org-skip-subtree-if-not-habit))
+                                             (org-agenda-overriding-header
+                                              "Todays habits:")))
+                                    (agenda ""
+                                            ((org-agenda-span 1)
+                                             (org-agenda-skip-function
+                                              '(max/org-skip-subtree-if-habit))
+                                             (org-agenda-overriding-header
+                                              "Todays tasks:")))
+                                    (alltodo ""
+                                             ((org-agenda-files
+                                               '("~/doc/org/agenda/someday.org"))
+                                              (org-agenda-overriding-header
+                                               "Other tasks:")))))
+                                  ("w" "Weekly agenda"
+                                   ((agenda ""
+                                            ((org-agenda-span 7)
+                                             (org-agenda-overriding-header
+                                              "Weekly agenda:")))))
+                                  ("p" "Projects"
+                                   ((tags "+PROJECT"
+                                         ((org-agenda-files
+                                           '("~/doc/org/agenda/projects.org"))
+                                          (org-tags-match-list-sublevels t)
+                                          (org-agenda-overriding-header
+                                           "Projects:"))))))))
 #+END_SRC
 
 ** Clock
@@ -2029,4 +2148,12 @@ duplicate words, and it highlights phrases that are in the passive voice.
         "w" 'writegood-mode))
    #+END_SRC
 
+** Habits
+#+BEGIN_SRC emacs-lisp
+  (use-package org-habit
+    :ensure nil
+    :custom
+    (org-habit-graph-column 66)
+    (org-habit-preceding-days 7))
+#+END_SRC
 
