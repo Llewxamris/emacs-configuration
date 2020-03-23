@@ -350,6 +350,7 @@ within Emacs.
 
 #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
+    :if (eq system-type 'gnu/linux)
     :config
     (exec-path-from-shell-initialize))
 #+END_SRC
