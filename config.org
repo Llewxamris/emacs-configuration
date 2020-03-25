@@ -1081,7 +1081,7 @@ some chunks of information twice.
 
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
-    :hook ((prog-mode go-mode) . lsp)
+    :hook ((java-mode dockerfile-mode go-mode) . lsp)
     :commands lsp
     :custom
     (read-process-output-max (* 1024 1024))
