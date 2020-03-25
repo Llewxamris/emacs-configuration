@@ -770,12 +770,22 @@ completing function invocations while typing them out. Or suggesting words while
 editing prose.
 
  #+BEGIN_SRC emacs-lisp
-  (use-package company
-    :config
-    (global-company-mode)
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
+   (use-package company
+     :config
+     (global-company-mode)
+     (company-tng-configure-default)
+     :custom
+     (company-minimum-prefix-length 1)
+     (company-idle-delay 0.5)
+     (company-backends '((company-files
+                          company-keywords
+                          company-capf
+                          company-yasnippet)
+                         (company-abbrev company-dabbrev)))
+     :general
+     (:state 'motion
+      "s-k" 'scroll-other-window-down
+      "s-j" 'scroll-other-window))
 #+END_SRC
 
 ** Yasnippet
@@ -1270,6 +1280,15 @@ evaluate arbitrary code is a fabulous (and dangerous) power to wield.
   (use-package elisp-mode
     :ensure nil
     :commands emacs-lisp-mode
+    :hook (emacs-lisp-mode . max/elisp-mode-hook)
+    :init
+    (defun max/elisp-mode-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends ())
+      (add-to-list 'company-backends '(company-capf
+                                       company-yasnippet
+                                       company-files
+                                       company-dabbrev-code)))
     :general
     ;; Elisp eval & jump keybindings
     (:states 'normal
@@ -1601,8 +1620,10 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
        (defun max/org-add-company-ispell-backend ()
          "Adds the iSpell backend for company locally. To use when writting as appose to programming."
          (make-local-variable 'company-backends)
-         (add-to-list 'company-backends 'company-ispell))
-
+         (set 'comapny-backends ())
+         (add-to-list 'company-backends '(company-ispell
+                                          company-yasnippet
+                                          company-files)))
        (defun max/org-mode-hook ()
          "Wrapper for all functions that need to be hooked to Org mode."
          (set-fill-column 80)
