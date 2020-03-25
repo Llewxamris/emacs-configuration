@@ -1431,6 +1431,26 @@ go get gopls
       (use-package json-mode)
 #+END_SRC
 
+*** Shell
+
+#+BEGIN_SRC emacs-lisp
+  (use-package sh-script
+    :ensure nil
+    :hook (sh-mode . max/sh-mode-hook)
+    :commands sh-mode
+    :init
+    (defun max/sh-mode-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends ())
+      (add-to-list 'company-backends '(company-yasnippet
+                                       company-shell
+                                       company-shell-env
+                                       company-files))))
+
+  (use-package company-shell
+    :after company shell-mode)
+#+END_SRC
+
 * Org-mode
 Org-mode was the killer feature that got me to try out Emacs to begin with, and
 honestly it's probably the main reason I keep using Emacs.
