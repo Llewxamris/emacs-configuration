@@ -2008,7 +2008,7 @@ capture). These are my templates:
       Pushes off the tags if I'm viewing the agenda in a vertical split on the
       laptop. I'd rather see the content of the heading rather than the tags
       associated in most contexts.")
-    (org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    (org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━")
     (org-agenda-custom-commands '(("r" "Raw tasks"
                                    ((todo "RAW"
                                           ((org-agenda-overriding-header
