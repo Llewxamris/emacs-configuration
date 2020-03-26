@@ -675,12 +675,16 @@ problem. These performance issues went away after switching to
 ~display-line-numbers~.
 
 #+BEGIN_SRC emacs-lisp
-      (use-package display-line-numbers
-        :ensure nil
-        :config
-        (global-display-line-numbers-mode)
-        :custom
-        (display-line-numbers-type 'relative))
+  (use-package display-line-numbers
+    :ensure nil
+    :config
+    (global-display-line-numbers-mode)
+    :custom
+    (display-line-numbers-type 'relative) ; Display numbers relatively
+    (display-line-numbers-grow-only t) ; Only increase the width, never shrink
+    (display-line-numbers-width-start t) ; Start as wide as the largest number
+    (display-line-numbers-widen t)) ; Display the true number when narrowing
+#+END_SRC
 #+END_SRC
 
 *** Smooth Scrolling
