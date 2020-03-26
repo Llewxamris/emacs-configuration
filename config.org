@@ -685,6 +685,23 @@ problem. These performance issues went away after switching to
     (display-line-numbers-width-start t) ; Start as wide as the largest number
     (display-line-numbers-widen t)) ; Display the true number when narrowing
 #+END_SRC
+
+*** Fill column indicator
+The /fill column indicator/ draws a character down a particular column to
+visually indicate where a certain column begins. This is useful if you are
+following the 80 column rule, or following a style guide that requires keeping
+to a specific number of characters per line.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package display-fill-column-indicator
+    :ensure nil
+    :config
+    (global-display-fill-column-indicator-mode)
+    :custom
+    (fill-column 80)
+    (display-fill-column-indicator t)
+    (display-fill-column-indicator-column t) ; use ~fill-column~ variable
+    )
 #+END_SRC
 
 *** Smooth Scrolling
@@ -1653,6 +1670,7 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
          (set-fill-column 80)
          (auto-fill-mode)
          (prettify-symbols-mode)
+         (display-fill-column-indicator-mode 0)
          (max/org-add-company-ispell-backend))
 
        :commands (org-mode org-capture org-agenda orgtbl-mode)
@@ -1952,6 +1970,8 @@ capture). These are my templates:
     :ensure nil
     :functions (org-end-of-subtree org-entry-get)
     :config
+    (display-fill-column-indicator-mode 0)
+
     (general-define-key
      :states 'normal
      :prefix "SPC o"
