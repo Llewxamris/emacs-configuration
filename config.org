@@ -444,7 +444,7 @@ forgot to save.
     :custom
     ;; Emacs auto-backups files, which is great. But, it dumps them in the current
     ;; directory, which is terrible. Instead, dump them into ~.emacs.d/~.
-    (backup-directory-alist '(("." . "~/.emacs.d/backups")))
+    (backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory))))
 
     ;; I don't want to have my hard drive littered with backups, so I set Emacs to
     ;; only keep up to three backup versions. I also don't want to have a nag every
@@ -507,7 +507,7 @@ later sessions. Command history is essential for any command based environment.
     ;; Save all minibuffer histories
     (savehist-save-minibuffer-history t)
     ;; Set the file location for storing minibuffer history
-    (savehist-file "~/.emacs.d/savehist")
+    (savehist-file (expand-file-name "savehist" user-emacs-directory))
     ;; Include the kill-ring, search-ring, and regexp-search-ring to the
     ;; history file.
     (savehist-additional-variables '(kill-ring
