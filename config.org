@@ -1,7 +1,7 @@
-;;; -*- lexical-binding: t; -*-
 #+TITLE: Maxwell Haley's Emacs Configuration
 #+OPTIONS: toc:4 h:4
 #+STARTUP: showeverything
+#+PROPERTY: header-args:emacs-lisp :tangle yes
 #  LocalWords:  Leuven Flycheck modeline keybinds Cliplink ido minibuffer GC ui
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC SCP UTF CLI
 #  LocalWords:  emacs modeline paren pinky dired magit Magit's LaTeX Flyspell
@@ -28,46 +28,64 @@ own and make informed decisions on what they want to co-opt
 I also tried to use some humour to make reading through this YAML file on
 steroids enjoyable. I apologize in advance.
 
-To start of this configuration, lets define my name and email address before
-kicking off the package initialization.
+* Early init
+Emacs supports loading a file with the name ~early-init.el~ early in the startup
+process. Specifically, before initialising the package manager & before creating
+any GUI elements.
 
-  #+BEGIN_SRC emacs-lisp
-    (setq user-full-name "Maxwell R. Haley")
-    (setq user-mail-address "maxwell.r.haley@gmail.com")
-  #+END_SRC
+** Package manager
+The package manager (in Emacs 27+) is automatically initialised /before/
+evaluating ~init.el~. To avoid having to re-initialising the package manager, I
+need to set any custom properties within the early init file.
+
+#+BEGIN_SRC emacs-lisp :tangle early-init.el
+  ;; -*- lexical-binding: t; -*-
+  (require 'package)
+  (setq package-archives '(("melpa" . "https://melpa.milkbox.net/packages/")
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("gnu" . "https://elpa.gnu.org/packages/")))
+
+  (unless (bound-and-true-p package--initialized)
+    (setq package-enable-at-startup nil)
+     (package-initialize))
+
+  (eval-and-compile
+    (setq use-package-verbose
+          (not (bound-and-true-p byte-compile-current-file))))
+
+  (eval-and-compile
+    (let ((package-dir
+           (expand-file-name "packages" user-emacs-directory)))
+      (add-to-list 'load-path package-dir)))
+#+END_SRC
+
+** User interface elements
+Emacs renders all of the user interface elements before evaluating the init
+file. This means wasting cycles on elements that I will be changing/removing.
+Luckily for me, anything in the early init file evaluates /before/ UI rendering
+begins. This means Emacs is not rendering disabled elements, and it is setting
+some elements correctly on the first draw.
+
+#+BEGIN_SRC emacs-lisp :tangle early-init.el
+  ;; Three bars in one night? Good.
+  ;; Three bars of gold? Great.
+  ;; Three bars in a slot machine? Amazing!
+  ;; Three bars in Emacs?: Bad.
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+
+
+  ;; Set the initial frames font.
+  ;; (add-to-list 'default-frame-alist '(font . "Go Mono-09"))
+
+  ;; Explicitly set the font backend to Cairo with HarfBuzz as the shaping engine. This
+  ;; opens up the door to better ligature support in the future.
+  (add-to-list 'default-frame-alist '(font-backend . "ftcrhb"))
+#+END_SRC
 
 * Preparation & Package Management
-** Remote Package Archives
-Define what remote archives to use as package repositories. GNU ELPA is the
-default package repository for Emacs. It is a solid repository, but limited in
-content. MELPA has a much larger selection of modern and up-to-date packages.
-
-Org is the Org mode repository.
-
-#+BEGIN_SRC emacs-lisp
-     (require 'package)
-     (setq package-archives '(("melpa" . "https://melpa.milkbox.net/packages/")
-                              ("org" . "https://orgmode.org/elpa/")
-                              ("gnu" . "https://elpa.gnu.org/packages/")))
-
-     (unless (bound-and-true-p package--initialized)
-       (setq package-enable-at-startup nil)
-       (package-initialize))
-
-     (eval-and-compile
-       (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
-#+END_SRC
-
 ** Use Package
-Check the packages directory for manually installed packages.
-
-#+BEGIN_SRC emacs-lisp
-     (eval-and-compile
-       (defvar package-dir (expand-file-name "packages" user-emacs-directory)
-         "The packages directory")
-       (add-to-list 'load-path package-dir))
-#+END_SRC
-
 /Ensure/ ~use-package~ is always installed alongside this configuration. I
 /ensure/ to always /ensure/ my packages are available, and then /ensure/ I have
 the newest packages available.
@@ -512,31 +530,6 @@ prevent Tramp from hanging.]]
 #+END_SRC
 
 ** Graphical User Interface
-Seeing three bars on a slot machine is good. Seeing three bars on Emacs is bad.
-
-#+BEGIN_SRC emacs-lisp
-     (use-package menu-bar
-       :ensure nil
-       :config
-       (menu-bar-mode -1))
-
-     (use-package scroll-bar
-       :ensure nil
-       :config
-       (scroll-bar-mode -1))
-
-     (use-package tool-bar
-       :ensure nil
-       :config
-       (tool-bar-mode -1))
-
-     (use-package tooltip
-       :ensure nil
-       :defer t
-       :custom
-       (tooltip-mode -1))
-#+END_SRC
-
 Undo/Redo window layouts using C-c <left> and C-c <right>. Lets me fix
 accidental destruction the layout of windows and buffers.
 

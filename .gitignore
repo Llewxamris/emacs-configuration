@@ -32,3 +32,5 @@ config.*
 /network-security.data
 /.dap-breakpoints
 /projectile-bookmarks.eld
+/early-init.el
+/eshell/
