@@ -742,14 +742,14 @@ don't think I could see myself ever using Emacs seriously.
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil
+    :init
+    ;; Evil-collection requires this to be nil before loading either package.
+    ;; See https://github.com/emacs-evil/evil-collection/issues/60
+    (setq evil-want-keybinding nil)
     :config
     (evil-set-initial-state 'ibuffer-mode 'normal)
     (evil-set-initial-state 'magit-mode 'normal)
-    (evil-mode 1)
-    :custom
-    ;; Do not load evil-keybindings.el. Evil Collection handles setting
-    ;; these bindings where necessary.
-    (evil-want-keybinding nil))
+    (evil-mode 1))
 
   (use-package evil-commands
     :ensure nil
