@@ -197,21 +197,15 @@ the fly.
 | SPC f e R | max/reload-emacs-configuration | Reload my Emacs configuration file |
 
 #+BEGIN_SRC emacs-lisp
-     (defun max/reload-emacs-configuration ()
-       (interactive)
-       (load-file (concat user-emacs-directory "init.el")))
+  (defun max/reload-emacs-configuration ()
+    (interactive)
+    (load-file (concat user-emacs-directory "init.el")))
 
-     (defun max/open-emacs-configuration ()
-       "Open ~config.org~, my literate Emacs configuration file.
-     If the file is already open in another buffer, switch to that buffer."
-       (interactive)
-       (find-file (concat user-emacs-directory "config.org")))
-
-     (general-define-key
-      :states 'normal
-      :prefix "SPC f e"
-      "E" 'max/open-emacs-configuration
-      "R" 'max/reload-emacs-configuration)
+  (defun max/open-emacs-configuration ()
+    "Open ~config.org~, my literate Emacs configuration file.
+  If the file is already open in another buffer, switch to that buffer."
+    (interactive)
+    (find-file (concat user-emacs-directory "config.org")))
 #+END_SRC
 
 * Emacs General
@@ -304,6 +298,7 @@ of them may be very useful once you are more familiar with Emacs.
     (locale-coding-system 'utf-8)
 
     ;; Always load the newest version of a file.
+<<<<<<< HEAD
     (load-prefer-newer t)
 
     ;; Disabling this results in better performance when scrolling vertically.
@@ -336,6 +331,9 @@ of them may be very useful once you are more familiar with Emacs.
      :prefix "SPC e"
      ""  '(nil :which-key "global state manipulation prefix")
      "N" 'widen))
+=======
+    (load-prefer-newer t))
+>>>>>>> ab56101... Purge all evil from my configuration
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -365,38 +363,12 @@ of them may be very useful once you are more familiar with Emacs.
 
     ;; Adds some curly arrows to help show which lines are being effected by
     ;; visual line wrapping.
-    (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-
-    :general
-    ;; Line modification and jump keybind
-    (:states 'normal
-     :prefix "SPC"
-     "j n" 'split-line)
-
-    ;; Text manipulation/analysis keybindings
-    (:states '(visual normal)
-     :prefix "SPC x"
-     ""    '(:ignore t :which-key "text manipulation/analysis prefix")
-     "c"   'count-words-region
-     "d"   '(:ignore t :which-key "text deletion prefix")
-     "d w" 'delete-trailing-whitespace
-     "u"   'downcase-region
-     "U"   'upcase-region)
-
-    ;; Text insertion keybindings
-    (:states 'normal
-     :prefix "SPC i"
-     ""  '(:ignore t :which-key "text inserttion keybindings")
-     "u" 'insert-char))
+    (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
   (use-package align
-    :ensure nil
-    :general
-    ;; Text alignment keybind
-    (:states 'visual
-     "SPC x a" 'align-regexp))
+    :ensure nil)
 #+END_SRC
 
 Similarly, I like having which-key around to pat me on the back and tell me I'm
@@ -442,31 +414,7 @@ is I'm having problems with.
 
 #+BEGIN_SRC emacs-lisp
   (use-package help-fns
-    :ensure nil
-    :general
-
-    ;; Help & documentation keybindings
-     (:states 'normal
-     :prefix "SPC h"
-     ""    '(nil :which-key "help prefix")
-     "d"   '(nil :which-key "describe thing prefix")
-     "d f" 'describe-function
-     "d F" 'describe-face
-     "d k" 'describe-key
-     "d m" 'describe-mode
-     "d p" 'describe-package
-     "d s" 'describe-symbol
-     "d v" 'describe-variable
-     "m"   'man
-     "i"   'info)
-
-    ;; Help mode navigation keybindings
-    (:states 'normal
-     :keymap 'help-map
-     :prefix "g"
-     ""  '(:ignore t :which-key "go in help doc prefix")
-     "b" 'help-go-back
-     "f" 'help-go-forward))
+    :ensure nil)
 #+END_SRC
 
 ** Files
@@ -509,27 +457,7 @@ forgot to save.
 
     ;; Always include a trailing newline at the end of a file.
     (require-final-newline t)
-    (delete-trailing-lines nil)
-
-    :general
-    ;; Quit Emacs keybindings
-    (:states 'normal
-     :prefix "SPC q"
-     ""  '(:ignore t :which-key "quiting emacs prefix")
-     "q" 'save-buffers-kill-terminal
-     "Q" '(server-mode :which-key "kill emacs server")
-     "r" '(server-start :which-key "restart emacs server"))
-
-    ;; File manipulation keybindings
-    (:states 'normal
-     :prefix "SPC f"
-     ""  '(:ignore t :which-key "file manipulation prefix")
-     "c" 'copy-file
-     "D" 'delete-file
-     "w" 'save-buffer
-     "r" 'find-file
-     "R" 'rename-file))
-
+    (delete-trailing-lines nil))
 #+END_SRC
 
 It is also very useful to automatically refresh buffers. That is: If the content
@@ -682,11 +610,7 @@ So I set it globally.
     ;; By default, highlight the entire expression between the two parens.
     (show-paren-style 'expression)
     ;; No delay between putting the cursor on a paren, and highlighting.
-    (show-paren-delay 0)
-    :general
-    (:states 'normal
-             :prefix "SPC t"
-             "p" 'max/toggle-show-paren-style))
+    (show-paren-delay 0))
 #+END_SRC
 
 Automatically insert a closing symbol if an opening symbol is entered (paren.,
@@ -769,11 +693,7 @@ Something about it just feels so right. Uses the [[https://github.com/aspiers/sm
 
 *** Expand Region
 #+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-    :general
-    (:states '(normal visual)
-     :prefix "SPC v"
-     "" 'er/expand-region))
+  (use-package expand-region)
 #+END_SRC
 
 *** Edit Indirect
@@ -787,79 +707,7 @@ can also make destructive changes without worrying about accidental changing
 something outside of my scope.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package edit-indirect
-    :general
-    (:states 'visual
-     :prefix "SPC x"
-     "'" 'edit-indirect-region)
-
-    (:states 'normal
-     :keymap 'edit-indirect-mode-map
-     :prefix "SPC x"
-     "'" 'edit-indirect-commit
-     "k" 'edit-indirect-abort
-     "w" 'edit-indirect-save))
-#+END_SRC
-
-* Evil Mode
-Vim has the superior input style. There. I said it. Modal-based bindings flow so
-much better for me, both in thinking and in executing. Using Emacs native
-modifier bindings feels incredibly restrictive in comparison. My left hand needs
-to positioned to always be able to hold down Control, Alt, or Meta. Making my
-pinky the main work-horse of my typing, to me, feels like a terrible mistake. On
-the other hand, modal style editing lets me use my fingers equally. Even when I
-need to use some sort of modifier key (mostly the space bar), it ends up being
-my thumb doing the work. My thumb can withstand the brute force of slamming it
-down in frustration during a heated moment. My pinky is barely even an
-appendage.
-
-Evil mode gives me Vim-like keybindings without having to invest in any sort of
-remapping. I, of course, still add my own mappings and re-mappings. Not because
-Vim lacks anything, but entirely due to personal preference. Without Evil, I
-don't think I could see myself ever using Emacs seriously.
-
-| Keybind   | Command                   | Description                                     |
-|-----------+---------------------------+-------------------------------------------------|
-| SPC w h   | evil-window-left          | Focus the window to the left.                   |
-| SPC w j   | evil-window-bottom        | Focus the window below.                         |
-| SPC w k   | evil-window-up            | Focus the window above.                         |
-| SPC w l   | evil-window-right         | Focus the window to the right.                  |
-
-#+BEGIN_SRC emacs-lisp
-  (use-package evil
-    :init
-    ;; Evil-collection requires this to be nil before loading either package.
-    ;; See https://github.com/emacs-evil/evil-collection/issues/60
-    (setq evil-want-keybinding nil)
-    :config
-    (evil-set-initial-state 'ibuffer-mode 'normal)
-    (evil-set-initial-state 'magit-mode 'normal)
-    (evil-mode 1))
-
-  (use-package evil-commands
-    :ensure nil
-    :general
-    (:states 'normal
-     :prefix "SPC w"
-     "h" 'evil-window-left
-     "j" 'evil-window-down
-     "k" 'evil-window-up
-     "l" 'evil-window-right))
-
-  (use-package evil-commentary
-    :ensure t
-    :config
-      ;; Enable by default
-      (evil-commentary-mode))
-
-  (use-package evil-collection
-    :after evil
-    :config
-    (evil-collection-init)
-    :custom
-    ;; If ~use-tng~ is not set to null, then ~company-lsp~ does not
-    ;; autocomplete correctly.
-    (evil-collection-company-use-tng nil))
+  (use-package edit-indirect)
 #+END_SRC
 
 * Completion
@@ -880,17 +728,7 @@ editing prose.
                           company-keywords
                           company-capf
                           company-yasnippet)
-                         (company-abbrev company-dabbrev)))
-     :general
-     (:state 'motion
-      "s-k" 'scroll-other-window-down
-      "s-j" 'scroll-other-window))
-
-   (use-package company-box
-     :after company
-     :hook (company-mode . company-box-mode)
-     :custom
-     (company-box-icons-alist 'company-box-icons-all-the-icons))
+                         (company-abbrev company-dabbrev))))
 #+END_SRC
 
 ** Yasnippet
@@ -909,34 +747,18 @@ full ~BLOCK_SRC~ element with the language set to ~emacs-lisp~.
 
 * Avy
 #+BEGIN_SRC emacs-lisp
-  (use-package avy
-    :general
-    ;; Jump based navigation keybindings
-    (:keymaps 'normal
-     :prefix "SPC j"
-     "" '(:ignore t :which-key "jump prefix")
-     "j" 'avy-goto-char
-     "l" 'avy-goto-line
-     "w" 'avy-goto-word-0))
+  (use-package avy)
 #+END_SRC
 
 * Ace
 #+BEGIN_SRC emacs-lisp
-  (use-package ace-link
-    :config
-    (general-define-key
-     :keymaps 'help-map
-     "o" 'ace-link-help))
+  (use-package ace-link)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
   (use-package ace-window
     :config
-    (ace-window-display-mode)
-
-    (general-define-key
-     :states 'normal
-     "SPC w W" 'ace-window))
+    (ace-window-display-mode))
 #+END_SRC
 
 * ido
@@ -953,18 +775,7 @@ entries that could not match your input without having to hit ~TAB~ each time.
 
     :custom
     (ido-enable-flex-matching t "If no prefix matches are found, look for the \
-                                  sequence of characters anywhere in an entry.")
-
-    :general
-    ;; Buffer manipulation keybindings
-    (:states 'normal
-     :prefix "SPC b"
-     "" '(:ignore t :which-key "buffer manipulation prefix")
-     "b" 'ido-switch-buffer
-     "d" 'ido-kill-buffer
-     "D" 'kill-this-buffer
-     "m" 'kill-some-buffers
-     "R" 'revert-buffer))
+                                  sequence of characters anywhere in an entry."))
 #+END_SRC
 
 I do not like the default in-line display used by ido. [[https://github.com/creichert/ido-vertical-mode.el][Ido-vertical-mode]] reads
@@ -1019,12 +830,7 @@ Emacs use.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ibuffer
-    :ensure nil
-    :general
-    ;; iBuffer opening keybind
-    (:states 'normal
-     :prefix "SPC b"
-     "B" 'ibuffer))
+    :ensure nil)
 #+END_SRC
 
 * Dired-X
@@ -1069,24 +875,7 @@ flags, which is really nice.
     (dired-recursive-copies t)
     :config
     ;; Reuse Dired buffers when navigating.
-    (put 'dired-find-alternate-file 'disabled nil)
-
-    :general
-    ;; Dired buffer opening keybindings
-    (:states 'normal
-     :prefix "SPC b"
-     "d" 'dired
-     "D" 'dired-jump)
-
-    ;; Jump to dired keybindings
-    (:states 'normal
-     :prefix "SPC j"
-     "d" 'dired-jump
-     "D" 'dired-jump-other-window))
-
-  (use-package all-the-icons-dired
-    :requires all-the-icons
-    :hook (dired-mode . all-the-icons-dired-mode))
+    (put 'dired-find-alternate-file 'disabled nil))
 #+END_SRC
 
 * Magit
@@ -1103,26 +892,7 @@ Magit that I figure I should give it a proper shot.
     ;; Don't load Magit on my work (Windows) machine.
     :if (eq system-type 'gnu/linux)
     :custom
-    (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion.")
-
-    :general
-    ;; Magit keybind
-    (:states 'normal
-     :prefix "SPC g"
-     ""  '(:ignore t :which-key "magit prefix")
-     "s" 'magit))
-#+END_SRC
-
-I am using the black magic [[https://github.com/emacs-evil/evil-magit][~evil-magit~]] package for Magit's keybinds. The
-defaults seem sane enough, so I am going to stick with them until I feel like it
-needs some configuration.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package evil-magit
-    :after (magit evil)
-    :custom
-    ;; Default to the Normal state in Magit
-    (evil-magit-state 'normal))
+    (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
 #+END_SRC
 
 * Spellchecking
@@ -1146,16 +916,7 @@ this occasionally to go between English and French documents.
   (use-package flyspell
     :hook
     ;; Auto-start flyspell within Markdown, Org-mode, TeX, and Git Commit modes
-    ((markdown-mode org-mode latex-mode git-commit-mode) . flyspell-mode)
-
-    :general
-    (:states 'normal
-     :prefix "SPC s"
-     ""  '(:ignore t :which-key "flyspell prefix")
-     "b" 'flyspell-buffer
-     "c" 'flyspell-correct-at-point
-     "n" 'flyspell-goto-next-error
-     "s" 'flyspell-mode))
+    ((markdown-mode org-mode latex-mode git-commit-mode) . flyspell-mode))
 
   (use-package flyspell-correct-popup)
 
@@ -1190,17 +951,7 @@ some chunks of information twice.
     :commands lsp
     :custom
     (read-process-output-max (* 1024 1024))
-    (lsp-idle-delay 0.500)
-    :general
-    ;; LSP keybindings
-    (:states '(normal visual)
-     :prefix "SPC l"
-     "" '(:ignore t :which-key "lsp prefix")
-     "a" 'lsp-execute-code-action
-     "f" 'lsp-format-buffer
-     "o" 'lsp-organize-imports
-     "r" 'lsp-rename
-     "R" 'lsp-workspace-restart))
+    (lsp-idle-delay 0.500))
 #+END_SRC
 
 *** LSP Company Backend
@@ -1311,16 +1062,7 @@ green.
     (lsp-ui-peek-footer ((t (
                              :underline "#A7A6AA"
                              :foreground "#555555"
-                             :background "#E2E1D5"))))
-    :general
-    (:states 'normal
-     :prefix "SPC l"
-     "d"   'lsp-ui-doc-glance
-     "e"   'lsp-ui-flycheck-list
-     "i"   'lsp-ui-imenu
-     "p"   '(:ignore t :which-key "peek prefix")
-     "p d" 'lsp-ui-peek-find-definitions
-     "p r" 'lsp-ui-peek-find-references))
+                             :background "#E2E1D5")))))
 #+END_SRC
 
 ** Flycheck
@@ -1333,17 +1075,8 @@ built in support for Flycheck.
     :hook (prog-mode . flycheck-mode)
     :custom
     ;; Disable flycheck on checkdoc
-    (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
     (flycheck-emacs-lisp-initialize-packages t)
-
-    :general
-    (:states 'normal
-     :prefix "SPC e"
-     "c" 'flycheck-clear-errors
-     "h" 'flycheck-describe-checker
-     "l" 'flycheck-list-errors
-     "n" 'flycheck-next-error
-     "p" 'flycheck-previous-error))
+    (flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 #+END_SRC
 
 ** Compilation Buffer
@@ -1394,22 +1127,7 @@ evaluate arbitrary code is a fabulous (and dangerous) power to wield.
       (add-to-list 'company-backends '(company-capf
                                        company-yasnippet
                                        company-files
-                                       company-dabbrev-code)))
-    :general
-    ;; Elisp eval & jump keybindings
-    (:states 'normal
-     :keymaps 'emacs-lisp-mode-map
-     :prefix "SPC m"
-     "e" '(:ignore t :which-key "elisp eval prefix")
-     "e b" 'eval-buffer
-     "e e" 'eval-last-sexp
-     "e f" 'eval-defun
-     "e r" 'eval-region
-     "j" '(:ignore t :which-key "elisp jump prefix")
-     "j f" 'find-function
-     "j F" 'find-function-other-window
-     "j v" 'find-variable
-     "j V" 'find-variable-other-window))
+                                       company-dabbrev-code))))
 #+END_SRC
 
 IELM is an inferior Emacs Lisp mode that acts as a REPL for Elisp. REPL-driven
@@ -1419,12 +1137,7 @@ cool kids.
 #+BEGIN_SRC emacs-lisp
   (use-package ielm
     :ensure nil
-    :hook (ielm-mode . turn-on-eldoc-mode)
-    :general
-    (:states 'normal
-     :keymaps 'emacs-lisp-mode-map
-     :prefix "SPC m"
-     "i" 'ielm))
+    :hook (ielm-mode . turn-on-eldoc-mode))
 #+END_SRC
 
 [[https://github.com/abo-abo/lispy][Lispy]] is a fantastic library that makes editing Elisp code so easy, even I can
@@ -1433,47 +1146,9 @@ in non-executable Elisp. For example: deleting a line without dropping a
 trailing parenthesis so the code is still valid. Another interaction includes
 barfage and slurpage.
 
-[[https://github.com/noctuid/lispyville][Lispyville]] wraps the Lispy interactions in Evil-friendly keybinds. It also
-allows for some safe Evil operations. For example: using commentary to comment
-out an entire line that ends in a paren will move the paren down a line to avoid
-making the Elisp invalid.
-
 #+BEGIN_SRC emacs-lisp
   (use-package lispy
     :hook (emacs-lisp-mode . lispy-mode))
-
-  (use-package lispyville
-    :hook (lispy-mode . lispyville-mode)
-    :after lispy
-    :config
-    (lispyville-set-key-theme  '(operators
-                                 c-w
-                                 prettify
-                                 atom-movement
-                                 additional-movement
-                                 commentary
-                                 slurp/barf-lispy
-                                 additional
-                                 escape))
-    :general
-    ;; Lispyville keybindings
-    (:states 'normal
-     :keymaps 'lispyville-mode-map
-     :prefix "SPC m"
-     "a"   '(:ignore t :which-key "elisp insert at prefix")
-     "a i" 'lispyville-insert-at-beginning-of-list
-     "a a" 'lispyville-insert-at-end-of-list
-     ;; lispyville-beginning-of[-next]-defun binds do not work
-     "h"   'lispyville-beginning-of-defun
-     "H"   'lispyville-beginning-of-next-defun
-     "l"   'lispyville-end-of-defun
-     "o"   'lispyville-open-below-list
-     "O"   'lispyville-open-above-list
-     "w"   '(:ignore t :which-key "elisp wrap prefix")
-     "w (" 'lispyville-wrap-round
-     "w [" 'lispyville-wrap-brackets
-     "w {" 'lispyville-wrap-braces))
-
 #+END_SRC
 
 Edebug is a source-level debugger for Elisp, same as you would find in any
@@ -1488,12 +1163,7 @@ just need Emacs.
     ;; Automatically to evaluate instrumentation required for Edebug.
     (edebug-all-defs t)
     ;; Display a trace of function calls in an external buffer.
-    (edebug-trace t)
-    :general
-    (:states 'normal
-     :keymaps 'emacs-lisp-mode-map
-     :prefix "SPC m"
-     "d" 'edebug-defun))
+    (edebug-trace t))
 #+END_SRC
 
 *** Golang
@@ -1819,72 +1489,6 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
          (org-emphasize ?\=))
 
        ;;; Keybinds
-       (general-define-key
-        :states 'normal
-        :keymaps 'org-mode-map
-        :prefix "SPC m"
-        "b" 'org-tree-to-indirect-buffer
-        "d" 'org-deadline
-        "D" 'org-insert-drawer
-        "E" 'org-set-effort
-        "n" 'org-narrow-to-subtree
-        "o" 'org-open-at-point
-        "p" 'org-set-property
-        "r" 'org-refile
-        "s" 'org-schedule
-        "t" 'org-show-todo-tree
-        "y" 'org-todo-yesterday
-        "!" 'org-time-stamp-inactive
-        "^" 'org-sort
-        "*" 'org-toggle-heading
-        "RET" 'org-insert-heading-respect-content
-        ":" 'org-set-tags
-        "'" 'org-edit-special
-        "/" 'org-sparse-tree
-        "." 'org-time-stamp)
-
-       (general-define-key
-        :states 'normal
-        :keymaps 'org-mode-map
-        :prefix "SPC m S"
-        "h" 'org-demote-subtree
-        "j" 'org-move-subtree-down
-        "k" 'org-move-subtree-up
-        "l" 'org-promote-subtree)
-
-       (general-define-key
-        :states 'normal
-        :keymaps 'org-mode-map
-        "TAB" 'org-cycle
-        "$" 'org-end-of-line
-        "^" 'org-beginning-of-line
-        "gh" 'outline-up-heading
-        "gj" 'org-forward-heading-same-level
-        "gk" 'org-backward-heading-same-level
-        "gl" 'outline-next-visible-heading
-        "t" 'org-todo
-        "T" 'org-insert-todo-heading)
-
-       (general-define-key
-        :states 'visual
-        :keymaps 'org-mode-map
-        :prefix "SPC m x"
-        "b" 'max/org-bold-region
-        "c" 'max/org-code-region
-        "i" 'max/org-italic-region
-        "s" 'max/org-strike-through-region
-        "u" 'max/org-underline-region
-        "v" 'max/org-verbatim-region)
-
-       (general-define-key
-        :states 'normal
-        :keymaps 'org-mode-map
-        :prefix "SPC m h"
-        "i" 'org-insert-heading-after-current
-        "I" 'org-insert-heading
-        "s" 'org-insert-subheading
-        "l" 'org-insert-link)
-
        (add-to-list 'org-modules 'org-habit)
 
        :custom
@@ -1919,21 +1523,6 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
       :hook (org-mode . org-bullets-mode)
       :custom
       (org-bullets-bullet-list '("✦")))
-   #+END_SRC
-
-   Evil-org supplements missing keybinds until I get off my ass and define them.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package evil-org
-       :after org
-       :config
-       (progn
-         (add-hook 'org-mode-hook 'evil-org-mode)
-         (add-hook 'evil-org-mode-hook
-                   (lambda ()
-                     (evil-org-set-key-theme)))
-         (require 'evil-org-agenda)
-         (evil-org-agenda-set-keys)))
    #+END_SRC
 
 ** Capture
@@ -2029,13 +1618,7 @@ capture). These are my templates:
               ("j" "Journal Entry" entry (file+function "~/doc/org/journal.org" max/journal-capture)
                (file "~/.emacs.d/capture-templates/journal-entry.txt"))
               ("p" "Org Protocol Capture" entry (file "~/doc/org/agenda/inbox.org")
-               (file "~/.emacs.d/capture-templates/protocol.txt"))))
-
-           :general
-           ;; Global capture keybind
-           (:states 'normal
-            :prefix "SPC o"
-            "c" 'org-capture))
+               (file "~/.emacs.d/capture-templates/protocol.txt")))))
      #+END_SRC
 
 ** Agenda
@@ -2056,15 +1639,6 @@ capture). These are my templates:
     :functions (org-end-of-subtree org-entry-get)
     :config
     (display-fill-column-indicator-mode 0)
-
-    (general-define-key
-     :states 'normal
-     :prefix "SPC o"
-     "a" 'org-agenda
-     "o" 'org-agenda-list
-     "s" 'org-search-view
-     "t" 'org-tags-view
-     "d" 'deft)
 
     (defun max/org-skip-subtree-if-habit ()
       "Skip an agenda entry if it has a STYLE property equal to \"habit\".
@@ -2149,15 +1723,7 @@ capture). These are my templates:
 |           |                                    | tracked.                                        |
 #+BEGIN_SRC emacs-lisp
   (use-package org-clock
-    :ensure nil
-    :config
-    (general-define-key
-     :states 'normal
-     :keymaps 'org-mode-map
-     :prefix "SPC m"
-     "i" 'org-clock-in
-     "O" 'org-clock-out
-     "Q" 'org-clock-cancel))
+    :ensure nil)
 #+END_SRC
 
 ** Archive
@@ -2168,14 +1734,8 @@ capture). These are my templates:
 |           |                                    | done state entries without deleting them.       |
 
 #+BEGIN_SRC emacs-lisp
-     (use-package org-archive
-       :ensure nil
-       :config
-       (general-define-key
-        :states 'normal
-        :keymaps 'org-mode-map
-        :prefix "SPC m"
-        "a" 'org-archive-subtree))
+  (use-package org-archive
+    :ensure nil)
 #+END_SRC
 
 ** Lists
@@ -2183,14 +1743,8 @@ capture). These are my templates:
 | SPC m c   | org-toggle-checkbox                | Toggles a checkbox between checked and empty.   |
 
 #+BEGIN_SRC emacs-lisp
-     (use-package org-list
-       :ensure nil
-       :config
-       (general-define-key
-        :states 'normal
-        :keymaps 'org-mode-map
-        :prefix "SPC m"
-        "c" 'org-toggle-checkbox))
+  (use-package org-list
+    :ensure nil)
 #+END_SRC
 
 ** Export
@@ -2201,14 +1755,8 @@ capture). These are my templates:
 |           |                                    | sharing my notes.                               |
 
 #+BEGIN_SRC emacs-lisp
-     (use-package ox
-       :ensure nil
-       :config
-       (general-define-key
-        :states 'normal
-        :keymaps 'org-mode-map
-        :prefix "SPC m"
-        "e" 'org-export-dispatch))
+  (use-package ox
+    :ensure nil)
 #+END_SRC
 
 ** Source
@@ -2218,15 +1766,8 @@ capture). These are my templates:
 | SPC m k | org-edit-src-abort   | Abandon the changes in the buffer |
 
 #+BEGIN_SRC emacs-lisp
-      (use-package org-src
-        :ensure nil
-        :config
-        (general-define-key
-         :states 'normal
-         :keymaps ' org-src-mode-map
-         :prefix "SPC m"
-         "'" 'org-edit-src-exit
-         "k" 'org-edit-src-abort))
+  (use-package org-src
+    :ensure nil)
 #+END_SRC
 
 ** Cliplink
@@ -2241,15 +1782,9 @@ as a reference point and not as an entry.
 |           |              | the clipboard.                    |
 
 #+BEGIN_SRC emacs-lisp
-    (use-package org-cliplink
-      :ensure t
-      :after org
-      :config
-      (general-define-key
-       :states 'normal
-       :keymaps 'org-mode-map
-       :prefix "SPC m"
-       "L" 'org-cliplink))
+  (use-package org-cliplink
+    :ensure t
+    :after org)
 #+END_SRC
 
 ** Deft
@@ -2290,13 +1825,7 @@ duplicate words, and it highlights phrases that are in the passive voice.
 
        ;; Uses the same colour as the foreground of second level outlines in Org mode
        ;; as defined within Leuven theme.
-       (writegood-passive-voice-face ((t (:underline (:style wave :color "#123555")))))
-
-       :general
-       ;; Toggle Writegood keybind
-       (:states 'normal
-        :prefix "SPC t"
-        "w" 'writegood-mode))
+       (writegood-passive-voice-face ((t (:underline (:style wave :color "#123555"))))))
    #+END_SRC
 
 ** Habits
