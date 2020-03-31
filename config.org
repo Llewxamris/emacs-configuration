@@ -403,6 +403,7 @@ is I'm having problems with.
      "d F" 'describe-face
      "d k" 'describe-key
      "d m" 'describe-mode
+     "d p" 'describe-package
      "d s" 'describe-symbol
      "d v" 'describe-variable
      "m"   'man
