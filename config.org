@@ -6,7 +6,7 @@
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC SCP UTF CLI
 #  LocalWords:  emacs modeline paren pinky dired magit Magit's LaTeX Flyspell
 #  LocalWords:  flyspell lang lsp flycheck imenu ibuffer Avy linter Yasnippet
-#  LocalWords:  backend Writegood actioned actioning
+#  LocalWords:  backend Writegood actioned actioning init
 
 * Forward
 My living monolith of a Emacs configuration file. Bred through trial, error, and
@@ -82,6 +82,37 @@ some elements correctly on the first draw.
   ;; Explicitly set the font backend to Cairo with HarfBuzz as the shaping engine. This
   ;; opens up the door to better ligature support in the future.
   (add-to-list 'default-frame-alist '(font-backend . "ftcrhb"))
+#+END_SRC
+
+* Global definitions
+#+BEGIN_SRC emacs-lisp
+  (defgroup max nil
+    "Personal configuration options."
+    :group 'environment)
+
+  (defcustom max-display-font-name nil
+    "Defines the name of the display font."
+    :type 'string
+    :group 'max)
+
+  (defcustom max-display-font-size nil
+    "Defines the size of the display font."
+    :type 'string
+    :group 'max)
+
+  (defconst max-on-personal (eq system-type 'gnu/linux)
+    "If non-nil, Emacs is running on my personal laptop.")
+
+  (defconst max-on-work (eq system-type 'windows-nt)
+    "If non-nil, Emacs is running on my work laptop.")
+
+  (defmacro when-personal (&rest body)
+    `(when ,max-on-personal
+      ,(cons 'progn body)))
+
+  (defmacro when-work (&rest body)
+    `(when ,max-on-work
+      ,(cons 'progn body)))
 #+END_SRC
 
 * Preparation & Package Management
@@ -199,9 +230,38 @@ of them may be very useful once you are more familiar with Emacs.
 #+BEGIN_SRC emacs-lisp
   (use-package emacs
     :ensure nil
+    :init
+    (defun max-set-font-size (&optional arg size)
+      "Sets the font size to SIZE. If called interactively, prompts for a font
+  size."
+      (interactive "P\nsSet font size to: ")
+      (if (not (eq size nil))
+          (set-face-attribute 'default nil :font (concat max-display-font-name "-" size))
+        (set-face-attribute 'default nil
+                            :font (concat
+                                   max-display-font-name "-" max-display-font-size))))
+
+    (defun max/set-font-based-on-monitors (font-name)
+      "Uses the amount of monitors in `display-monitor-attributes-list' to determine
+  what size font to use. If more than one monitor is available, then it sets
+  a large font size."
+      (setq max-display-font-name font-name)
+      (if (= (length (display-monitor-attributes-list)) 1)
+          (setq max-display-font-size "9")
+        (setq max-display-font-size "12"))
+      (max-set-font-size))
+
+    ;; Set email based on current operating system.
+    (if (eq system-type 'windows-nt)
+        (setq user-mail-address "maxwell.haley@hrsdc-rhdcc.gc.ca")
+      (setq user-mail-address "maxwell.r.haley@gmail.com"))
+
     :config
     ;; Force syntax highlighting for all supported major modes.
     (global-font-lock-mode t)
+
+    ;; Disable tooltip popups.
+    (tooltip-mode -1)
 
     ;; Change the "Yes or No" prompt to just be "y or n".
     (defalias 'yes-or-no-p 'y-or-n-p)
@@ -211,23 +271,18 @@ of them may be very useful once you are more familiar with Emacs.
     (when (eq system-type 'windows-nt)
       (setq inhibit-compacting-font-caches t))
 
-    ;; Set the font. According to HLISSNER (of Doom Emacs fame), adding
-    ;; the font to the default frame list results in better start times.
-    ;; I agree, and have also noticed that on Windows, I have to reload
-    ;; the config for the font to actually apply.
-    (if (eq system-type 'gnu/linux)
-        (add-to-list 'default-frame-alist '(font . "Iosevka Term SS04-12"))
-                     (add-to-list 'default-frame-alist '(font . "Iosevka Term-12")))
+    (max/set-font-based-on-monitors "Go Mono")
 
     :custom
+    (use-full-name "Maxwell R. Haley")
     ;; Disable the startup screen & message.
-    (inhibit-startup-screen t )
+    (inhibit-startup-screen t)
 
     ;; Disable the bell that makes me feel shame every time it lets me
     ;; know I fumbled a keystroke. Worse, its almost like hearing the
     ;; bell guarantees the next few strokes will also be fumbled
     ;; resulting in more bells. Disable this existential horror please.
-    (ring-bell-function 'ignore) ;*ding-ding* SHAME. *ding-ding* SHAME.
+    (ring-bell-function 'ignore)          ;*ding-ding* SHAME. *ding-ding* SHAME.
 
     ;;	Show keystrokes after 0.1 seconds. Any longer and the panic sets in.
     (echo-keystrokes 0.01)
