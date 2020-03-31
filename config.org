@@ -717,6 +717,31 @@ Something about it just feels so right. Uses the [[https://github.com/aspiers/sm
      "" 'er/expand-region))
 #+END_SRC
 
+*** Edit Indirect
+[[https://github.com/Fanael/edit-indirect][Edit Indirect]] allows the user to open any region in a separate buffer, edit it,
+then commit those changes back to the original buffer. It is similar to Org
+Mode's ability to open source or quote blocks in their own buffer.
+
+This is super useful when I am editing a single function, or writing a single
+paragraph. I can make changes in a buffer independent of what surrounds it. I
+can also make destructive changes without worrying about accidental changing
+something outside of my scope.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package edit-indirect
+    :general
+    (:states 'visual
+     :prefix "SPC x"
+     "'" 'edit-indirect-region)
+
+    (:states 'normal
+     :keymap 'edit-indirect-mode-map
+     :prefix "SPC x"
+     "'" 'edit-indirect-commit
+     "k" 'edit-indirect-abort
+     "w" 'edit-indirect-save))
+#+END_SRC
+
 * Evil Mode
 Vim has the superior input style. There. I said it. Modal-based bindings flow so
 much better for me, both in thinking and in executing. Using Emacs native
