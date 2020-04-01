@@ -187,27 +187,6 @@ my Emacs configuration.
           (auto-compile-on-save-mode))
 #+END_SRC
 
-** Reload & Edit Configuration
-The following function definition allows me to reload my Emacs configuration on
-the fly.
-
-| Keybind   | Command                        | Description                        |
-|-----------+--------------------------------+------------------------------------|
-| SPC f e E | max/open-emacs-configuration   | Open the config file for Emacs     |
-| SPC f e R | max/reload-emacs-configuration | Reload my Emacs configuration file |
-
-#+BEGIN_SRC emacs-lisp
-  (defun max/reload-emacs-configuration ()
-    (interactive)
-    (load-file (concat user-emacs-directory "init.el")))
-
-  (defun max/open-emacs-configuration ()
-    "Open ~config.org~, my literate Emacs configuration file.
-  If the file is already open in another buffer, switch to that buffer."
-    (interactive)
-    (find-file (concat user-emacs-directory "config.org")))
-#+END_SRC
-
 * Emacs General
 ** Essentials
 Emacs comes with a large set of defaults designed to make adoption simple for
@@ -216,17 +195,11 @@ they get in the way or are unnecessary. There are also some settings that are
 not set by default to avoid confusing new users. And like the set defaults, some
 of them may be very useful once you are more familiar with Emacs.
 
-| Keybind   | Command                   | Description                                     |
-|-----------+---------------------------+-------------------------------------------------|
-| SPC w d   | delete-window             | Delete (close) the currently focused window.    |
-| SPC w s h | split-window-vertically   | Split the window, resulting in two vertically  |
-|           |                           | side-by-side windows.                           |
-| SPC w s v | split-window-horizontally | Split the window, resulting in two horizontally |
-|           |                           | side-by-side windows.                           |
-
 #+BEGIN_SRC emacs-lisp
   (use-package emacs
     :ensure nil
+    :bind (([f5] . max/reload-emacs-configuration)
+           ([f6] . max/open-emacs-configuration))
     :init
     (defun max-set-font-size (&optional arg size)
       "Sets the font size to SIZE. If called interactively, prompts for a font
@@ -254,6 +227,16 @@ of them may be very useful once you are more familiar with Emacs.
       (setq user-mail-address "maxwell.r.haley@gmail.com"))
 
     :config
+    (defun max/reload-emacs-configuration ()
+      (interactive)
+      (load-file (concat user-emacs-directory "init.el")))
+
+    (defun max/open-emacs-configuration ()
+      "Open ~config.org~, my literate Emacs configuration file.
+  If the file is already open in another buffer, switch to that buffer."
+      (interactive)
+      (find-file (concat user-emacs-directory "config.org")))
+
     ;; Force syntax highlighting for all supported major modes.
     (global-font-lock-mode t)
 
