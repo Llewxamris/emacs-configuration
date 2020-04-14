@@ -71,17 +71,20 @@ some elements correctly on the first draw.
   ;; Three bars of gold? Great.
   ;; Three bars in a slot machine? Amazing!
   ;; Three bars in Emacs?: Bad.
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+  (push '(menu-bar-lines . 0) default-frame-alist)
+  (push '(tool-bar-lines . 0) default-frame-alist)
+  (push '(vertical-scroll-bars) default-frame-alist)
 
+  ;; Inhibit the resizing of fonts which causes slowdowns on any font resizing.
+  (setq frame-inhibit-implied-resize t)
 
-  ;; Set the initial frames font.
-  ;; (add-to-list 'default-frame-alist '(font . "Go Mono-09"))
-
-  ;; Explicitly set the font backend to Cairo with HarfBuzz as the shaping engine. This
-  ;; opens up the door to better ligature support in the future.
+  ;; Explicitly set the font backend to Cairo with HarfBuzz as the shaping engine.
+  ;; This opens up the door to better ligature support in the future.
   (add-to-list 'default-frame-alist '(font-backend . "ftcrhb"))
+
+  ;; Ignore the X resources file. I don't use X resources for anything, so there's
+  ;; no reason to even look at it.
+  (advice-add #'x-apply-session-resources :override #'ignore)
 #+END_SRC
 
 * Global definitions
