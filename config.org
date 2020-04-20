@@ -1327,6 +1327,7 @@ built in support for Flycheck.
     :custom
     ;; Disable flycheck on checkdoc
     (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+    (flycheck-emacs-lisp-initialize-packages t)
 
     :general
     (:states 'normal
