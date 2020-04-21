@@ -621,9 +621,10 @@ To congratulate myself for taking a stand against non-UTF-8 encoding, I will
 reward myself with some pretty symbols.
 
 #+BEGIN_SRC emacs-lisp
-      (use-package pretty-mode
-        :config
-        (global-pretty-mode t))
+  (use-package pretty-mode
+    :config
+    :disabled t
+    (global-pretty-mode t))
 #+END_SRC
 
 On top of ~pretty-mode~, I also use ~prettify-symbols-mode~ to replace some Org
