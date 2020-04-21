@@ -1194,7 +1194,7 @@ some chunks of information twice.
      "f" 'lsp-format-buffer
      "o" 'lsp-organize-imports
      "r" 'lsp-rename
-     "R" 'lsp-restart-workspace))
+     "R" 'lsp-workspace-restart))
 #+END_SRC
 
 *** LSP Company Backend
