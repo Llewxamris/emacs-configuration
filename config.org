@@ -306,6 +306,9 @@ of them may be very useful once you are more familiar with Emacs.
     ;; Always load the newest version of a file.
     (load-prefer-newer t)
 
+    ;; Disabling this results in better performance when scrolling vertically.
+    (auto-window-vscroll nil)
+
     :general
     ;; Window manipulation keybindings
     (:states 'normal
