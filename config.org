@@ -626,6 +626,7 @@ Mode text.
 #+BEGIN_SRC emacs-lisp
   (use-package prog-mode
     :ensure nil
+    :disabled t
     :custom
     (prettify-symbols-alist '(("#+BEGIN_SRC" . "⚞")
                               ("#+END_SRC" . "⚟"))))
