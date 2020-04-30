@@ -632,17 +632,23 @@ Mode text.
 #+END_SRC
 
 *** Colour Theme
-I've recently switched over to the [[https://github.com/fniessen/emacs-leuven-theme][Leuven]] theme. I've started switching over to
-light-themes for my systems in general. I keep my brightness relatively low, so
-dark-themes end up having poor contrast. Leuven was built with Org-mode in mind,
-and gives Org files a more cohesive feeling.
+I have been obsessing with the [[https://gitlab.com/dj_goku/modus-themes][Modus Operandi]] theme. I love the focus on
+accessibility. It also is not overly busy as far as colours go, but it is also
+not visually boring.
 
 #+BEGIN_SRC emacs-lisp
-      (use-package leuven-theme
-        :config
-        ;; Load the theme unless running without an interactive terminal.
-        (unless noninteractive
-          (load-theme 'leuven t)))
+  (use-package modus-operandi-theme
+    :config
+    ;; Load the theme unless running without an interactive terminal.
+    (unless noninteractive
+      (load-theme 'modus-operandi t))
+    :custom
+    (modus-operandi-theme-distinct-org-blocks t)
+    (modus-operandi-theme-section-headings t)
+    (modus-operandi-theme-scale-headings t)
+    (modus-operandi-theme-visible-fringe t)
+    (modus-operandi-theme-slanted-constructs t)
+    (modus-operandi-theme-bold-constructs t))
 #+END_SRC
 
 *** Highlighting & Pair Matching
