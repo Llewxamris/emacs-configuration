@@ -878,6 +878,12 @@ editing prose.
      (:state 'motion
       "s-k" 'scroll-other-window-down
       "s-j" 'scroll-other-window))
+
+   (use-package company-box
+     :after company
+     :hook (company-mode . company-box-mode)
+     :custom
+     (company-box-icons-alist 'company-box-icons-all-the-icons))
 #+END_SRC
 
 ** Yasnippet
