@@ -281,42 +281,7 @@ of them may be very useful once you are more familiar with Emacs.
     (locale-coding-system 'utf-8)
 
     ;; Always load the newest version of a file.
-<<<<<<< HEAD
-    (load-prefer-newer t)
-
-    ;; Disabling this results in better performance when scrolling vertically.
-    (auto-window-vscroll nil)
-
-    :general
-    ;; Window manipulation keybindings
-    (:states 'normal
-     :prefix "SPC w"
-     ""    '(:ignore t :which-key "window manipulation prefix")
-     "["   'evil-window-decrease-height
-     "]"   'evil-window-increase-height
-     "{"   'evil-window-decrease-width
-     "}"   'evil-window-increase-width
-     "="   'balance-windows
-     "c"   'delete-other-windows
-     "d"   'delete-window
-     "f"   'make-frame
-     "H"   'evil-window-move-far-left
-     "i"   '(:ignore t :which-key "")
-     "J"   'evil-window-move-very-bottom
-     "K"   'evil-window-move-very-top
-     "L"   'evil-window-move-far-right
-     "s"   '(:ignore t :which-key "window splitting prefix")
-     "s h" 'split-window-vertically
-     "s v" 'split-window-horizontally)
-
-    ;; Global state/buffer state keybindings
-    (:states 'normal
-     :prefix "SPC e"
-     ""  '(nil :which-key "global state manipulation prefix")
-     "N" 'widen))
-=======
     (load-prefer-newer t))
->>>>>>> ab56101... Purge all evil from my configuration
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -691,6 +656,27 @@ something outside of my scope.
 
 #+BEGIN_SRC emacs-lisp
   (use-package edit-indirect)
+#+END_SRC
+
+* Evil
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :bind (("s-u" . universal-argument)
+           ("<leader> b" . ido-switch-buffer)
+           ("<leader> e" . eval-last-sexp)
+           ("<leader> f" . find-file)
+           ("<leader> s" . save-buffer)
+           ("<leader> h" . help-command))
+    :bind-keymap ("<leader> w" . evil-window-map)
+    :commands evil-mode
+    :defines org-src-mode-map
+    :functions evil-set-leader
+    :hook (after-init . evil-mode)
+    :config
+    (evil-set-leader 'motion (kbd "SPC") nil)
+    (evil-set-leader 'motion (kbd ",") t)
+    :custom
+    (evil-want-C-u-scroll t))
 #+END_SRC
 
 * Completion
