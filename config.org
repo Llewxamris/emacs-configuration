@@ -683,9 +683,9 @@ full ~BLOCK_SRC~ element with the language set to ~emacs-lisp~.
 
 * Ace
 #+BEGIN_SRC emacs-lisp
-  (use-package ace-link)
-
+  (use-package ace-link
     :config
+    (ace-link-setup-default (kbd "<localleader> o")))
 #+END_SRC
 
 * ido
