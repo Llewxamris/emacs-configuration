@@ -616,7 +616,13 @@ can also make destructive changes without worrying about accidental changing
 something outside of my scope.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package edit-indirect)
+  (use-package edit-indirect
+    :bind (("<leader> \"" . #'edit-indirect-region)
+           :map edit-indirect-mode-map
+           ("<localleader> s" . #'edit-indirect-save)
+           ("<localleader> '" . #'edit-indirect-commit)
+           ("<localleader> c" . #'edit-indirect-commit)
+           ("<localleader> k" . #'edit-indirect-abort)))
 #+END_SRC
 
 * Evil
