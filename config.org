@@ -1362,6 +1362,15 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
       :hook (org-mode . org-bullets-mode)
       :custom
       (org-bullets-bullet-list '("✦")))
+      #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package evil-org
+       :hook (org-mode . evil-org-mode)
+       :config
+       (require 'evil-org-agenda)
+       (evil-org-set-key-theme)
+       (evil-org-agenda-set-keys))
    #+END_SRC
 
 ** Capture
@@ -1475,6 +1484,7 @@ capture). These are my templates:
 #+BEGIN_SRC emacs-lisp
   (use-package org-agenda
     :ensure nil
+    :bind ("<leader> o" . org-agenda)
     :functions (org-end-of-subtree org-entry-get)
     :config
     (display-fill-column-indicator-mode 0)
@@ -1606,6 +1616,9 @@ capture). These are my templates:
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-src
+    :bind ((:map org-src-mode-map)
+           ("<localleader> '" . org-edit-src-exit)
+           ("<localleader> k" . org-edit-src-abort))
     :ensure nil)
 #+END_SRC
 
