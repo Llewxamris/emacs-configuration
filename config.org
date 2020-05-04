@@ -809,9 +809,15 @@ Magit that I figure I should give it a proper shot.
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     ;; Don't load Magit on my work (Windows) machine.
+    :bind ("<leader> g" . magit)
     :if (eq system-type 'gnu/linux)
     :custom
     (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-magit
+    :after magit)
 #+END_SRC
 
 * Spellchecking
