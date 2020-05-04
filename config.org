@@ -758,7 +758,8 @@ Emacs use.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ibuffer
-    :ensure nil)
+    :ensure nil
+    :bind ("<leader> B" . ibuffer))
 #+END_SRC
 
 * Dired-X
