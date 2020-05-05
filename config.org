@@ -832,9 +832,18 @@ this occasionally to go between English and French documents.
 
 #+BEGIN_SRC emacs-lisp
   (use-package flyspell
+    :ensure nil
+    :bind (("<leader> c c" .  #'flyspell-correct-wrapper)
+           ("<leader> c n" .  #'flyspell-goto-next-error))
     :hook
-    ;; Auto-start flyspell within Markdown, Org-mode, TeX, and Git Commit modes
-    ((markdown-mode org-mode latex-mode git-commit-mode) . flyspell-mode))
+    ;; Auto-start flyspell within Markdown, Org-mode, TeX, and Git Commit modes.
+    ;; Flyspell will scan the entire buffer to check for spelling mistakes.
+    ((markdown-mode org-mode latex-mode git-commit-mode) . flyspell-mode)
+
+    ;; Auto-start flyspell inside programming modes. In this case, Flyspell will
+    ;; only scan comments and strings within the buffer to check for spelling
+    ;; mistakes.
+    (prog-mode . flyspell-prog-mode))
 
   (use-package flyspell-correct-popup)
 
