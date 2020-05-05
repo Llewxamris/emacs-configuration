@@ -6,7 +6,8 @@
 #  LocalWords:  iBuffer Dired Magit ELPA MELPA Keybinds Keybind SPC SCP UTF CLI
 #  LocalWords:  emacs modeline paren pinky dired magit Magit's LaTeX Flyspell
 #  LocalWords:  flyspell lang lsp flycheck imenu ibuffer Avy linter Yasnippet
-#  LocalWords:  backend Writegood actioned actioning init Linum
+#  LocalWords:  backend Writegood actioned actioning init Linum GUIs Git's
+#  LocalWords:  shatteringly
 
 * Forward
 My living monolith of a Emacs configuration file. Bred through trial, error, and
@@ -802,20 +803,32 @@ which is really nice.
 #+END_SRC
 
 * Magit
-Magit is a Git porcelain for Emacs. Just like with Dired-X, I normally default
-to the shell and use the Git CLI. However, I've heard such good things about
-Magit that I figure I should give it a proper shot.
+Every Git-but-it-is-a-GUI application I have tried has been disappointing,
+except for Magit. I think this is because other applications act as a simple
+graphical wrapper around the Git. They hide away some complexities that Git has
+and try to smooth down the rough edges. But the result always feels
+half-complete and more like Git with training wheels. I have seen Git GUIs omit
+information that I would think is crucial for end-users. Like whether or not
+they are in a merge conflict state.
+
+Magit on the other hand is not just a wrapper. It is a full fledged interface
+that exposes all of Git's functionality within Emacs. It is not hiding anything,
+or trying to stop you from shooting yourself in the foot. I find it as good if
+not better than the Git CLI.
+
+I do not load Magit on Windows. Git CLI on Windows is already /soul-shatteringly
+slow/. Combine that with the slower speeds of Emacs on Windows and the
+"/enterprise-level antivirus/" installed on my work laptop, and it becomes an
+unpleasant slog to use Magit. Which is a damn shame.
 
 #+BEGIN_SRC emacs-lisp
   (use-package magit
-    ;; Don't load Magit on my work (Windows) machine.
     :bind ("<leader> g" . magit)
+    ;; Don't load Magit on my work (Windows) machine.
     :if (eq system-type 'gnu/linux)
     :custom
     (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
   (use-package evil-magit
     :after magit)
 #+END_SRC
