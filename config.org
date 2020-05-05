@@ -1152,7 +1152,7 @@ go get gopls
 Org-mode was the killer feature that got me to try out Emacs to begin with, and
 honestly it's probably the main reason I keep using Emacs.
 
-I have tried many solutions to low tech or plain text note taking and
+I have tried multiple solutions to low tech or plain text note taking and
 productivity tools, but until org-mode I was constantly disappointed. Todo.txt,
 Markdown, XML with custom schemas, and Bullet Journals. Bullet Journals was the
 closest to a perfect solution, but my natural tendency to forget my journal at
@@ -1162,15 +1162,15 @@ Combining org-mode with Orgzly and Syncthing has become my perfect organization,
 productivity, and note taking stack.
 
 The location of my Org files differs depending on what machine I am on. On my
-personal machine, the directory is ~/home/max/doc/org/~. It is synced to
+personal machine, the directory is ~/home/max/doc/org/~. I sync it with
 Nextcloud as a backup solution, and synced to my mobile phone with Syncthing. On
-my work machine, it is under ~C:\Users\maxwell.haley\Org~. This drive is backed
-up on some schedule, but it is not the most robust backup solution. So, I have a
-Batch script that copies the contents of my Org directory to my works network
-drive. Again this is not truly a backup solution, but the network drive is
-replicated on a much more regular basis. I have Task Scheduler run this script
-when I log into my machine, every time I lock my machine, and every night at
-17:00.
+my work machine, it is under ~C:\Users\maxwell.haley\Org~. The drive is
+automatically up on some schedule, but it is not the most robust backup
+solution. So, I have a Batch script that copies the contents of my Org directory
+to my works network drive. Again this is not truly a backup solution, but the
+network drive replicates on a much more regular basis. I have Task Scheduler run
+this script when I log into my machine, every time I lock my machine, and every
+night at 17:00.
 
 #+BEGIN_SRC bat
     @echo off
@@ -1257,38 +1257,44 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :ensure t
     :bind ((:map org-mode-map
-            ("<localleader> '" . org-edit-special)))
+            ("<localleader> '" . #'org-edit-special)
+            ("<localleader> a" . #'org-archive-subtree)
+            ("<localleader> c" . #'org-toggle-checkbox)
+            ("<localleader> e" . #'org-export-dispatch))
+           (:map org-src-mode-map
+            ("<localleader> '" . org-edit-src-exit)
+            ("<localleader> k" . org-edit-src-abort)))
     :defines company-backends
     :init
-    (defun max/org-update-dblocks ()
-      "Wrapper around ~org-update-all-dblocks~ that only executes said function if
-  the current buffer is an Org buffer. This is intended to be used alongside
-  hooks for automatic dynamic block updating."
+    (defun max-org-update-dblocks ()
+      "Wrapper around `org-update-all-dblocks' that only executes said function
+  if the current buffer is an Org buffer. The intention is to call this function
+  alongside hooks for automatic dynamic block updating."
       (interactive)
       (when (derived-mode-p 'org-mode)
         (org-update-all-dblocks)))
 
-    (defun max/org-add-company-ispell-backend ()
-      "Adds the iSpell backend for company locally. To use when writting as appose to programming."
+    (defun max-org-add-company-ispell-backend ()
+      "Adds the `company-ispell' company backend locally. To use when writing as
+  appose to programming."
       (make-local-variable 'company-backends)
-      (set 'comapny-backends ())
+      (set 'company-backends ())
       (add-to-list 'company-backends '(company-ispell
                                        company-yasnippet
                                        company-files)))
-    (defun max/org-mode-hook ()
+    (defun max-org-mode-hook ()
       "Wrapper for all functions that need to be hooked to Org mode."
       (set-fill-column 80)
       (auto-fill-mode)
       (prettify-symbols-mode)
       (display-fill-column-indicator-mode 0)
-      (max/org-add-company-ispell-backend))
+      (max-org-add-company-ispell-backend))
 
     :commands (org-mode org-capture org-agenda orgtbl-mode)
     :mode ("\\.org$" . org-mode)
-    :hook ((before-save . max/org-update-dblocks)
-           (org-mode . max/org-mode-hook))
+    :hook ((before-save . max-org-update-dblocks)
+           (org-mode . max-org-mode-hook))
     :config
     ;; I have two machines I use this Emacs configuration on. My personal laptop,
     ;; running Linux, and my work laptop, running Windows. The directories are
@@ -1345,9 +1351,7 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
       (interactive)
       (org-emphasize ?\=))
 
-  ;;; Keybinds
     (add-to-list 'org-modules 'org-habit)
-
 
     :custom
     (org-log-done 'time "Inserts a timestamp on task completion.")
@@ -1376,21 +1380,21 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
 
    Org-bullets changes out the asterisks for UTF-8 symbols.
 
-   #+BEGIN_SRC emacs-lisp
-    (use-package org-bullets
-      :hook (org-mode . org-bullets-mode)
-      :custom
-      (org-bullets-bullet-list '("✦")))
-      #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode)
+    :custom
+    (org-bullets-bullet-list '("✦")))
+#+END_SRC
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package evil-org
-       :hook (org-mode . evil-org-mode)
-       :config
-       (require 'evil-org-agenda)
-       (evil-org-set-key-theme)
-       (evil-org-agenda-set-keys))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-org
+     :hook (org-mode . evil-org-mode)
+     :config
+     (require 'evil-org-agenda)
+     (evil-org-set-key-theme)
+     (evil-org-agenda-set-keys))
+#+END_SRC
 
 ** Capture
 Org-capture is a fantastic feature I wish I used more often. Most of the time
@@ -1401,7 +1405,7 @@ capture the information is far more limited than org-capture proper.
 That said, setting up capture templates for my work machine would probably be a
 blessing. I'm on that thing 7.5 hours a day.
 
-All templates are defined externally in ~*.txt~ files to keep this configuration
+I define all templates externally in ~*.txt~ files to keep this configuration
 file clean. The goal of each template is to capture the minimum amount of
 information required for the item to be actionable (excluding the ~RAW~
 capture). These are my templates:
@@ -1419,87 +1423,75 @@ capture). These are my templates:
                   become a note, a task, or something else entirely. I invoke
                   Org protocol using the following bookmark:
 
-     #+BEGIN_SRC javascript
-   javascript:location.href='org-protocol://capture?template=p&url='+encodeURIComponent(location.href)
-       + '&title='+encodeURIComponent(document.title)
-       + '&body='+encodeURIComponent(window.getSelection())
-     #+END_SRC
+#+BEGIN_SRC javascript
+  javascript:location.href='org-protocol://capture?template=p&url='+encodeURIComponent(location.href)
+      + '&title='+encodeURIComponent(document.title)
+      + '&body='+encodeURIComponent(window.getSelection())
+#+END_SRC
 
-     #+BEGIN_SRC emacs-lisp
-       (use-package org-protocol
-         :ensure nil
-         :after org-capture)
-     #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package org-protocol
+    :ensure nil
+    :after org-capture)
+#+END_SRC
 
 - Journal entry :: An entry into my personal journal. It invokes the function
                    ~max/journal-capture~ to handle creating the correct
                    month/week headers automatically.
 
-| Keybind | Command              | Description                       |
-|---------+----------------------+-----------------------------------|
-| SPC m " | org-capture-finalize | Save and file the capture buffer  |
-| SPC m a | org-capture-kill     | Abandon the capture buffer        |
 
+#+BEGIN_SRC emacs-lisp
+  (use-package org-capture
+    :ensure nil
+    :functions org-find-olp
+    :config
+    (defun max-journal-capture ()
+      "Sets the pointer to the correct Month/Week location in my journal file.
+  If the week or month does not exist, it is automatically
+  inserted."
+      (require 'org)
+      (let ((month (format-time-string "%B"))
+            (week (format-time-string "W%V")))
+        (unless (search-forward (format "* %s" month) nil t)
+          (goto-char (point-max))
+          (insert (format "* %s\n** %s\n" month week)))
+        (goto-char (point-max))
+        (unless (search-backward (format "** %s" week) nil t)
+          (insert (format "** %s\n" week)))
+        (goto-char (org-find-olp (list month week) t)) t))
 
-     #+BEGIN_SRC emacs-lisp
-         (use-package org-capture
-           :ensure nil
-           :config
-           (defun max/journal-capture ()
-             "Sets the pointer to the correct Month/Week location in my journal file.
-       If the week or month does not exist, it is automatically inserted."
-             (let ((month (format-time-string "%B"))
-                   (week (format-time-string "W%V")))
-               (unless (search-forward (format "* %s" month) nil t)
-                 (goto-char (point-max))
-                 (insert (format "* %s\n** %s\n" month week)))
-               (goto-char (point-max))
-               (unless (search-backward (format "** %s" week) nil t)
-                 (insert (format "** %s\n" week)))
-               (goto-char (org-find-olp (list month week) t)) t))
+    (defun max-note-capture ()
+      "Create a new Org file based on a prompted description.
+  The title and first-level heading values uses the description,
+  and converts them to snake case for the file name. Drops the
+  pointer at the end of the new file for Org Capture to start off
+  on."
+      (let* ((note-desc
+              (read-string "Enter a brief description of the note: "))
+             (note-file-name
+              (replace-regexp-in-string " " "-" (downcase note-desc))))
+        (find-file (concat "~/doc/org/" note-file-name ".org"))
+        (goto-char (point-min))
+        (insert
+         (format "#+TITLE: %s\n" note-desc)
+         (format "* %s :note:\n" note-desc))
+        (goto-char (point-max))))
 
-           (defun max/note-capture ()
-             "Create a new Org file based on a prompted description. The description is
-       used as the title and first-level heading values, and is converted to snake case
-       for the file name. Drops the pointer at the end of the new file for Org Capture
-       to start off on."
-             (let* ((note-desc
-                     (read-string "Enter a brief description of the note: "))
-                    (note-file-name
-                     (replace-regexp-in-string " " "-" (downcase note-desc))))
-               (find-file (concat "~/doc/org/" note-file-name ".org"))
-               (goto-char (point-min))
-               (insert
-                (format "#+TITLE: %s\n" note-desc)
-                (format "* %s :note:\n" note-desc))
-               (goto-char (point-max))))
-
-           :custom
-           (org-capture-templates
-            '(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
-               (file "~/.emacs.d/capture-templates/task.txt"))
-              ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
-               (file "~/.emacs.d/capture-templates/raw-task.txt"))
-              ("n" "Note" plain (function max/note-capture)
-               (file "~/.emacs.d/capture-templates/note.txt"))
-              ("j" "Journal Entry" entry (file+function "~/doc/org/journal.org" max/journal-capture)
-               (file "~/.emacs.d/capture-templates/journal-entry.txt"))
-              ("p" "Org Protocol Capture" entry (file "~/doc/org/agenda/inbox.org")
-               (file "~/.emacs.d/capture-templates/protocol.txt")))))
-     #+END_SRC
+    :custom
+    (org-capture-templates
+     '(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
+        (file "~/.emacs.d/capture-templates/task.txt"))
+       ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
+        (file "~/.emacs.d/capture-templates/raw-task.txt"))
+       ("n" "Note" plain (function max-note-capture)
+        (file "~/.emacs.d/capture-templates/note.txt"))
+       ("j" "Journal Entry" entry (file+function "~/doc/org/journal.org" max-journal-capture)
+        (file "~/.emacs.d/capture-templates/journal-entry.txt"))
+       ("p" "Org Protocol Capture" entry (file "~/doc/org/agenda/inbox.org")
+        (file "~/.emacs.d/capture-templates/protocol.txt")))))
+#+END_SRC
 
 ** Agenda
-| Keybind | Command         | Description                                     |
-|---------+-----------------+-------------------------------------------------|
-| SPC o a | org-agenda      | Opens the agenda command view. This lets me     |
-|         |                 | interactively decide how I want to use the      |
-|         |                 | org-mode agenda.                                |
-| SPC o o | org-agenda-list | Opens the agenda list view. Shows me my agenda  |
-|         |                 | For today and the next two days                 |
-| SPC o s | org-search-view | Opens the search view for org-mode. Lets me     |
-|         |                 | construct a complex search query.               |
-| SPC o t | org-tags-view   | Opens a view to filter org-mode items by tag.   |
-
 #+BEGIN_SRC emacs-lisp
   (use-package org-agenda
     :ensure nil
@@ -1581,79 +1573,16 @@ capture). These are my templates:
                                            "Projects:"))))))))
 #+END_SRC
 
-** Clock
-| Keybind   | Command                            | Description                                     |
-|-----------+------------------------------------+-------------------------------------------------|
-| SPC m i   | org-clock-in                       | Begin tracking the amount of time spent on a    |
-|           |                                    | task.                                           |
-| SPC m O   | org-clock-out                      | Stop tracking time against a specific task.     |
-| SPC m Q   | org-clock-cancel                   | Stop the current clock and undo all time        |
-|           |                                    | tracked.                                        |
-#+BEGIN_SRC emacs-lisp
-  (use-package org-clock
-    :ensure nil)
-#+END_SRC
-
-** Archive
-| Keybind   | Command                            | Description                                     |
-|-----------+------------------------------------+-------------------------------------------------|
-| spc m a   | org-archive-subtree                | takes the current subtree and moves it to an    |
-|           |                                    | archive files. I do this periodically to hide   |
-|           |                                    | done state entries without deleting them.       |
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-archive
-    :ensure nil)
-#+END_SRC
-
-** Lists
-| Keybind   | Command                            | Description                                     |
-| SPC m c   | org-toggle-checkbox                | Toggles a checkbox between checked and empty.   |
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-list
-    :ensure nil)
-#+END_SRC
-
-** Export
-| Keybind   | Command                            | Description                                     |
-|-----------+------------------------------------+-------------------------------------------------|
-| SPC m e   | org-export-dispatch                | Opens the interactive export buffer. This is    |
-|           |                                    | used by me to export org files to PDF when      |
-|           |                                    | sharing my notes.                               |
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ox
-    :ensure nil)
-#+END_SRC
-
-** Source
-| Keybind | Command              | Description                       |
-|---------+----------------------+-----------------------------------|
-| SPC m ' | org-edit-src-exit    | Save and exit the org edit buffer |
-| SPC m k | org-edit-src-abort   | Abandon the changes in the buffer |
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-src
-    :bind ((:map org-src-mode-map)
-           ("<localleader> '" . org-edit-src-exit)
-           ("<localleader> k" . org-edit-src-abort))
-    :ensure nil)
-#+END_SRC
-
 ** Cliplink
-[[https://github.com/rexim/org-cliplink][org-cliplink]] grabs a URL from the clipboard, fetches the title of the web page,
+[[https://github.com/rexim/org-cliplink][Org-cliplink]] grabs a URL from the clipboard, fetches the title of the web page,
 then inserts a link element with the URL as the link and the title as the
 description. I use this over ~org-protocol~ when I only want to use the web page
 as a reference point and not as an entry.
 
-| Keybind   | Command      | Description                       |
-|-----------+--------------+-----------------------------------|
-| SPC m L h | org-cliplink | Create a link based on the URL in |
-|           |              | the clipboard.                    |
-
 #+BEGIN_SRC emacs-lisp
   (use-package org-cliplink
+    :bind (:map org-mode-map
+           ("<localleader> L" . org-cliplink))
     :ensure t
     :after org)
 #+END_SRC
@@ -1664,10 +1593,11 @@ quickly search through my Org notes. I can enter a fuzzy term like "git" and get
 back every file that mentions Git.
 
 #+BEGIN_SRC emacs-lisp
-   (use-package deft
-     :custom
-     (deft-extentions '("org"))
-     (deft-directory "~/doc/org/"))
+  (use-package deft
+    :disabled t
+    :custom
+    (deft-extentions '("org"))
+    (deft-directory "~/doc/org/"))
 #+END_SRC
 
 ** Confluence Markup Export
@@ -1677,7 +1607,8 @@ Confluence friendly markup. This includes properly generating source blocks,
 which is just the best.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package ox-jira)
+  (use-package ox-jira
+    :after org)
 #+END_SRC
 
 ** Writegood Mode
@@ -1703,6 +1634,7 @@ duplicate words, and it highlights phrases that are in the passive voice.
 #+BEGIN_SRC emacs-lisp
   (use-package org-habit
     :ensure nil
+    :after org
     :custom
     (org-habit-graph-column 66)
     (org-habit-preceding-days 7))
