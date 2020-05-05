@@ -750,12 +750,9 @@ built-in ~icomplete~ mode.
 #+END_SRC
 
 * iBuffer
-iBuffer is a great tool for managing the many buffers created in day-to-day
-Emacs use.
-
-| Keybind | Command | Description               |
-|---------+---------+---------------------------|
-| SPC b b | ibuffer | Open the iBuffer...buffer |
+Managing buffers can be a bit of a pain in Emacs. iBuffer is a great tool for
+lessening that pain. It is a much better interface for buffer management that
+the default ~list-buffers~ interface.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ibuffer
