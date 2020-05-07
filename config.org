@@ -647,6 +647,13 @@ something outside of my scope.
     (evil-want-C-u-scroll t))
 #+END_SRC
 
+* Ace
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-link
+    :config
+    (ace-link-setup-default (kbd "<localleader> o")))
+#+END_SRC
+
 * Completion
 ** Company
 [[http://company-mode.github.io/][Company]] is a framework for text insertion completion. For example, automatically
@@ -680,13 +687,6 @@ full ~BLOCK_SRC~ element with the language set to ~emacs-lisp~.
 
    (use-package yasnippet-snippets
      :after yasnippet)
-#+END_SRC
-
-* Ace
-#+BEGIN_SRC emacs-lisp
-  (use-package ace-link
-    :config
-    (ace-link-setup-default (kbd "<localleader> o")))
 #+END_SRC
 
 * ido
