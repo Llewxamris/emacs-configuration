@@ -885,32 +885,6 @@ some chunks of information twice.
     (lsp-idle-delay 0.500))
 #+END_SRC
 
-*** LSP Company Backend
-Lsp-mode has its own backend for Company, allowing the Company completion
-framework to pull suggestions from the running language server.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company-lsp
-    :after (lsp company)
-    :config
-    ;; Add company-lsp as a backend to company-mode
-    (push 'company-lsp company-backends)
-    :custom
-    ;; Cache completions if the cached results are incomplete
-    (company-lsp-cache-candidates 'auto)
-
-    ;; Fetch completion results asynchronously. No need to lock up just to
-    ;; fetch results from the language server.
-    (company-lsp-async t)
-
-    ;; Enable snippet expansion from the language sever.
-    (company-lsp-enable-snippet nil)
-
-    ;; Allow recompletion in the case there are other completion trigger
-    ;; characters.
-    (company-lsp-enable-recompletion t))
-#+END_SRC
-
 *** LSP UI
 ~lsp-ui~ gives much higher-level interactions with ~lsp-mode~:
 
