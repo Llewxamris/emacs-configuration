@@ -652,17 +652,72 @@ editing prose.
 
  #+BEGIN_SRC emacs-lisp
    (use-package company
+     :demand
+     :bind (:map company-active-map
+                 ("C-d"       . company-show-doc-buffer)
+                 ("<tab>"     . company-select-next)
+                 ("<backtab>" . company-select-previous)
+                 ("<ret>"     . nil)
+                 ;; First stroke of C-n,p completes any missing, common characters.
+                 ;; Second stroke moves up/down the list of completions.
+                 ("C-n" . (lambda () (interactive)
+                            (company-complete-common-or-cycle 1)))
+                 ("C-p" . (lambda () (interactive)
+                            (company-complete-common-or-cycle -1))))
      :config
      (global-company-mode)
-     (company-tng-configure-default)
      :custom
-     (company-minimum-prefix-length 1)
-     (company-idle-delay 0.5)
+     (company-minimum-prefix-length 2 "
+   Require two characters before starting completion.")
+
+     (company-idle-delay 0.25 "
+   Begin showing completions after a 0.25 second delay.")
+
      (company-backends '((company-files
                           company-keywords
                           company-capf
                           company-yasnippet)
-                         (company-abbrev company-dabbrev))))
+                         '(company-abbrev company-dabbrev))
+                       "
+   Define the default completion engines.")
+
+     (company-transformers '(company-sort-by-backend-importance
+                             company-sort-prefer-same-case-prefix
+                             company-sort-by-occurrence) "
+   Define transformers that alter the order of completion candidates.")
+
+     (company-selection-wrap-around t "
+   Jump to the beginning/end of the list after reaching to beginning/end of the list.")
+
+     (company-auto-complete-chars nil "
+   Not interested in triggering auto-completion at any point.")
+
+     (company-tooltip-align-annotations t "Right align annotations.")
+
+     (company-dabbrev-other-buffers nil "
+   Do not scan other buffers for suggestions. When a lot of buffers are open, this
+   can cause noticeable slowdowns.")
+
+     (company-dabbrev-downcase nil "
+   Do not downcase any completion candidates.")
+
+     (company-dabbrev-ignore-case nil"
+   Ensure the prefix is case-sensitive."))
+
+   (use-package company-box
+     :hook (company-mode . company-box-mode)
+     :custom
+     (company-box-show-single-candidate t "
+   Display the candidate, even if it is the sole option.")
+
+     (company-box-backends-colors nil "
+   Don't change colour based on the active back-end.")
+
+     (company-box-max-candidates 50 "
+   Only grab a maximum of 50 candidates (down from 100).")
+
+     (company-box-icons-alist 'company-box-icons-all-the-icons "
+   Use the all-the-icons font-set for the icons."))
 #+END_SRC
 
 ** Yasnippet
