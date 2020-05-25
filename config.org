@@ -305,12 +305,24 @@ of them may be useful once you are more familiar with Emacs.
     (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)))
 #+END_SRC
 
-Similarly, I like having which-key around to pat me on the back and tell me I'm
-doing okay when I start a motion and forget where to go next.
+Which-key is a fantastic package for folks new to Emacs, experienced with Emacs,
+and in-between. After entering a partial key sequence, it displays all
+additional keys that one can press and what function/prefix it will invoke.
 
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
-    :hook (after-init . which-key-mode))
+    :hook (after-init . which-key-mode)
+    :config
+    ;; Prefixes bound by `use-package' do not generate nice prefix names, so I
+    ;; need to declare them manually.
+    (which-key-add-key-based-replacements
+      "<leader> c" '("flyspell prefix" . "Flyspell keys")
+      "<leader> w" '("evil-window prefix" . "Evil window keys"))
+    :custom
+    (which-key-idle-delay 0.5 "
+  Only wait half a second before displaying the popup.")
+    (which-key-enable-extended-define-key t "
+  Extend the define-key symbol to support which-key."))
 #+END_SRC
 
 Automatically decompress archives when reading, and then compress again when
