@@ -1409,7 +1409,7 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
     (org-fontify-done-headline t)
     (org-startup-indented t "Enable indent mode on all Org files.")
     (org-pretty-entities t "Draw entities as UTF symbols.")
-    (org-ellipses " ⤸" "Use fancy symbol to represent headers with additional content."))
+    (org-ellipsis " ⤸" "Use fancy symbol to represent headers with additional content."))
    #+END_SRC
 
    Org-bullets changes out the asterisks for UTF-8 symbols.
