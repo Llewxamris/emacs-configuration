@@ -1297,8 +1297,8 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
             ("<localleader> c" . #'org-toggle-checkbox)
             ("<localleader> e" . #'org-export-dispatch))
            (:map org-src-mode-map
-            ("<localleader> '" . org-edit-src-exit)
-            ("<localleader> k" . org-edit-src-abort)))
+            ("<localleader> '" . #'org-edit-src-exit)
+            ("<localleader> k" . #'org-edit-src-abort)))
     :defines company-backends
     :init
     (defun max-org-update-dblocks ()
