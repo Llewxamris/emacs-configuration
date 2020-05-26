@@ -1419,7 +1419,6 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
   levels.")
     (org-fontify-done-headline t)
     (org-startup-indented t "Enable indent mode on all Org files.")
-    (org-pretty-entities t "Draw entities as UTF symbols.")
     (org-ellipsis " ⤸" "Use fancy symbol to represent headers with additional content."))
    #+END_SRC
 
