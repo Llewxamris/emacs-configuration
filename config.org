@@ -1148,15 +1148,29 @@ go get gopls
       (use-package json-mode)
 #+END_SRC
 
-*** Shell
+*** Shell Scripts
+The built in ~sh-script~ mode paired with ~company-shell~ and Flycheck has been
+a good experience. I find it better than using LSP most of the time.
 
 #+BEGIN_SRC emacs-lisp
   (use-package sh-script
     :ensure nil
-    :hook (sh-mode . max/sh-mode-hook)
-    :commands sh-mode
+    :hook (sh-mode . max-sh-mode-hook)
+    :bind (:map sh-mode-map
+           ("<localleader> c" . sh-case)
+           ("<localleader> f" . sh-for)
+           ("<localleader> F" . sh-function)
+           ("<localleader> i" . sh-if)
+           ("<localleader> I" . sh-indexed-loop)
+           ("<localleader> r" . sh-repeat)
+           ("<localleader> s" . sh-select)
+           ("<localleader> u" . sh-until)
+           ("<localleader> w" . sh-while)
+           ("<localleader> W" . sh-while-getopts))
+    :defines company-backends
+    :functions sh-case
     :init
-    (defun max/sh-mode-hook ()
+    (defun max-sh-mode-hook ()
       (make-local-variable 'company-backends)
       (set 'company-backends ())
       (add-to-list 'company-backends '(company-yasnippet
@@ -1165,7 +1179,7 @@ go get gopls
                                        company-files))))
 
   (use-package company-shell
-    :after company shell-mode)
+    :after sh-script)
 #+END_SRC
 
 * Org-mode
