@@ -881,15 +881,15 @@ I use Emacs for writing documents on a regular basis. Usually this means an
 could be comments within source code. Lastly, I like to draft emails within
 Emacs. This means I need spellchecking on the fly within Emacs to keep my
 documents professional. Flyspell is /the/ package for spell checking in Emacs. I
-use the popup menu from ~flyspell-correct~ to go through correction options. I
-also use ~auto-dictionary~ to automatically switch between dictionaries. I need
-this occasionally to go between English and French documents.
+use ~flyspell-correct~ package to simplify correcting mistakes, and for the
+~ido~ interface.
+
+I also use ~auto-dictionary~ to automatically switch between dictionaries. I
+need this occasionally to go between English and French documents.
 
 #+BEGIN_SRC emacs-lisp
   (use-package flyspell
     :ensure nil
-    :bind (("<leader> c c" .  #'flyspell-correct-wrapper)
-           ("<leader> c n" .  #'flyspell-goto-next-error))
     :hook
     ;; Auto-start flyspell within Markdown, Org-mode, TeX, and Git Commit modes.
     ;; Flyspell will scan the entire buffer to check for spelling mistakes.
@@ -898,9 +898,25 @@ this occasionally to go between English and French documents.
     ;; Auto-start flyspell inside programming modes. In this case, Flyspell will
     ;; only scan comments and strings within the buffer to check for spelling
     ;; mistakes.
-    (prog-mode . flyspell-prog-mode))
+    (prog-mode . flyspell-prog-mode)
+    :custom
+    (flyspell-issue-welcome-flag nil "
+  Do not show the welcome message when Flyspell starts.")
 
-  (use-package flyspell-correct-popup)
+    (flyspell-issue-message-flag nil "
+  Do not show any messages when checking words."))
+
+  (use-package flyspell-correct
+    :after flyspell
+    :bind (("<leader> c c" . flyspell-correct-wrapper)
+           ("<leader> c n" . flyspell-goto-next-error)))
+
+  (use-package flyspell-correct-ido
+    :ensure nil
+    :after flyspell-correct
+    :custom
+    (flyspell-correct-interface #'flyspell-correct-ido "
+  Explicitly set flyspell-correct to use the ido interface."))
 
   (use-package auto-dictionary
     :hook (flyspell-mode . auto-dictionary-mode))
