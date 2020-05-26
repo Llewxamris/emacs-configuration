@@ -1321,6 +1321,9 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
       "Wrapper for all functions that need to be hooked to Org mode."
       (set-fill-column 80)
       (auto-fill-mode)
+      (push '("#+BEGIN_SRC" . ?⚞) prettify-symbols-alist)
+      (setq prettify-symbols-unprettify-at-point 'right-edge)
+      (push '("#+END_SRC" . ?⚟) prettify-symbols-alist)
       (prettify-symbols-mode)
       (display-fill-column-indicator-mode 0)
       (max-org-add-company-ispell-backend))
