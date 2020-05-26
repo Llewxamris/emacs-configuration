@@ -1292,13 +1292,21 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :bind ((:map org-mode-map
-            ("<localleader> '" . #'org-edit-special)
-            ("<localleader> a" . #'org-archive-subtree)
-            ("<localleader> c" . #'org-toggle-checkbox)
-            ("<localleader> e" . #'org-export-dispatch))
+                 ("<localleader> '"   . org-edit-special)
+                 ("<localleader> :"   . org-set-tags-command)
+                 ("<localleader> a"   . org-archive-subtree)
+                 ("<localleader> c i" . org-clock-in)
+                 ("<localleader> c o" . org-clock-out)
+                 ("<localleader> C"   . org-ctrl-c-ctrl-c)
+                 ("<localleader> e"   . org-export-dispatch)
+                 ("<localleader> h i" . org-insert-heading-respect-content)
+                 ("<localleader> h I" . org-insert-heading-after-current)
+                 ("<localleader> h s" . org-insert-subheading)
+                 ("<localleader> h s" . org-insert-subheading)
+                 ("<localleader> o"   . org-open-at-point))
            (:map org-src-mode-map
-            ("<localleader> '" . #'org-edit-src-exit)
-            ("<localleader> k" . #'org-edit-src-abort)))
+                 ("<localleader> '" . org-edit-src-exit)
+                 ("<localleader> k" . org-edit-src-abort)))
     :defines company-backends
     :init
     (defun max-org-update-dblocks ()
@@ -1427,9 +1435,18 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
 #+BEGIN_SRC emacs-lisp
   (use-package evil-org
      :hook (org-mode . evil-org-mode)
+     :commands evil-org-set-key-theme
+     :functions evil-org-agenda-set-keys
      :config
      (require 'evil-org-agenda)
      (evil-org-set-key-theme)
+     (evil-org-set-key-theme '(return
+                               navigation
+                               textobjects
+                               calendar
+                               additional
+                               shift
+                               todo))
      (evil-org-agenda-set-keys))
 #+END_SRC
 
