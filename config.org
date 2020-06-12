@@ -1075,6 +1075,8 @@ evaluate arbitrary code is a fabulous (and dangerous) power to wield.
 #+BEGIN_SRC emacs-lisp
   (use-package elisp-mode
     :ensure nil
+    :mode ("\\.el\\'" . emacs-lisp-mode)
+    :interpreter ("emacs" . emacs-lisp-mode)
     :commands emacs-lisp-mode
     :hook (emacs-lisp-mode . max/elisp-mode-hook)
     :init
@@ -1130,9 +1132,7 @@ go get gopls
 
 #+BEGIN_SRC emacs-lisp
   (use-package go-mode
-    :config
-    (add-hook 'before-save-hook #'lsp-format-buffer nil t)
-    (add-hook 'before-save-hook #'lsp-organize-imports nil t)
+    :mode "\\.go\\'"
     :custom
     ;; Run goimports before saving a file
     (gofmt-command "goimports"))
@@ -1141,6 +1141,7 @@ go get gopls
 *** Java
 #+BEGIN_SRC emacs-lisp
   (use-package java-mode
+    :mode "\\.java\\'"
     :ensure nil
     :commands java-mode)
 
@@ -1151,17 +1152,26 @@ go get gopls
 
 *** Markdown
 #+BEGIN_SRC emacs-lisp
-      (use-package markdown-mode
-        :commands (markdown-mode gfm-mode)
-        ;; Use GitHub markdown on README.md files, and regular Markdown on others
-        :mode (("README\\.md'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)))
+  (use-package markdown-mode
+    :commands (markdown-mode gfm-mode)
+    ;; Use GitHub markdown on README.md files, and regular Markdown on others
+    :mode (("README\\.md'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)))
 #+END_SRC
 
 *** Typescript
 #+BEGIN_SRC emacs-lisp
-      (use-package typescript-mode)
-      (use-package json-mode)
+  (use-package typescript-mode
+    :mode "\\.ts\\'")
+
+  (use-package json-mode
+    :mode "\\.json\\'")
+#+END_SRC
+
+*** Rust
+#+BEGIN_SRC emacs-lisp
+  (use-package rust-mode
+    :mode "\\.rs\\'")
 #+END_SRC
 
 *** Shell Scripts
@@ -1171,6 +1181,7 @@ a good experience. I find it better than using LSP most of the time.
 #+BEGIN_SRC emacs-lisp
   (use-package sh-script
     :ensure nil
+    :mode "\\.sh\\'"
     :hook (sh-mode . max-sh-mode-hook)
     :bind (:map sh-mode-map
            ("<localleader> c" . sh-case)
