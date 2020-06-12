@@ -34,3 +34,4 @@ config.*
 /projectile-bookmarks.eld
 /early-init.el
 /eshell/
+/eglot-eclipse-jdt-cache/
