@@ -626,9 +626,8 @@ something outside of my scope.
            ("<leader> s" . save-buffer)
            ("<leader> h" . help-command))
     :bind-keymap ("<leader> w" . evil-window-map)
-    :commands evil-mode
+    :commands (evil-mode evil-set-leader)
     :defines org-src-mode-map
-    :functions evil-set-leader
     :hook (after-init . evil-mode)
     :config
     (evil-set-leader 'motion (kbd "SPC") nil)
