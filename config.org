@@ -633,7 +633,24 @@ something outside of my scope.
     (evil-set-leader 'motion (kbd "SPC") nil)
     (evil-set-leader 'motion (kbd ",") t)
     :custom
-    (evil-want-C-u-scroll t))
+    (evil-want-C-u-scroll t "Treat C-u the same as Vim.")
+
+    (evil-want-keybinding nil "
+  Do not load evil-keybindings. This is handled by evil-collection."))
+#+END_SRC
+
+~evil-collection~ attempts to fill the space between "just installed evil-mode"
+and "rebound every single key to properly fit evil-mode". it attempts to create
+a consistent key bind experience across all modes, including some third-party
+modes.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-collection
+    :after evil
+    :init
+    (evil-collection-init)
+    :custom
+    (evil-collection-company-use-tng nil))
 #+END_SRC
 
 * Ace
