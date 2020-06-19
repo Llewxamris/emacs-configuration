@@ -1084,6 +1084,15 @@ npm install --global dockerfile-language-server-nodejs
         :mode (("Dockerfile\\'" . dockerfile-mode)))
 #+END_SRC
 
+*** Clojure
+#+BEGIN_SRC emacs-lisp
+  (use-package clojure-mode
+    :mode ("\\.cl\\'" . clojure-mode))
+
+  (use-package cider
+    :after clojure-mode)
+#+END_SRC
+
 *** Emacs Lisp
 Elisp makes the (Emacs) world go round. Making your Elisp editing experience as
 comfortable as possible is a must. Being able to whip around functions and
