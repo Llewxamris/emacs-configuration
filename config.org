@@ -1122,6 +1122,7 @@ cool kids.
 #+BEGIN_SRC emacs-lisp
   (use-package ielm
     :ensure nil
+    :commands ielm
     :hook (ielm-mode . turn-on-eldoc-mode))
 #+END_SRC
 
