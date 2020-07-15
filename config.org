@@ -1054,14 +1054,16 @@ codes. Emacs can handle these colour codes, but it requires applying a function
 against the entire buffers output.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package ansi-color
+  (use-package compile
     :ensure nil
-    :config
-    (defun max/colorize-compilation-buffer ()
+    :bind ("C-<f11>" . compile)
+    :hook (compilation-filter . max-colorize-compilation-buffer)
+    :commands ansi-color-apply-on-region
+    :init
+    (defun max-colorize-compilation-buffer ()
+      (require 'ansi-color)
       (read-only-mode)
-      (ansi-color-apply-on-region compilation-filter-start (point)))
-
-    (add-hook 'compilation-filter-hook 'max/colorize-compilation-buffer))
+      (ansi-color-apply-on-region compilation-filter-start (point))))
 #+END_SRC
 
 ** Programming & Markup Languages
