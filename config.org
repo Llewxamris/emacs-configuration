@@ -724,20 +724,10 @@ editing prose.
      (company-dabbrev-ignore-case nil"
    Ensure the prefix is case-sensitive."))
 
-   (use-package company-box
-     :hook (company-mode . company-box-mode)
-     :custom
-     (company-box-show-single-candidate t "
-   Display the candidate, even if it is the sole option.")
-
-     (company-box-backends-colors nil "
-   Don't change colour based on the active back-end.")
-
-     (company-box-max-candidates 50 "
-   Only grab a maximum of 50 candidates (down from 100).")
-
-     (company-box-icons-alist 'company-box-icons-all-the-icons "
-   Use the all-the-icons font-set for the icons."))
+   (use-package company-posframe
+     :after company
+     :config
+     (company-posframe-mode))
 #+END_SRC
 
 ** Yasnippet
