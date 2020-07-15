@@ -1083,7 +1083,16 @@ npm install --global dockerfile-language-server-nodejs
 *** Clojure
 #+BEGIN_SRC emacs-lisp
   (use-package clojure-mode
-    :mode ("\\.cl\\'" . clojure-mode))
+    :mode ("\\.cl\\'" . clojure-mode)
+    :hook max-clojure-mode-hook
+    :init
+    (defun max-clojure-mode-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends ())
+      (add-to-list 'company-backends '(company-capf
+                                       company-yasnippet
+                                       company-files
+                                       company-dabbrev-code))))
 
   (use-package cider
     :after clojure-mode)
