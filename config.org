@@ -1207,8 +1207,11 @@ go get gopls
 #+END_SRC
 
 *** Shell Scripts
-The built in ~sh-script~ mode paired with ~company-shell~ and Flycheck has been
-a good experience. I find it better than using LSP most of the time.
+The built in ~sh-script~ mode paired with ~company-shell~ and Flycheck has been a
+good experience. I find it better than using a language server. ~shfmt~ is a
+source-code formatting tool similar to ~gofmt~. Formatting is something that I
+should never be doing manually, and this tool makes it easy to automate
+formatting.
 
 #+BEGIN_SRC emacs-lisp
   (use-package sh-script
@@ -1239,6 +1242,14 @@ a good experience. I find it better than using LSP most of the time.
 
   (use-package company-shell
     :after sh-script)
+
+  (use-package shfmt
+    :after sh-script
+    :hook (sh-mode . shfmt-on-save-mode)
+    :custom
+    (shfmt-arguments '("-i" "2" "-ci") "
+  A list of arguments passed to shfmt. -i 2 means indent by two spaces, and -ci
+  indents case statements."))
 #+END_SRC
 
 * Org-mode
