@@ -1617,7 +1617,8 @@ capture). These are my templates:
 #+BEGIN_SRC emacs-lisp
   (use-package org-capture
     :ensure nil
-    :functions org-find-olp
+    :bind ("<leader> o c" . org-capture)
+    :commands org-find-olp
     :config
     (defun max-journal-capture ()
       "Sets the pointer to the correct Month/Week location in my journal file.
