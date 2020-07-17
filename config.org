@@ -1670,7 +1670,7 @@ capture). These are my templates:
 #+BEGIN_SRC emacs-lisp
   (use-package org-agenda
     :ensure nil
-    :bind ("<leader> o" . org-agenda)
+    :bind ("<leader> o a" . org-agenda)
     :functions (org-end-of-subtree org-entry-get)
     :config
     (display-fill-column-indicator-mode 0)
