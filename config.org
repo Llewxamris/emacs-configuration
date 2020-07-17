@@ -1655,15 +1655,15 @@ capture). These are my templates:
     :custom
     (org-capture-templates
      '(("t" "Task" entry (file "~/doc/org/agenda/inbox.org")
-        (file "~/.emacs.d/capture-templates/task.txt"))
+        (file "~/.config/emacs/capture-templates/task.txt"))
        ("T" "Raw task" entry (file "~/doc/org/agenda/inbox.org")
-        (file "~/.emacs.d/capture-templates/raw-task.txt"))
+        (file "~/.config/emacs/capture-templates/raw-task.txt"))
        ("n" "Note" plain (function max-note-capture)
-        (file "~/.emacs.d/capture-templates/note.txt"))
+        (file "~/.config/emacs/capture-templates/note.txt"))
        ("j" "Journal Entry" entry (file+function "~/doc/org/journal.org" max-journal-capture)
-        (file "~/.emacs.d/capture-templates/journal-entry.txt"))
+        (file "~/.config/emacs/capture-templates/journal-entry.txt"))
        ("p" "Org Protocol Capture" entry (file "~/doc/org/agenda/inbox.org")
-        (file "~/.emacs.d/capture-templates/protocol.txt")))))
+        (file "~/.config/emacs/capture-templates/protocol.txt")))))
 #+END_SRC
 
 ** Agenda
