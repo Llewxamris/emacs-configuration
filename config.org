@@ -1405,6 +1405,7 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :pin org
     :bind ((:map org-mode-map
                  ("<localleader> '"   . org-edit-special)
                  ("<localleader> :"   . org-set-tags-command)
