@@ -1426,6 +1426,8 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
                  ("<localleader> '" . org-edit-src-exit)
                  ("<localleader> k" . org-edit-src-abort)))
     :defines company-backends
+    :commands (org-update-all-dblocks org-emphasize)
+    :functions (max-set-prettify-symbols max-set-company-backends)
     :init
     (defun max-org-update-dblocks ()
       "Wrapper around `org-update-all-dblocks' that only executes said function
@@ -1435,24 +1437,16 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
       (when (derived-mode-p 'org-mode)
         (org-update-all-dblocks)))
 
-    (defun max-org-add-company-ispell-backend ()
-      "Adds the `company-ispell' company backend locally. To use when writing as
-  appose to programming."
-      (make-local-variable 'company-backends)
-      (set 'company-backends ())
-      (add-to-list 'company-backends '(company-ispell
-                                       company-yasnippet
-                                       company-files)))
     (defun max-org-mode-hook ()
       "Wrapper for all functions that need to be hooked to Org mode."
       (set-fill-column 80)
-      (auto-fill-mode)
-      (push '("#+BEGIN_SRC" . ?⚞) prettify-symbols-alist)
-      (setq prettify-symbols-unprettify-at-point 'right-edge)
-      (push '("#+END_SRC" . ?⚟) prettify-symbols-alist)
-      (prettify-symbols-mode)
       (display-fill-column-indicator-mode 0)
-      (max-org-add-company-ispell-backend))
+      (auto-fill-mode)
+      (max-set-prettify-symbols '("#+BEGIN_SRC" . ?⚞)
+                                '("#+END_SRC" . ?⚟)
+                                '("#+begin_src" . ?⚞)
+                                '("#+end_src" . ?⚟))
+      (max-set-company-backends '(company-ispell company-yasnippet company-files)))
 
     :commands (org-mode org-capture org-agenda orgtbl-mode)
     :mode ("\\.org$" . org-mode)
