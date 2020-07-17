@@ -850,9 +850,18 @@ which is really nice.
     ;; Recursively delete and copy directories.
     (dired-recursive-deletes t)
     (dired-recursive-copies t)
+    (dired-dwim-target t "
+  Guess the default target directory instead of prompting."))
+#+END_SRC
+
+~diredfl~ adds additional font lock rules to Dired. Modus supports it, and I find
+its choice of colours pleasing, so I enable ~diredfl~.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package diredfl
+    :after dired
     :config
-    ;; Reuse Dired buffers when navigating.
-    (put 'dired-find-alternate-file 'disabled nil))
+    (diredfl-global-mode))
 #+END_SRC
 
 * Magit
