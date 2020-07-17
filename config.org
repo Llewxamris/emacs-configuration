@@ -913,16 +913,35 @@ that exposes all of Git's functionality within Emacs. It is not hiding anything,
 or trying to stop you from shooting yourself in the foot. I find it as good if
 not better than the Git CLI.
 
-I do not load Magit on Windows. Git CLI on Windows is already /soul-shatteringly
-slow/. Combine that with the slower speeds of Emacs on Windows and the
-"/enterprise-level antivirus/" installed on my work laptop, and it becomes an
-unpleasant slog to use Magit. Which is a damn shame.
+On Windows, I do not use Magit as my primary Git interface. The Git CLI on
+Windows is /so slow it physically hurts/. Emacs on Windows /even slower and more
+painful/. Combine the two, and you have /distilled agony/. Slap on an
+"enterprise-grade" anti-virus and Magit becomes nearly unusable. So what I do is
+not use Magit directly, but still use some of its features when working. My
+typical flow is using Eshell to invoke Git for just about every operation. Where
+I do use Magit is any time Git invokes ~EDITOR~ (which will open up a Magit
+commit/interactive rebase buffer). I also use Magit in situations where Eshell
+does not display Git's output correctly. ~git diff~ and ~git log~ just dump the
+output to the terminal since Eshell is a dumb terminal with no pager. So I
+invoke Magit to view diffs and logs.
+
+Since I have two separate use cases for Magit, I have two separate declarations.
+One for my person machines (Linux), and one for my work machine (Windows).
 
 #+BEGIN_SRC emacs-lisp
   (use-package magit
+    ;; Only parse this declaration if I am on my personal machine.
+    :if max-on-personal
     :bind ("<leader> g" . magit)
-    ;; Don't load Magit on my work (Windows) machine.
-    :if (eq system-type 'gnu/linux)
+    :custom
+    (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
+
+  (use-package magit
+    ;; Only parse this declaration if I am on my work machine.
+    :if max-on-work
+    ;; Emacs loads Magit whenever one of the three following commands are invoked.
+    ;; These commands are bound to keys elsewhere.
+    :commands (magit-commit magit-log magit-diff)
     :custom
     (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
 
