@@ -88,37 +88,6 @@ some elements correctly on the first draw.
   (advice-add #'x-apply-session-resources :override #'ignore)
 #+END_SRC
 
-* Global definitions
-#+BEGIN_SRC emacs-lisp
-  (defgroup max nil
-    "Personal configuration options."
-    :group 'environment)
-
-  (defcustom max-display-font-name nil
-    "Defines the name of the display font."
-    :type 'string
-    :group 'max)
-
-  (defcustom max-display-font-size nil
-    "Defines the size of the display font."
-    :type 'string
-    :group 'max)
-
-  (defconst max-on-personal (eq system-type 'gnu/linux)
-    "If non-nil, Emacs is running on my personal laptop.")
-
-  (defconst max-on-work (eq system-type 'windows-nt)
-    "If non-nil, Emacs is running on my work laptop.")
-
-  (defmacro when-personal (&rest body)
-    `(when ,max-on-personal
-      ,(cons 'progn body)))
-
-  (defmacro when-work (&rest body)
-    `(when ,max-on-work
-      ,(cons 'progn body)))
-#+END_SRC
-
 * Preparation & Package Management
 ** Use Package
 /Ensure/ ~use-package~ is always installed alongside this configuration. I
@@ -178,6 +147,94 @@ time spent setting up my Emacs configuration negates the performance increase.
       (auto-compile-on-save-mode))
 #+END_SRC
 
+* Personal package
+I am trying out keeping my custom variables/constants/macros/functions in their
+own /"external"/ package. They are all defined within this Org document, but I
+have set them to tangle to a different directory under the name ~max.el~. My
+thought was that keeping everything that is custom tooled together will make it
+easier to hunt them done. I guess I will see.
+
+#+BEGIN_SRC emacs-lisp :tangle lib/max.el :mkdirp yes
+  (require 'company)
+
+  (defgroup max nil
+    "Personal configuration options."
+    :group 'environment)
+
+  (defcustom max-display-font-name "Iosevka"
+    "Defines the name of the display font."
+    :type 'string
+    :group 'max)
+
+  (defconst max-on-personal (eq system-type 'gnu/linux)
+    "If non-nil, Emacs is running on my personal laptop.")
+
+  (defconst max-on-work (eq system-type 'windows-nt)
+    "If non-nil, Emacs is running on my work laptop.")
+
+  (defconst max-font-sizes-alist '((small . 9) (large . 10.5))
+    "An alist containing predefined \"small\" and \"large\" font sizes.")
+
+  (defmacro when-personal (&rest body)
+    "Executes BODY if `max-on-personal' is non-nil."
+    `(when ,max-on-personal
+      ,(cons 'progn body)))
+
+  (defmacro when-work (&rest body)
+    "Executes BODY if `max-on-work' is non-nil."
+    `(when ,max-on-work
+       ,(cons 'progn body)))
+
+  (defun max-set-company-backends (backends)
+    "Creates a local copy of var `company-backends' and sets it to BACKENDS.
+  BACKENDS is a list following the structure of `company-backends'. This allows me
+  to customize the list of back ends per major-mode."
+    (make-local-variable 'company-backends)
+    (set 'company-backends ())
+    (add-to-list 'company-backends backends))
+
+  (defun max-set-font-based-on-monitors ()
+    "Set the font and font size based on the available displays."
+    (interactive)
+    (let* ((display-size (if (= (length (display-monitor-attributes-list))
+                                1)
+                             'small
+                           'large))
+           (font-size (alist-get display-size max-font-sizes-alist)))
+      (set-face-attribute 'default nil
+                          :font max-display-font-name
+                          :height (truncate (* 10 font-size)))
+      (set-face-attribute 'fixed-pitch nil
+                          :font max-display-font-name
+                          :height (truncate (* 10 font-size)))))
+
+  (defun max-set-prettify-symbols (&rest symbols)
+    "Creates a local copy of `prettify-symbols-alist', and adds to it SYMBOLS.
+  The intention is for mode-specific hooks to call this function with the set of
+  SYMBOLS specific to that mode. Declare common prettify symbols in the
+  `prettify-symbols-mode' declaration.
+
+  This function does not enable `prettify-symbols-mode' in the modes that call it."
+    (make-local-variable 'prettify-symbols-alist)
+    (when symbols
+      (seq-do
+       (lambda (symbol)
+         (push symbol prettify-symbols-alist))
+       symbols)))
+
+  (provide 'max)
+#+END_SRC
+
+I load the previous package using ~use-package~'s ~load-path~ mechanism.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package max
+    :load-path "~/.config/Emacs/lib/"
+    :functions max-set-font-based-on-monitors
+    :config
+    (max-set-font-based-on-monitors))
+#+END_SRC
+
 * Emacs General
 ** Essentials
 Emacs comes with a large set of defaults designed to make adoption simple for
@@ -192,26 +249,6 @@ of them may be useful once you are more familiar with Emacs.
     :bind (([f5] . max/reload-emacs-configuration)
            ([f6] . max/open-emacs-configuration))
     :init
-    (defun max-set-font-size (&optional arg size)
-      "Sets the font size to SIZE. If called interactively, prompts for a font
-  size."
-      (interactive "P\nsSet font size to: ")
-      (if (not (eq size nil))
-          (set-face-attribute 'default nil :font (concat max-display-font-name "-" size))
-        (set-face-attribute 'default nil
-                            :font (concat
-                                   max-display-font-name "-" max-display-font-size))))
-
-    (defun max/set-font-based-on-monitors (font-name)
-      "Uses the amount of monitors in `display-monitor-attributes-list' to determine
-  what size font to use. If more than one monitor is available, then it sets
-  a large font size."
-      (setq max-display-font-name font-name)
-      (if (= (length (display-monitor-attributes-list)) 1)
-          (setq max-display-font-size "9")
-        (setq max-display-font-size "12"))
-      (max-set-font-size))
-
     ;; Set email based on current operating system.
     (if (eq system-type 'windows-nt)
         (setq user-mail-address "maxwell.haley@hrsdc-rhdcc.gc.ca")
@@ -241,8 +278,6 @@ of them may be useful once you are more familiar with Emacs.
     ;; some lag for increased memory usage.
     (when (eq system-type 'windows-nt)
       (setq inhibit-compacting-font-caches t))
-
-    (max/set-font-based-on-monitors "Go Mono")
 
     :custom
     (use-full-name "Maxwell R. Haley")
