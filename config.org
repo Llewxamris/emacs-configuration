@@ -1420,6 +1420,7 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
                  ("<localleader> h s" . org-insert-subheading)
                  ("<localleader> h s" . org-insert-subheading)
                  ("<localleader> o"   . org-open-at-point)
+                 ("<localleader> r"   . org-refile)
                  ("<localleader> s"   . org-schedule))
            (:map org-src-mode-map
                  ("<localleader> '" . org-edit-src-exit)
