@@ -475,7 +475,7 @@ not visually boring.
     (unless noninteractive
       (load-theme 'modus-operandi t))
     :custom
-    (modus-operandi-theme-distinct-org-blocks t)
+    (modus-operandi-theme-org-blocks 'greyscale)
     (modus-operandi-theme-section-headings t)
     (modus-operandi-theme-scale-headings t)
     (modus-operandi-theme-visible-fringe t)
