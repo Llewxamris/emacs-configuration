@@ -1535,7 +1535,12 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
     (org-special-ctrl-a/e t
                           "When on a headline, treat anything after
   the stars and todo keyword as the beginning of the line and the
-  character before the tags as the end of the line."))
+  character before the tags as the end of the line.")
+    (org-confirm-babel-evaluate nil "Do not prompt on source block evaluations.")
+    (org-src-window-setup 'current-window "
+     Open source code block windows on top of the current window instead of
+     opening  new window. This stops editing source blocks from ruining your
+     window setup."))
    #+END_SRC
 
    Org-bullets changes out the asterisks for UTF-8 symbols.
