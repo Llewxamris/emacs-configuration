@@ -1315,6 +1315,42 @@ formatting.
   indents case statements."))
 #+END_SRC
 
+* Eshell
+My work machine runs Windows, which is a cause of daily frustrations. One of
+which is the lack of a comfortable shell environment. There are plenty of
+applications that attempt to mimic UNIX-like shell environments in Windows, but
+so far they have either been too slow or have had conflicts with the way the
+machine has been setup by IT.
+
+The only shell that works consistently is Git Bash. Which is fine for the most
+part, but the amount of small issues I bump into drives me a little nuts.
+
+I decided to give Eshell a try, and so far I am enjoying it. At its core it is a
+Lisp shell, which is great since I can invoke Emacs functions or arbitrary Elisp
+from it. But it also emulates a POSIX shell, providing all of the built-in
+commands you expect. So far, Eshell has been the best shell experience on
+Windows. I do not think I would use it as my primary shell on non-Windows
+machines (I do not even run my shell inside of Emacs), but that is due to the
+"dumbness" of Eshell.
+
+Eshell has no pager, and limited colour output. This makes working with Git
+frustrating, especially when viewing a diff or the logs. I get around this by
+invoking Magit when I want to perform those operations.
+
+#+begin_src emacs-lisp
+  (use-package eshell
+    :ensure nil
+    :if max-on-work
+    :commands eshell
+    :defines eshell-mode-map
+    :bind (:map eshell-mode-map
+                ("<localleader> g c" . magit-commit)
+                ("<localleader> g l" . magit-log)
+                ("<localleader> g d" . magit-diff))
+    :custom
+    (auto-revert-buffer-list-filter 'magit-auto-revert-repository-buffer-p))
+#+end_src
+
 * Org-mode
 Org-mode was the killer feature that got me to try out Emacs to begin with, and
 honestly it's probably the main reason I keep using Emacs.
