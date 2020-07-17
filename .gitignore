@@ -35,3 +35,4 @@ config.*
 /early-init.el
 /eshell/
 /eglot-eclipse-jdt-cache/
+/lib/
