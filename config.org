@@ -641,8 +641,6 @@ The fill column is also never useful to me in non-text editing buffers.
     :custom
     ;; Set the column where automatic line-wrapping should begin.
     (fill-column 80)
-    ;; Draw the indicator.
-    (display-fill-column-indicator t)
     ;; Draw the indicator at the column indicated by the ~fill-column~ variable.
     (display-fill-column-indicator-column t))
 #+END_SRC
