@@ -229,7 +229,7 @@ I load the previous package using ~use-package~'s ~load-path~ mechanism.
 
 #+BEGIN_SRC emacs-lisp
   (use-package max
-    :load-path "~/.config/Emacs/lib/"
+    :load-path "~/.config/emacs/lib"
     :functions max-set-font-based-on-monitors
     :config
     (max-set-font-based-on-monitors))
