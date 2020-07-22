@@ -589,16 +589,32 @@ actually disabled ~linum-mode~ in all Org files because it became such a
 problem. These performance issues went away after switching to
 ~display-line-numbers~.
 
+I used to display line numbers in all buffers, but recently I have changed to
+only displaying them in buffers for programming languages. My reasoning was:
+
+1. I do not find line numbers useful in most non-programming contexts.
+2. I do not find line numbers aesthetically pleasing in non-text editing buffers
+   (e.g., Org's agenda, EWW, Info, etc.)
+3. There is still a /bit/ of a performance hit. I found it most noticeable in
+   buffers where lines may be rapidly scrolling by (e.g., compile, (e)shell).
+
 #+BEGIN_SRC emacs-lisp
   (use-package display-line-numbers
     :ensure nil
+    :hook prog-mode
     :config
-    (global-display-line-numbers-mode)
+    (display-line-numbers-mode)
     :custom
-    (display-line-numbers-type 'relative) ; Display numbers relatively
-    (display-line-numbers-grow-only t) ; Only increase the width, never shrink
-    (display-line-numbers-width-start t) ; Start as wide as the largest number
-    (display-line-numbers-widen t)) ; Display the true number when narrowing
+    ;; Display line numbers relative to the line with the pointer.
+    (display-line-numbers-type 'relative)
+    ;; Never decrease the width of the line number bar.
+    (display-line-numbers-grow-only t)
+    ;; Make the starting width of the line number bar equal to the width of the
+    ;; greatest line number.
+    (display-line-numbers-width-start t)
+    ;; When narrowing a buffer, display the true line number and not the line
+    ;; relative to the narrowed buffer.
+    (display-line-numbers-widen t))
 #+END_SRC
 
 *** Fill column indicator
@@ -607,16 +623,28 @@ visually indicate where a certain column begins. This is useful if you are
 following the 80 column rule, or following a style guide that requires keeping
 to a specific number of characters per line.
 
+As with displaying line numbers, I now only enable the fill column indicator on
+programming related buffers. In most non-programming text editing contexts
+visualising the fill column is not handy. I find it useful to know when I am
+about to brush against the fill column when programming, since that will require
+me to manually choose where to break to a new line. When just writing (such as
+in most of this file), I just let ~M-q~ do its thing a majority of the time.
+
+The fill column is also never useful to me in non-text editing buffers.
+
 #+BEGIN_SRC emacs-lisp
   (use-package display-fill-column-indicator
     :ensure nil
+    :hook prog-mode
     :config
-    (global-display-fill-column-indicator-mode)
+    (display-fill-column-indicator-mode)
     :custom
+    ;; Set the column where automatic line-wrapping should begin.
     (fill-column 80)
+    ;; Draw the indicator.
     (display-fill-column-indicator t)
-    (display-fill-column-indicator-column t) ; use ~fill-column~ variable
-    )
+    ;; Draw the indicator at the column indicated by the ~fill-column~ variable.
+    (display-fill-column-indicator-column t))
 #+END_SRC
 
 *** Smooth Scrolling
