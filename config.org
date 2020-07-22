@@ -172,8 +172,8 @@ easier to hunt them done. I guess I will see.
   (defconst max-on-work (eq system-type 'windows-nt)
     "If non-nil, Emacs is running on my work laptop.")
 
-  (defconst max-font-sizes-alist '((small . 9) (large . 10.5))
-    "An alist containing predefined \"small\" and \"large\" font sizes.")
+  (defconst max-font-sizes-alist '((small . 9.5) (large . 10.5))
+  "An alist containing predefined \"small\" and \"large\" font sizes.")
 
   (defmacro when-personal (&rest body)
     "Executes BODY if `max-on-personal' is non-nil."
