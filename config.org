@@ -7,7 +7,7 @@
 #  LocalWords:  emacs modeline paren pinky dired magit Magit's LaTeX Flyspell
 #  LocalWords:  flyspell lang lsp flycheck imenu ibuffer Avy linter Yasnippet
 #  LocalWords:  backend Writegood actioned actioning init Linum GUIs Git's
-#  LocalWords:  shatteringly
+#  LocalWords:  shatteringly Hideshow
 
 * Forward
 My living monolith of a Emacs configuration file. Bred through trial, error, and
@@ -1195,9 +1195,107 @@ against the entire buffers output.
       (ansi-color-apply-on-region compilation-filter-start (point))))
 #+END_SRC
 
+** Hideshow
+The /Hideshow/ package (hs) does exactly what it says on the box. It makes it
+possible to hide and show blocks of code (think folding from Vim). I like using
+folding on top-level blocks in source code. Seeing the full source code can be
+overwhelming and distracting. Folding helps me focus on one thing without having
+to /narrow/ the buffer. Not that I do not like narrowing, I just think it has a
+different use case.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package hideshow
+    :ensure nil
+    :custom
+    (hs-isearch-open t "Open comments and code blocks when searching."))
+#+END_SRC
+
+** Semantic
+Whenever I am programming in a language where using a language server is not
+possible/practical, I miss some of the simpler features. Seeing documentation in
+the minibuffer, jumping to definitions, etc. Not that Emacs cannot do this, but
+it really seems to be hit or miss.
+
+Semantic parses source code to construct a parse tree. It provides an API that
+allows users to perform actions with that tree. Like jumping to a specific
+declaration, moving up/down call stacks, etc.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package semantic
+    :ensure nil
+    :hook (c-mode . max-semantic-functions)
+    :commands (global-semanticdb-minor-mode
+               global-semantic-idle-scheduler-mode
+               global-semantic-idle-summary-mode
+               global-semantic-idle-local-symbol-highlight-mode)
+    :init
+    (defun max-semantic-functions ()
+      (semantic-mode)
+      ;; Enable SemanticDB for that sweet caching.
+      (global-semanticdb-minor-mode)
+      ;; Automatically re-parse source code when Emacs is idling.
+      (global-semantic-idle-scheduler-mode)
+      ;; When idling, give a summary of the symbol at point in the minibuffer.
+      (global-semantic-idle-summary-mode)
+      ;; When idling, highlight additional uses of the current symbol at point.
+      (global-semantic-idle-local-symbol-highlight-mode)))
+#+END_SRC
+
+Semantic Refactor builds on top of Semantic. It exposes a function to refactor
+source code by looking at its semantic elements. This lets me do things like
+extracting blocks of code into their own functions, renaming variables across
+an entire project, etc.
+
+#+BEGIN_SRC emacs-lisp
+
+  (use-package srefactor
+    :after semantic
+    :general
+    (max-local-leader-def
+      :states 'normal
+      "r" #'srefactor-refactor-at-point)
+    :init
+    (evil-set-initial-state 'srefactor-ui-menu-mode 'emacs))
+#+END_SRC
+
 ** Programming & Markup Languages
 The following are specific configurations for individual programming and markup
 languages.
+
+*** C
+#+BEGIN_SRC emacs-lisp
+  (use-package c-mode
+    :ensure nil
+    :hook (c-mode . max-c-mode-hook)
+    :general
+    (max-local-leader-def
+      :states 'normal
+      :modes #'c-mode
+      :keymaps 'c-mode-map
+      "i" #'imenu)
+    :mode "\\.[ch]\\'"
+    :init
+    (defun max-c-mode-hook ()
+      (hs-minor-mode)
+      (max-set-company-backends '(company-clang
+                                  company-semantic
+                                  company-capf
+                                  company-yasnippet))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gdb-mi
+    :ensure nil
+    :after cc-mode
+    :defines c-mode-base-map
+    :bind (:map c-mode-base-map
+                ("C-c d" . gdb))
+    :custom
+    ;; Show the source for the "main" function of the program.
+    (gdb-show-main t)
+    ;; Create an IDE-like interface when running gdb.
+    (gdb-many-windows t))
+#+END_SRC
 
 *** Docker
 ~~~
