@@ -1630,7 +1630,17 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
       (interactive)
       (org-emphasize ?\=))
 
+    ;; Include the Org Habit tracker module. Without the module, habit tracking
+    ;; would not work.
     (add-to-list 'org-modules 'org-habit)
+
+    ;; Define the languages I want to be able to evaluate within an Org source
+    ;; block.
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (shell . t)
+       (sql . t)))
 
     :custom
     (org-log-done 'time "Inserts a timestamp on task completion.")
