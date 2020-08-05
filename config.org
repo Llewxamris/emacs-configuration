@@ -1077,7 +1077,6 @@ some chunks of information twice.
   (use-package lsp-mode
     :hook (((java-mode dockerfile-mode go-mode) . lsp)
            (lsp-mode . lsp-enable-which-key-integration))
-    :bind-keymap ("<localleader> l" . lsp-command-map)
     :custom
     (read-process-output-max (* 1024 1024))
     (lsp-idle-delay 0.500))
