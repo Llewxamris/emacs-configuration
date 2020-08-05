@@ -147,6 +147,21 @@ time spent setting up my Emacs configuration negates the performance increase.
       (auto-compile-on-save-mode))
 #+END_SRC
 
+* General
+#+BEGIN_SRC emacs-lisp
+  (use-package general
+    :config
+    (general-create-definer max-leader-def
+      :prefix "SPC")
+
+    (general-create-definer max-org-leader-def
+      :prefix "SPC o")
+
+    (general-create-definer max-local-leader-def
+      :prefix "SPC m")
+    (general-auto-unbind-keys))
+#+END_SRC
+
 * Personal package
 I am trying out keeping my custom variables/constants/macros/functions in their
 own /"external"/ package. They are all defined within this Org document, but I
