@@ -625,9 +625,7 @@ only displaying them in buffers for programming languages. My reasoning was:
 #+BEGIN_SRC emacs-lisp
   (use-package display-line-numbers
     :ensure nil
-    :hook prog-mode
-    :config
-    (display-line-numbers-mode)
+    :hook (prog-mode . display-line-numbers-mode)
     :custom
     ;; Display line numbers relative to the line with the pointer.
     (display-line-numbers-type 'relative)
@@ -659,9 +657,7 @@ The fill column is also never useful to me in non-text editing buffers.
 #+BEGIN_SRC emacs-lisp
   (use-package display-fill-column-indicator
     :ensure nil
-    :hook prog-mode
-    :config
-    (display-fill-column-indicator-mode)
+    :hook (prog-mode . display-fill-column-indicator-mode)
     :custom
     ;; Set the column where automatic line-wrapping should begin.
     (fill-column 80)
