@@ -263,6 +263,15 @@ of them may be useful once you are more familiar with Emacs.
     :ensure nil
     :bind (([f5] . max/reload-emacs-configuration)
            ([f6] . max/open-emacs-configuration))
+    :general
+    (max-leader-def
+      :states 'normal
+      "n" '(:ignore :which-key "narrowing prefix")
+      "n f" #'narrow-to-defun
+      "n F" #'narrow-to-defun-include-comments
+      "n p" #'narrow-to-page
+      "n r" #'narrow-to-region
+      "n w" #'widen)
     :init
     ;; Set email based on current operating system.
     (if (eq system-type 'windows-nt)
@@ -699,19 +708,17 @@ something outside of my scope.
 * Evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
-    :bind (("s-u" . universal-argument)
-           ("<leader> b" . ido-switch-buffer)
-           ("<leader> e" . eval-last-sexp)
-           ("<leader> f" . find-file)
-           ("<leader> s" . save-buffer)
-           ("<leader> h" . help-command))
-    :bind-keymap ("<leader> w" . evil-window-map)
-    :commands (evil-mode evil-set-leader)
+    :general
+    (max-leader-def
+      :keymaps 'normal
+      "SPC" #'execute-extended-command
+      "u" #'universal-argument
+      "e" #'eval-last-sexp
+      "w" #'evil-window-map
+      "h" #'help-command)
+    :commands evil-mode
     :defines org-src-mode-map
     :hook (after-init . evil-mode)
-    :config
-    (evil-set-leader 'motion (kbd "SPC") nil)
-    (evil-set-leader 'motion (kbd ",") t)
     :custom
     (evil-want-C-u-scroll t "Treat C-u the same as Vim.")
 
@@ -736,8 +743,10 @@ modes.
 * Ace
 #+BEGIN_SRC emacs-lisp
   (use-package ace-link
-    :config
-    (ace-link-setup-default (kbd "<localleader> o")))
+    :general
+    (:keymaps 'help-map
+              :states 'normal
+              "o" #'ace-link-help))
 #+END_SRC
 
 * Completion
@@ -749,17 +758,6 @@ editing prose.
  #+BEGIN_SRC emacs-lisp
    (use-package company
      :demand
-     :bind (:map company-active-map
-                 ("C-d"       . company-show-doc-buffer)
-                 ("<tab>"     . company-select-next)
-                 ("<backtab>" . company-select-previous)
-                 ("<ret>"     . nil)
-                 ;; First stroke of C-n,p completes any missing, common characters.
-                 ;; Second stroke moves up/down the list of completions.
-                 ("C-n" . (lambda () (interactive)
-                            (company-complete-common-or-cycle 1)))
-                 ("C-p" . (lambda () (interactive)
-                            (company-complete-common-or-cycle -1))))
      :config
      (global-company-mode)
      :custom
@@ -888,7 +886,12 @@ the default ~list-buffers~ interface.
 #+BEGIN_SRC emacs-lisp
   (use-package ibuffer
     :ensure nil
-    :bind ("<leader> B b" . ibuffer))
+    :general
+    (max-leader-def
+      :states 'normal
+      "b" '(:ignore t :which-key "buffer manipulation prefix")
+      "b b" #'ido-switch-buffer
+      "b B" #'ibuffer))
 #+END_SRC
 
 * Dired-X
@@ -918,7 +921,16 @@ which is really nice.
 #+BEGIN_SRC emacs-lisp
   (use-package dired
     :ensure nil
-    :bind ("<leader> B d" . dired)
+    :general
+    (max-leader-def
+      :states 'normal
+      "f" '(nil :which-key "file manipulation prefix")
+      "f f" #'find-file
+      "f j" #'dired-jump
+      "f s" #'save-buffer)
+    (:keymaps 'dired-mode-map
+              :states 'motion
+              "RET" #'dired-find-alternate-file)
     :custom
     ;; ~ls~ switches passed to Dired.
     (dired-listing-switches "-kaBhl --group-directories-first")
@@ -970,24 +982,27 @@ Since I have two separate use cases for Magit, I have two separate declarations.
 One for my person machines (Linux), and one for my work machine (Windows).
 
 #+BEGIN_SRC emacs-lisp
-  (use-package magit
-    ;; Only parse this declaration if I am on my personal machine.
-    :if max-on-personal
-    :bind ("<leader> g" . magit)
-    :custom
-    (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
+    (use-package magit
+      :if (eq system-type 'gnu/linux)
+      :general
+      (max-leader-def
+        :states 'normal
+        "g" '(nil :which-key "magit prefix")
+        "g s" #'magit)
+      :custom
+      (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
 
-  (use-package magit
-    ;; Only parse this declaration if I am on my work machine.
-    :if max-on-work
-    ;; Emacs loads Magit whenever one of the three following commands are invoked.
-    ;; These commands are bound to keys elsewhere.
-    :commands (magit-commit magit-log magit-diff)
-    :custom
-    (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
+    ;;; Only parse this declaration if I am on my work machine.
+    (use-package magit
+      :if max-on-work
+      ;; Emacs loads Magit whenever one of the three following commands are invoked.
+      ;; These commands are bound to keys elsewhere.
+      :commands (magit-commit magit-log magit-diff)
+      :custom
+      (magit-completing-read-function 'magit-ido-completing-read "Use Ido completion."))
 
-  (use-package evil-magit
-    :after magit)
+    (use-package evil-magit
+      :after magit)
 #+END_SRC
 
 * Spellchecking
@@ -1023,8 +1038,13 @@ need this occasionally to go between English and French documents.
 
   (use-package flyspell-correct
     :after flyspell
-    :bind (("<leader> c c" . flyspell-correct-wrapper)
-           ("<leader> c n" . flyspell-goto-next-error)))
+    :general
+    (max-leader-def
+      :states 'normal
+      "S" '(nil :which-key "spell-checking prefix")
+      "S b" #'flyspell-buffer
+      "S c" #'flyspell-correct-wrapper
+      "S n" #'flyspell-goto-next-error))
 
   (use-package flyspell-correct-ido
     :ensure nil
@@ -1160,7 +1180,11 @@ against the entire buffers output.
 #+BEGIN_SRC emacs-lisp
   (use-package compile
     :ensure nil
-    :bind ("C-<f11>" . compile)
+    :general
+    (max-leader-def
+      :states 'normal
+      "c c" #'compile
+      "c r" #'recompile)
     :hook (compilation-filter . max-colorize-compilation-buffer)
     :commands ansi-color-apply-on-region
     :init
@@ -1502,25 +1526,26 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :pin org
-    :bind ((:map org-mode-map
-                 ("<localleader> '"   . org-edit-special)
-                 ("<localleader> :"   . org-set-tags-command)
-                 ("<localleader> a"   . org-archive-subtree)
-                 ("<localleader> c i" . org-clock-in)
-                 ("<localleader> c o" . org-clock-out)
-                 ("<localleader> C"   . org-ctrl-c-ctrl-c)
-                 ("<localleader> d"   . org-deadline)
-                 ("<localleader> e"   . org-export-dispatch)
-                 ("<localleader> h i" . org-insert-heading-respect-content)
-                 ("<localleader> h I" . org-insert-heading-after-current)
-                 ("<localleader> h s" . org-insert-subheading)
-                 ("<localleader> h s" . org-insert-subheading)
-                 ("<localleader> o"   . org-open-at-point)
-                 ("<localleader> r"   . org-refile)
-                 ("<localleader> s"   . org-schedule))
-           (:map org-src-mode-map
-                 ("<localleader> '" . org-edit-src-exit)
-                 ("<localleader> k" . org-edit-src-abort)))
+    :general
+    (max-local-leader-def
+      :states 'normal
+      :keymaps 'org-mode-map
+      "'"   #'org-edit-special
+      ":"   #'org-set-tags-command
+      "a"   #'org-archive-subtree
+      "c"   '(nil :which-key "org-clock prefix")
+      "c i" #'org-clock-in
+      "c o" #'org-clock-out
+      "C"   #'org-ctrl-c-ctrl-c
+      "d"   #'org-deadline
+      "e"   #'org-export-dispatch
+      "h"   '(:ignore t :which-key "org-insert-[sub]heading prefix")
+      "h i" #'org-insert-heading-respect-content
+      "h I" #'org-insert-heading-after-current
+      "h s" #'org-insert-subheading
+      "o"   #'org-open-at-point
+      "r"   #'org-refile
+      "s"   #'org-schedule)
     :defines company-backends
     :commands (org-update-all-dblocks org-emphasize)
     :functions (max-set-prettify-symbols max-set-company-backends)
@@ -1713,7 +1738,10 @@ capture). These are my templates:
 #+BEGIN_SRC emacs-lisp
   (use-package org-capture
     :ensure nil
-    :bind ("<leader> o c" . org-capture)
+    :general
+    (max-org-leader-def
+      :states 'normal
+      "c" #'org-capture)
     :commands org-find-olp
     :config
     (defun max-journal-capture ()
@@ -1766,7 +1794,10 @@ capture). These are my templates:
 #+BEGIN_SRC emacs-lisp
   (use-package org-agenda
     :ensure nil
-    :bind ("<leader> o a" . org-agenda)
+    :general
+    (max-org-leader-def
+      :states 'normal
+      "a" #'org-agenda)
     :functions (org-end-of-subtree org-entry-get)
     :config
     (display-fill-column-indicator-mode 0)
