@@ -733,7 +733,10 @@ modes.
     :init
     (evil-collection-init)
     :custom
-    (evil-collection-company-use-tng nil))
+    ;; Mirror the behaviour of Vim's "YouCompleteMe" plugin.
+    (evil-collection-company-use-tng t)
+    ;; Use Evil bindings in the minibuffer.
+    (evil-collection-setup-minibuffer t))
 #+END_SRC
 
 * Ace
