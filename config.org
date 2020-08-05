@@ -832,7 +832,7 @@ entries that could not match your input without having to hit ~TAB~ each time.
 
     :custom
     ;; If nothing matching, look for the sequence elsewhere in an entry.
-    (ido-enable-flex-matching t ))
+    (ido-enable-flex-matching t))
 #+END_SRC
 
 I do not like the default in-line display used by ido. [[https://github.com/creichert/ido-vertical-mode.el][Ido-vertical-mode]] reads
