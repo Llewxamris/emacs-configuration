@@ -42,7 +42,7 @@ need to set any custom properties within the early init file.
 #+BEGIN_SRC emacs-lisp :tangle early-init.el
   ;; -*- lexical-binding: t; -*-
   (require 'package)
-  (setq package-archives '(("melpa" . "https://melpa.milkbox.net/packages/")
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                            ("org" . "https://orgmode.org/elpa/")
                            ("gnu" . "https://elpa.gnu.org/packages/")))
 
