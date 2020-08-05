@@ -930,6 +930,9 @@ which is really nice.
     (:keymaps 'dired-mode-map
               :states 'motion
               "RET" #'dired-find-alternate-file)
+    :config
+    ;; Reuse Dired buffers when navigating.
+    (put 'dired-find-alternate-file 'disabled nil)
     :custom
     ;; ~ls~ switches passed to Dired.
     (dired-listing-switches "-kaBhl --group-directories-first")
