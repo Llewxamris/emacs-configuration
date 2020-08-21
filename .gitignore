@@ -36,3 +36,9 @@ config.*
 /eshell/
 /eglot-eclipse-jdt-cache/
 /lib/
+/ede-projects.el
+/eln-cache/
+/projects
+/semanticdb/
+/srecode-map.el
+/url/
