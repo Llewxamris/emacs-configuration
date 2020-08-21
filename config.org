@@ -339,9 +339,9 @@ of them may be useful once you are more familiar with Emacs.
     ;; Always load the newest version of a file.
     (load-prefer-newer t)
 
-    (x-underline-at-descent-line t "
-  Underline a word at the decent point (the lowest point of a character like 'g'
-  or 'y')."))
+    ;; Draw the underline at the decent line. The descent line being the point
+    ;; where the descenders of glyphs like 'g' and 'y' end.
+    (x-underline-at-descent-line t)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
