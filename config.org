@@ -342,6 +342,9 @@ of them may be useful once you are more familiar with Emacs.
     ;; Draw the underline at the decent line. The descent line being the point
     ;; where the descenders of glyphs like 'g' and 'y' end.
     (x-underline-at-descent-line t)
+
+    ;; Hide the mouse pointer when typing.
+    (make-pointer-invisible t)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
