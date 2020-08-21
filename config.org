@@ -1681,7 +1681,8 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
       "h s" #'org-insert-subheading
       "o"   #'org-open-at-point
       "r"   #'org-refile
-      "s"   #'org-schedule)
+      "s"   #'org-schedule
+      "z"   #'org-add-note)
     :defines company-backends
     :commands (org-update-all-dblocks org-emphasize)
     :functions (max-set-prettify-symbols max-set-company-backends)
