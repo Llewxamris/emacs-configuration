@@ -1374,6 +1374,10 @@ evaluate arbitrary code is a fabulous (and dangerous) power to wield.
     :interpreter ("emacs" . emacs-lisp-mode)
     :commands emacs-lisp-mode
     :hook (emacs-lisp-mode . max/elisp-mode-hook)
+    :general
+    (max-local-leader-def
+      :states 'normal
+      "b" #'eval-buffer)
     :init
     (defun max/elisp-mode-hook ()
       (make-local-variable 'company-backends)
