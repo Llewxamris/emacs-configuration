@@ -768,6 +768,14 @@ modes.
     (evil-collection-setup-minibuffer t))
 #+END_SRC
 
+~evil-commentary~ is a port of the Vim plugin ~vim-commentary~. This lets me use
+=gc= to comment out motions of text, or =gcc= to comment an entire line.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-commentary
+    :after evil)
+#+END_SRC
+
 * Ace
 #+BEGIN_SRC emacs-lisp
   (use-package ace-link
