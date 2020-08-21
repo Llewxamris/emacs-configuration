@@ -719,6 +719,17 @@ something outside of my scope.
            ("<localleader> k" . #'edit-indirect-abort)))
 #+END_SRC
 
+** Minibuffer
+#+BEGIN_SRC emacs-lisp
+  (use-package minibuf-eldef
+    :ensure nil
+    :config
+    (minibuffer-electric-default-mode)
+    :custom
+    ;; Shorten "(default ...)" to "[...]" in the minibuffer.
+    (minibuffer-eldef-shorten-default t))
+#+END_SRC
+
 * Evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
