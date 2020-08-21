@@ -454,7 +454,12 @@ in case you forgot to save.
 
     ;; Always include a trailing newline at the end of a file.
     (require-final-newline t)
-    (delete-trailing-lines nil))
+    (delete-trailing-lines nil)
+
+    ;; Do not ask for confirmation on either opening an non-existent file
+    ;; (creating it), or a non-existent buffer (creating it without an associated
+    ;; file).
+    (confirm-nonexistent-file-or-buffer nil))
 #+END_SRC
 
 It is also useful to automatically refresh buffers. That is: If the content of a
