@@ -345,6 +345,10 @@ of them may be useful once you are more familiar with Emacs.
 
     ;; Hide the mouse pointer when typing.
     (make-pointer-invisible t)
+
+    ;; When scrolling quckly through a buffer, only fontify the portion of the
+    ;; buffer that will be displayed. Helps *A LOT* on Windows.
+    (fast-but-imprecise-scrolling t))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
