@@ -504,7 +504,7 @@ prevent Tramp from hanging.]]
 
 #+BEGIN_SRC emacs-lisp
   (use-package tramp
-    :ensure nil
+    :pin gnu
     :custom
     (tramp-default-method "ssh" "SSH is faster than SCP.")
     (tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*"
