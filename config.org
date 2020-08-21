@@ -1260,22 +1260,23 @@ declaration, moving up/down call stacks, etc.
 #+BEGIN_SRC emacs-lisp
   (use-package semantic
     :ensure nil
-    :hook (c-mode . max-semantic-functions)
-    :commands (global-semanticdb-minor-mode
-               global-semantic-idle-scheduler-mode
-               global-semantic-idle-summary-mode
-               global-semantic-idle-local-symbol-highlight-mode)
-    :init
-    (defun max-semantic-functions ()
-      (semantic-mode)
-      ;; Enable SemanticDB for that sweet caching.
-      (global-semanticdb-minor-mode)
-      ;; Automatically re-parse source code when Emacs is idling.
-      (global-semantic-idle-scheduler-mode)
-      ;; When idling, give a summary of the symbol at point in the minibuffer.
-      (global-semantic-idle-summary-mode)
-      ;; When idling, highlight additional uses of the current symbol at point.
-      (global-semantic-idle-local-symbol-highlight-mode)))
+    :hook ((c-mode emacs-lisp-mode) . semantic-mode)
+    :general
+    (max-leader-def
+      :states 'normal
+      ""    '(:ignore t :which-key "semantic prefix")
+      "s b" #'semantic-mrub-switch-tags
+      "s j" #'semantic-complete-jump-local
+      "s J" #'semantic-complete-jump
+      "s g" #'semantic-symref-symbol
+      "s G" #'semantic-symref
+      "s n" #'senator-next-tag
+      "s p" #'senator-previous-tag)
+    :custom
+    (semantic-default-submodes '(global-semanticdb-minor-mode
+                                 global-semantic-idle-scheduler-mode
+                                 global-semantic-idle-local-symbol-highlight-mode
+                                 global-semantic-mru-bookmark-mode)))
 #+END_SRC
 
 Semantic Refactor builds on top of Semantic. It exposes a function to refactor
@@ -1284,13 +1285,12 @@ extracting blocks of code into their own functions, renaming variables across
 an entire project, etc.
 
 #+BEGIN_SRC emacs-lisp
-
   (use-package srefactor
     :after semantic
     :general
     (max-local-leader-def
       :states 'normal
-      "r" #'srefactor-refactor-at-point)
+      "s r" #'srefactor-refactor-at-point)
     :init
     (evil-set-initial-state 'srefactor-ui-menu-mode 'emacs))
 #+END_SRC
