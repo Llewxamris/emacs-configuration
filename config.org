@@ -305,6 +305,10 @@ of them may be useful once you are more familiar with Emacs.
     (when (eq system-type 'windows-nt)
       (setq inhibit-compacting-font-caches t))
 
+    ;; Trigger garbage collection whenever I switch focus from Emacs to another
+    ;; window/application.
+    (add-hook 'focus-out-hook #'garbage-collect)
+
     :custom
     (use-full-name "Maxwell R. Haley")
     ;; Disable the startup screen & message.
