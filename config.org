@@ -211,17 +211,19 @@ easier to hunt them done. I guess I will see.
   (defun max-set-font-based-on-monitors ()
     "Set the font and font size based on the available displays."
     (interactive)
-    (let* ((display-size (if (= (length (display-monitor-attributes-list))
-                                1)
-                             'small
-                           'large))
+    (let* ((display-size
+            (if (= (length (display-monitor-attributes-list)) 1)
+                'small
+              'large))
            (font-size (alist-get display-size max-font-sizes-alist)))
       (set-face-attribute 'default nil
                           :font max-display-font-name
                           :height (truncate (* 10 font-size)))
       (set-face-attribute 'fixed-pitch nil
                           :font max-display-font-name
-                          :height (truncate (* 10 font-size)))))
+                          :height (truncate (* 10 font-size)))
+      (set-fontset-font "fontset-default" nil
+                        (font-spec :size font-size :name "Symbola"))))
 
   (defun max-set-prettify-symbols (&rest symbols)
     "Creates a local copy of `prettify-symbols-alist', and adds to it SYMBOLS.
