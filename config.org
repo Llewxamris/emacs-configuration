@@ -200,13 +200,47 @@ easier to hunt them done. I guess I will see.
     `(when ,max-on-work
        ,(cons 'progn body)))
 
-  (defun max-set-company-backends (backends)
-    "Creates a local copy of var `company-backends' and sets it to BACKENDS.
-  BACKENDS is a list following the structure of `company-backends'. This allows me
-  to customize the list of back ends per major-mode."
-    (make-local-variable 'company-backends)
-    (set 'company-backends ())
-    (add-to-list 'company-backends backends))
+  (defun max--add-pretty-symbols-to-alist (initial-alist seq-elm)
+    "Flatten SEQ-ELM and add the result to INITIAL-ALIST."
+    (let ((symbol (car seq-elm))
+          (char (cdr seq-elm)))
+      (if (listp symbol)
+          (map-merge 'list initial-alist
+                     (seq-reduce
+                      (lambda (init sym)
+                        (map-insert init sym char))
+                      symbol '()))
+        (map-insert initial-alist symbol char))))
+
+  (defmacro max-define-pretty-symbols (&rest body)
+    "Set `prettify-symbols-alist' with the values of BODY.
+
+  BODY must be a list of the form ([SYMBOL SYMBOLS] CHARACTER...)'
+  where SYMBOL is a string, SYMBOLS is a list of strings, and
+  CHARACTER is the character to replace the string(s).
+
+  Providing SYMBOL adds the element (SYMBOL . CHARACTER) to
+  `prettify-symbols-alist'. Providing SYMBOLS adds an element
+  (SYMBOL . CHARACTER)--where SYMBOL is an element of SYMBOL--per
+  element of SYMBOLS.
+
+  For example:
+  (max-define-pretty-symbols \"FOO\" \"BAZ\") adds the
+  element (\"FOO\" . \"BAZ\") to prettify symbols,
+  while (max-define-pretty-symbols (\"FOO\" \"BAR\") \"BAZ\") adds the elements
+  \(\"FOO\" . \"BAZ\") and (\"BAR\" . \"BAZ\") to prettify symbols."
+    `(let* ((symbol-tuple-list
+            (seq-partition (quote ,body) 2))
+           (local-prettify-symbols-alist
+            (seq-reduce
+             (lambda (alist tuple)
+               (max--add-pretty-symbols-to-alist alist tuple))
+             symbol-tuple-list ())))
+       (setq prettify-symbols-alist local-prettify-symbols-alist)))
+
+  (defmacro max-define-company-backends (&rest backends)
+    "Set `company-backends' to BACKENDS."
+    `(setq-local company-backends (quote ,backends)))
 
   (defun max-set-font-based-on-monitors ()
     "Set the font and font size based on the available displays."
@@ -224,20 +258,6 @@ easier to hunt them done. I guess I will see.
                           :height (truncate (* 10 font-size)))
       (set-fontset-font "fontset-default" nil
                         (font-spec :size font-size :name "Symbola"))))
-
-  (defun max-set-prettify-symbols (&rest symbols)
-    "Creates a local copy of `prettify-symbols-alist', and adds to it SYMBOLS.
-  The intention is for mode-specific hooks to call this function with the set of
-  SYMBOLS specific to that mode. Declare common prettify symbols in the
-  `prettify-symbols-mode' declaration.
-
-  This function does not enable `prettify-symbols-mode' in the modes that call it."
-    (make-local-variable 'prettify-symbols-alist)
-    (when symbols
-      (seq-do
-       (lambda (symbol)
-         (push symbol prettify-symbols-alist))
-       symbols)))
 
   (provide 'max)
 #+END_SRC
@@ -1314,10 +1334,10 @@ languages.
     :init
     (defun max-c-mode-hook ()
       (hs-minor-mode)
-      (max-set-company-backends '(company-clang
-                                  company-semantic
-                                  company-capf
-                                  company-yasnippet))))
+      (max-define-company-backends company-clang
+                                   company-semantic
+                                   company-capf
+                                   company-yasnippet)))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -1373,19 +1393,21 @@ evaluate arbitrary code is a fabulous (and dangerous) power to wield.
     :mode ("\\.el\\'" . emacs-lisp-mode)
     :interpreter ("emacs" . emacs-lisp-mode)
     :commands emacs-lisp-mode
-    :hook (emacs-lisp-mode . max/elisp-mode-hook)
+    :hook (emacs-lisp-mode . max--elisp-mode)
     :general
     (max-local-leader-def
       :states 'normal
       "b" #'eval-buffer)
     :init
-    (defun max/elisp-mode-hook ()
-      (make-local-variable 'company-backends)
-      (set 'company-backends ())
-      (add-to-list 'company-backends '(company-capf
-                                       company-yasnippet
-                                       company-files
-                                       company-dabbrev-code))))
+    (defun max--elisp-mode ()
+      (max-define-company-backends company-capf
+                                   company-yasnippet
+                                   company-files
+                                   company-dabbrev-code)
+      (max-define-pretty-symbols "lambda" ?λ
+                                 "not" ?¬
+                                 "and" ?∧
+                                 "or" ?∨)))
 #+END_SRC
 
 IELM is an inferior Emacs Lisp mode that acts as a REPL for Elisp. REPL-driven
@@ -1689,7 +1711,7 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
       "z"   #'org-add-note)
     :defines company-backends
     :commands (org-update-all-dblocks org-emphasize)
-    :functions (max-set-prettify-symbols max-set-company-backends)
+    :functions (max-set-prettify-symbols)
     :init
     (defun max-org-update-dblocks ()
       "Wrapper around `org-update-all-dblocks' that only executes said function
@@ -1704,12 +1726,11 @@ from the inheritance list so all sub-headers do not get the ~PROJECT~ tag.
       (set-fill-column 80)
       (display-fill-column-indicator-mode 0)
       (auto-fill-mode)
-      (max-set-prettify-symbols '("#+BEGIN_SRC" . ?⚞)
-                                '("#+END_SRC" . ?⚟)
-                                '("#+begin_src" . ?⚞)
-                                '("#+end_src" . ?⚟))
-      (max-set-company-backends '(company-ispell company-yasnippet company-files)))
-
+      (max-define-pretty-symbols ("#+BEGIN_SRC" "#+begin_src") ?⚞
+                                 ("#+END_SRC" "#+end_src") ?⚟)
+      (max-define-company-backends company-ispell
+                                   company-yasnippet
+                                   company-files))
     :commands (org-mode org-capture org-agenda orgtbl-mode)
     :mode ("\\.org$" . org-mode)
     :hook ((before-save . max-org-update-dblocks)
